@@ -1,0 +1,36 @@
+﻿@model IList<DS.Domain.Contact>
+@using System.Collections.Specialized;
+@using System.Collections;
+@{
+    ViewBag.Title = "Feedback - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+	View feedback
+}
+
+<div class="container_16">
+	<div class="grid_16">
+       
+	      @{
+                var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, sortFieldName: "sortField");
+			    grid.Pager(WebGridPagerModes.NextPrevious);
+			    @grid.GetHtml(
+                    tableStyle: "webGrid",
+                    htmlAttributes: new { id = "" },
+                    headerStyle: "header",
+                    alternatingRowStyle: "alt",
+                    columns: grid.Columns(
+                                grid.Column("FromName", "From", style: "left Title "),
+                                grid.Column("FromEmail", "Email", format: (item) => Html.Raw(string.Format(@"<a href=""mailto:{0}"" title=""Send email to {1}"">{0}</a>",item.FromEmail,item.FromName))),                                
+                                grid.Column("Message", style: "messagecol", canSort: false),
+                                grid.Column("DateCreated", "Sent", style: "left datecol DateCreated")
+                    )
+                )
+                
+            }
+        
+    </div>
+</div>

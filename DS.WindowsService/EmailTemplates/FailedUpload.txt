@@ -1,0 +1,8 @@
+﻿DataShare Folder watch upload failed.
+Failed to add #FileName# that was dropped into to Datashare automatic upload.
+
+Categoryy name #CategoryName#
+Schema name: #SchemaName#
+
+List of errors:
+#Errors#

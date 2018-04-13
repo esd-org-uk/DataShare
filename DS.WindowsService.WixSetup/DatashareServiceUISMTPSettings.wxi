@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <UI>
+
+      <Dialog Id="EnterSMTPDialog" Width="370" Height="270" Title="SMTP Mail Server">
+        
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next"> <!--!(loc.WixUINext)-->
+          <Publish Property="SMTP_RELAY" Value="[SMTP_RELAY]"></Publish>
+          <Publish Property="SMTP_USERNAME" Value="[SMTP_USERNAME]"></Publish>
+          <Publish Property="SMTP_PASSWORD" Value="[SMTP_PASSWORD]"></Publish>
+          <Publish Property="SMTP_REPLYTO" Value="[SMTP_REPLYTO]"></Publish>
+          <!--<Condition Action="disable"><![CDATA[SMTP_RELAY = "" AND SMTP_REPLYTO = ""]]></Condition>
+          <Condition Action="enable"><![CDATA[SMTP_RELAY <> "" AND SMTP_REPLYTO <> ""]]></Condition>-->
+
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="SMTP relay/Default reply to must not be empty">(SMTP_RELAY = "" OR SMTP_REPLYTO = "")</Publish>
+          <Publish Property="ERROR_TITLE" Value="SMTP relay/Default reply to must not be empty">(SMTP_RELAY = "" OR SMTP_REPLYTO = "" )</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+        </Control>
+        
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Please enter a SMTP to connect to." />
+        
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter SMTP details" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+       
+        <Control Id="SMTPServerLabel" Type="Text" X="20" Y="50" Width="290" Height="20" Text="SMTP Relay:"></Control>
+        <Control Id="SMTPRelay" Type="Edit" X="30" Y="68" Width="200" Height="18" Property="SMTP_RELAY" Text="[SMTP_RELAY]"></Control>
+
+        <Control Id="FromEmailLabel" Type="Text" X="20" Y="95" Width="290" Height="20" Text="Default Reply to:" />
+        <Control Id="DefaultReplyTo" Type="Edit" X="30" Y="113" Width="200" Height="18" Property="SMTP_REPLYTO" Text="[SMTP_REPLYTO]">
+        </Control>
+
+        <Control Id="UserNameLabel" Type="Text" X="20" Y="145" Width="290" Height="20" Text="Username:(Optional)"></Control>
+        <Control Id="Username" Type="Edit" X="30" Y="163" Width="148" Height="18" Property="SMTP_USERNAME"></Control>
+        
+        <Control Id="PasswordLabel" Type="Text" X="20" Y="195" Width="290" Height="20" Text="Password:(Optional)" />
+        <Control Id="Password" Password="yes" Type="Edit" X="30" Y="213" Width="200" Height="18" Property="SMTP_PASSWORD">
+        </Control>
+      </Dialog>
+    </UI>
+    
+  </Fragment>
+</Include>

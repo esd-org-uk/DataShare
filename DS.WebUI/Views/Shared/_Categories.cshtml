@@ -1,0 +1,39 @@
+﻿@model IList<DS.Domain.Category>
+@{var controller = ViewContext.RouteData.Values["controller"].ToString();}
+<h3 class="grid_13">Please pick a category</h3>
+@if (controller == "View" || controller == "Download")
+{<div class="grid_3">
+    @Html.ActionLink("View all datasets", "All", controller, new { }, new { @class = "button float_right", title = "View all available data sets" })
+</div>}
+<div class="clearfix"></div>
+<ul class="biglist clickablelistrows">
+    @foreach(var c in Model){
+        var disable = c.Schemas.Count() == 0 && controller != "Upload" && controller != "Schema";
+        var css = disable ? "clearfix empty" : "clearfix";
+            
+        if (!disable)
+        { 
+        <li class="@css">                
+            <h4 class="grid_4">@Html.ActionLink(c.Title, c.FriendlyUrl, controller, new { }, new { @class = "default" })</h4>                
+            <div class="grid_2">
+                
+                    @if (String.IsNullOrEmpty(c.ImageUrl))
+                    {
+                        <span class="image @c.CssClass">
+                            Category
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="namedimage" style="background:#fff url(@c.ImageUrl) no-repeat 0 0;background-size: 100%;">
+                            Category
+                        </span>
+                    }
+                
+            </div>
+            <div class="grid_10 description">@c.Description</div>
+        </li>
+        }
+    }
+</ul>
+

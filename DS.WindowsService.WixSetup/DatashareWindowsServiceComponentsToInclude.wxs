@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"  xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Fragment>
+    <!-- Step 2: Add files to your installer package -->
+    <ComponentGroup Id="DatashareServiceComponents" Directory="INSTALLFOLDER">
+
+    <!-- this changes the web config after installation-->
+       
+      <Component Id="ChangeConnectionStringConfig" > <!--Guid="07248725-8a55-48aa-b8d1-daa0dd677384" KeyPath="yes"-->
+        <Condition><![CDATA[RUNTIME_DATABASE_LOGON_TYPE = "SqlAuth"]]></Condition>
+        <File Id="DS.WindowsService.exe.config" Name="DS.WindowsService.exe.config" Vital="yes" KeyPath="yes" Source="$(var.DsServiceDirectory)DS.WindowsService.exe.config" />
+        <util:XmlFile Id="AppConfigSetConnStr" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/connectionStrings/add[\[]@name=&quot;DataShareContext&quot;[\]]" Name="connectionString"
+           Value="Data Source=[DATABASE_SERVER];Initial Catalog=[DATASHARE_DATABASENAME];Persist Security Info=True;User ID=[RUNTIME_DATABASE_USERNAME];Password=[RUNTIME_DATABASE_PASSWORD];" />
+        <util:XmlFile Id="AppConfigSetFileRoot2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/appSettings/add[\[]@key=&quot;FileRoot&quot;[\]]" Name="value"
+           Value="[INSTALLFOLDER]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPServer2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+ ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="host"
+ Value="[SMTP_RELAY]" />
+        <util:XmlFile Id="AppConfigSetSMTPPassword2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="password"
+           Value="[SMTP_PASSWORD]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPUser2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="userName"
+           Value="[SMTP_USERNAME]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPReplyTo2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+            ElementPath="/configuration/system.net/mailSettings/smtp" Name="from"
+            Value="[SMTP_REPLYTO]" />
+
+        <util:XmlFile Id="AppConfigSetDatashareUrl2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+      ElementPath="/configuration/appSettings/add[\[]@key=&quot;DatashareURL&quot;[\]]" Name="value"
+      Value="[DATASHARE_URL]" />
+
+      </Component>
+    
+
+      <Component Id="ChangeConfig" > <!--Guid="ef2c539c-1af0-4bab-bed7-ff7f1e023c1c" KeyPath="yes"-->
+        <Condition><![CDATA[NOT RUNTIME_DATABASE_LOGON_TYPE = "SqlAuth"]]></Condition>
+        <File Id="DS.WindowsService.exe.config2" Name="DS.WindowsService.exe.config" Vital="yes" KeyPath="yes" Source="$(var.DsServiceDirectory)DS.WindowsService.exe.config" />
+        <util:XmlFile Id="AppConfigSetConnStr2" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/connectionStrings/add[\[]@name=&quot;DataShareContext&quot;[\]]" Name="connectionString"
+           Value="Data Source=[DATABASE_SERVER];Initial Catalog=[DATABASE_DATABASENAME];Integrated Security=SSPI;" />
+        <util:XmlFile Id="AppConfigSetFileRoot" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/appSettings/add[\[]@key=&quot;FileRoot&quot;[\]]" Name="value"
+           Value="[INSTALLFOLDER]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPServer" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+   ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="host"
+   Value="[SMTP_RELAY]" />
+        <util:XmlFile Id="AppConfigSetSMTPPassword" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="password"
+           Value="[SMTP_PASSWORD]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPUser" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+           ElementPath="/configuration/system.net/mailSettings/smtp/network" Name="userName"
+           Value="[SMTP_USERNAME]" />
+
+        <util:XmlFile Id="AppConfigSetSMTPReplyTo" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+            ElementPath="/configuration/system.net/mailSettings/smtp" Name="from"
+            Value="[SMTP_REPLYTO]" />
+        <util:XmlFile Id="AppConfigSetDatashareUrl" Action="setValue" Permanent="yes" File="[INSTALLFOLDER]DS.WindowsService.exe.config"
+      ElementPath="/configuration/appSettings/add[\[]@key=&quot;DatashareURL&quot;[\]]" Name="value"
+      Value="[DATASHARE_URL]" />
+      </Component>
+
+
+
+      
+
+      <!-- this is to install the service with the account and start the service-->
+      <Component Id="ProductComponent2" > <!--Guid="d01f84d4-1d97-42be-a8ac-0a169197d33f" KeyPath="yes"-->
+        <File Id="Ds.WindowsService.exe" Name="Ds.WindowsService.exe" Source="$(var.DsServiceDirectory)DS.WindowsService.exe" Vital="yes" KeyPath="yes" DiskId="1"></File>
+        <ServiceInstall
+            Id="ServiceInstaller"
+            Type="ownProcess"
+            Vital="yes"
+            Name="DataShare Windows Service"
+            Description="DataShare email notification service"
+            Start="auto"
+            Account="LocalSystem"
+            ErrorControl="normal"
+            Interactive="no" >
+        </ServiceInstall>
+        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="both" Name="DataShare Windows Service" Wait="no" />
+      </Component>
+
+      
+      <!--below are the list of files to be packaged in the cab file when releasing-->
+      
+      <Component>
+        <File Id="DS.DL.dll" Name="DS.DL.dll" Source="$(var.DsServiceDirectory)DS.DL.dll" Vital="yes"  KeyPath="yes" DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="DS.Domain.dll" Name="DS.Domain.dll" Source="$(var.DsServiceDirectory)DS.Domain.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+      <Component>
+        <File Id="DataAnnotationsExtensions.dll" Name="DataAnnotationsExtensions.dll" Source="$(var.DsServiceDirectory)DataAnnotationsExtensions.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="DS.Extensions.dll" Name="DS.Extensions.dll" Source="$(var.DsServiceDirectory)DS.Extensions.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="DS.Service.dll" Name="DS.Service.dll" Source="$(var.DsServiceDirectory)DS.Service.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="DS.WindowsService.application" Name="DS.WindowsService.application" Source="$(var.DsServiceDirectory)DS.WindowsService.application" Vital="yes"  DiskId="1"></File>
+      </Component>
+      
+      <Component>
+        <File Id="DS.WindowsService.exe.manifest" Name="DS.WindowsService.exe.manifest" Source="$(var.DsServiceDirectory)DS.WindowsService.exe.manifest" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="Elmah.dll" Name="Elmah.dll" Source="$(var.DsServiceDirectory)Elmah.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+      <Component>
+        <File Id="EntityFramework.dll" Name="EntityFramework.dll" Source="$(var.DsServiceDirectory)EntityFramework.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+      <Component>
+        <File Id="LumenWorks.Framework.IO.dll" Name="LumenWorks.Framework.IO.dll" Source="$(var.DsServiceDirectory)LumenWorks.Framework.IO.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+      <Component>
+        <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.DsServiceDirectory)Newtonsoft.Json.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+      <Component>
+        <File Id="Newtonsoft.Json.xml" Name="Newtonsoft.Json.xml" Source="$(var.DsServiceDirectory)Newtonsoft.Json.xml" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="StructureMap.dll" Name="StructureMap.dll" Source="$(var.DsServiceDirectory)StructureMap.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="System.Data.DataSetExtensions.dll" Name="System.Data.DataSetExtensions.dll" Source="$(var.DsServiceDirectory)System.Data.DataSetExtensions.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="System.Data.dll" Name="System.Data.dll" Source="$(var.DsServiceDirectory)System.Data.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="Visualization.dll" Name="Visualization.dll" Source="$(var.DsServiceDirectory)Visualization.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component>
+        <File Id="DS.WindowsService.Debugger.dll" Name="DS.WindowsService.Debugger.dll" Source="$(var.DsServiceDirectory)DS.WindowsService.Debugger.dll" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+    
+
+
+    </ComponentGroup>
+
+    <ComponentGroup  Id="LBRINITIALFOLDER" >
+      <Component Directory="LBR" Id="LBR" KeyPath="yes" Guid="777c7cc5-1475-4561-a48c-f9ca646bf78c">
+        <CreateFolder />
+      </Component>
+        
+      
+    </ComponentGroup>
+
+    <ComponentGroup  Id="ExtraFolders" >
+      <Component Directory="FOLDERWATCH">
+        <CreateFolder />
+        <File Id="DoNotDelete.txt" Name="DoNotDelete.txt" Source="$(var.DsServiceDirectory)\FolderWatch\DoNotDelete.txt" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+
+      <Component Directory="EMAILTEMPLATES">
+        <CreateFolder />
+        <File Id="FailedUpload.txt" Name="FailedUpload.txt" Source="$(var.DsServiceDirectory)\EmailTemplates\FailedUpload.txt" Vital="yes"  DiskId="1"></File>
+      </Component>
+      <Component Directory="EMAILTEMPLATES">
+        <CreateFolder />
+        <File Id="UploadReminder.txt" Name="UploadReminder.txt"  Source="$(var.DsServiceDirectory)\EmailTemplates\UploadReminder.txt" Vital="yes"  DiskId="1"></File>
+      </Component>
+
+    </ComponentGroup>
+  </Fragment>
+</Wix>

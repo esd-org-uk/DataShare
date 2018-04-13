@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <UI>
+
+      <Dialog Id="EnterDatashareUrlDialog" Width="370" Height="270" Title="Datashare URL">
+
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next">
+          <Publish Property="DATASHARE_URL" Value="[DATASHARE_URL]"></Publish>
+          <Publish Property="DATASHARE_DATABASENAME" Value="[DATASHARE_DATABASENAME]"></Publish>
+          <!--<Condition Action="disable"><![CDATA[DATASHARE_URL = "" ]]></Condition>
+          <Condition Action="enable"><![CDATA[DATASHARE_URL <> "" ]]></Condition>-->
+
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="DataShare URL/Database name must not be empty">(DATASHARE_URL = "" OR DATASHARE_DATABASENAME = "")</Publish>
+          <Publish Property="ERROR_TITLE" Value="DataShare URL/Database name must not be empty">(DATASHARE_URL = "" OR DATASHARE_DATABASENAME = "" )</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+
+        </Control>
+
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Please enter additional details for the DataShare service " />
+
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter DataShare additional details" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+
+        <Control Id="DatashareDBNameLabel" Type="Text" X="20" Y="50" Width="290" Height="20" Text="DataShare database name:"></Control>
+        <Control Id="DatashareDBName" Type="Edit" X="30" Y="68" Width="200" Height="18" Property="DATASHARE_DATABASENAME" Text="[DATASHARE_DATABASENAME]" ></Control>
+        <Control Id="DatashareDBNameHelpLabel" Type="Text" X="30" Y="86" Width="290" Height="20" Text="The database name of where DataShare service will be using"></Control>
+
+        <Control Id="DatashareUrlLabel" Type="Text" X="20" Y="126" Width="290" Height="20" Text="DataShare Url:"></Control>
+        <Control Id="DatashareUrl" Type="Edit" X="30" Y="146" Width="200" Height="18" Property="DATASHARE_URL" Text="[DATASHARE_URL]"></Control>
+        <Control Id="DatashareUrlHelpLabel" Type="Text" X="30" Y="164" Width="290" Height="20" Text="The url where DataShare website is installed. I.e. http://DataShare.gov.uk or if it is a secure server https://DataShare.gov.uk"></Control>
+        <!--<Control Id="DatashareDBNameLabel" Type="Text" X="20" Y="126" Width="290" Height="20" Text="*DataShare database name:"></Control>
+        <Control Id="DatashareDBNameUrl" Type="Edit" X="30" Y="146" Width="200" Height="18" Property="DATASHARE_DATABASENAME" Text="Enter DataShare database name"></Control>
+        <Control Id="DatashareDBNameHelpLabel" Type="Text" X="30" Y="86" Width="290" Height="20" Text="The database name of where DataShare website connects to"></Control>-->
+
+
+
+      </Dialog>
+    </UI>
+
+  </Fragment>
+</Include>

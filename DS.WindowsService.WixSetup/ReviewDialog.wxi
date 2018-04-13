@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Fragment>
+    <UI>
+
+    <Dialog Id="ReviewInstallationDialog" Width="370" Height="270" Title="Required Information Not Filled In">
+
+      <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+        <Condition Action="disable"><![CDATA[SMTP_RELAY = "" OR SMTP_REPLYTO = "" OR (DATABASE_LOGON_TYPE = "DatabaseAccount" AND (DATABASE_USERNAME = "" OR DATABASE_PASSWORD = "")) OR DATASHARE_URL = "" OR DATASHARE_DATABASENAME = ""]]></Condition>
+        <Condition Action="enable"><![CDATA[SMTP_RELAY <> "" AND SMTP_REPLYTO <> "" AND DATASHARE_URL <> "" AND DATASHARE_DATABASENAME <> "" AND (DATABASE_LOGON_TYPE = "DatabaseAccount" AND DATABASE_USERNAME <> "" AND DATABASE_PASSWORD <> "") ]]></Condition>
+              </Control>
+
+      <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+      <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+        <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+      </Control>
+      <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Required Information Needed " />
+
+      <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Required Information Needed" />
+      <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+      <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+      <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+
+      <Control Id="SMTPRelayNotFilledInLabel" Type="Text" X="20" Y="50" Width="290" Height="20" Text="The SMTP Relay field needs to be filled in.">
+        <Condition Action="hide"><![CDATA[SMTP_RELAY <> "" ]]></Condition>
+        <Condition Action="show"><![CDATA[SMTP_RELAY = "" ]]></Condition>
+        
+      </Control>
+
+      <Control Id="ReplyToNotFilledInLabel" Type="Text" X="20" Y="70" Width="290" Height="20" Text="The default reply to email field needs to be filled in.">
+        <Condition Action="hide"><![CDATA[SMTP_REPLYTO <> "" ]]></Condition>
+        <Condition Action="show"><![CDATA[SMTP_REPLYTO = "" ]]></Condition>
+      </Control>
+
+      <Control Id="DatashareDBNotFilledInLabel" Type="Text" X="20" Y="90" Width="290" Height="20" Text="The DataShare database name field needs to be filled in.">
+        <Condition Action="hide"><![CDATA[DATASHARE_DATABASENAME <> "" ]]></Condition>
+        <Condition Action="show"><![CDATA[DATASHARE_DATABASENAME = "" ]]></Condition>
+        
+      </Control>
+      <Control Id="DatashareUrlNotFilledInLabel" Type="Text" X="20" Y="110" Width="290" Height="20" Text="The DataShare Url field needs to be filled in.">
+        <Condition Action="hide"><![CDATA[DATASHARE_URL <> "" ]]></Condition>
+        <Condition Action="show"><![CDATA[DATASHARE_URL = "" ]]></Condition>
+      </Control>
+
+      <Control Id="DatashareLoginNotFilledInLabel" Type="Text" X="20" Y="110" Width="290" Height="20" Text="The DataShare Database server username and password fields needs to be filled in.">
+        <Condition Action="hide"><![CDATA[DATABASE_LOGON_TYPE = "DatabaseIntegratedAuth"  ]]></Condition>
+        <Condition Action="hide"><![CDATA[DATABASE_LOGON_TYPE = "DatabaseAccount" AND DATABASE_USERNAME <> "" AND DATABASE_PASSWORD <> ""   ]]></Condition>
+        <Condition Action="show"><![CDATA[DATABASE_LOGON_TYPE = "DatabaseAccount" AND (DATABASE_USERNAME = "" OR DATABASE_PASSWORD = "") ]]></Condition> 
+      </Control>
+
+      <Control Id="ClickBackButtonToFillInLabel" Hidden="yes" Type="Text" X="20" Y="130" Width="290" Height="20" Text="Please click the back button and fill in the required fields.">
+        <Condition Action="hide"><![CDATA[SMTP_RELAY <> "" AND SMTP_REPLYTO <> "" AND DATASHARE_URL <> "" AND DATASHARE_DATABASENAME <> "" AND (DATABASE_LOGON_TYPE = "DatabaseAccount" AND DATABASE_USERNAME <> "" AND DATABASE_PASSWORD <> "") ]]></Condition>
+        <Condition Action="show"><![CDATA[SMTP_RELAY = "" OR SMTP_REPLYTO = "" OR (DATABASE_LOGON_TYPE = "DatabaseAccount" AND (DATABASE_USERNAME = "" OR DATABASE_PASSWORD = "")) OR DATASHARE_URL = "" OR DATASHARE_DATABASENAME = ""]]></Condition>
+      </Control>
+      <Control Id="EverythingOKLabel"  Type="Text" X="20" Y="50" Width="290" Height="20" Text="All required details are filled in. Please click the Next button and proceed with the installation.">
+        <Condition Action="hide"><![CDATA[SMTP_RELAY = "" OR SMTP_REPLYTO = "" OR (DATABASE_LOGON_TYPE = "DatabaseAccount" AND (DATABASE_USERNAME = "" OR DATABASE_PASSWORD = "")) OR DATASHARE_URL = "" OR DATASHARE_DATABASENAME = ""]]></Condition>
+        <Condition Action="show"><![CDATA[SMTP_RELAY <> "" AND SMTP_REPLYTO <> "" AND DATASHARE_URL <> "" AND DATASHARE_DATABASENAME <> "" AND (DATABASE_LOGON_TYPE = "DatabaseAccount" AND DATABASE_USERNAME <> "" AND DATABASE_PASSWORD <> "") ]]></Condition>
+
+      </Control>
+    </Dialog>
+  </UI>
+  </Fragment>
+</Include>

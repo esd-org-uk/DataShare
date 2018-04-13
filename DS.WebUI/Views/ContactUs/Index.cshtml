@@ -1,0 +1,65 @@
+﻿@model DS.Domain.Contact
+
+@{
+    ViewBag.Title = "Contact us - DataShare";
+}
+
+@section TitleContent{
+    Contact us
+}
+
+@section FooterScripts{
+  <script src="//ajax.aspnetcdn.com/ajax/mvc/3.0/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
+  <script src="//ajax.aspnetcdn.com/ajax/mvc/3.0/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+}
+
+<div class="container_16">
+    <div class="grid_16">
+        @Html.Raw(ViewBag.Message)        
+        @using (Html.BeginForm())
+        {
+            <p class="intro">If you wish to make an enquiry about DataShare, have some feedback or a suggestion for additional data, please complete the form below.  @if(ViewBag.CouncilTitle=="London Borough of Redbridge")
+                                                                                                                                                                      {
+                <text>Requests under the Freedom of Information Act 2000 should be made using the <a href="http://www.redbridge.gov.uk/cms/the_council/about_the_council/freedom_of_information/foi_form.aspx">Freedom of Information online form </a>.</text>
+                                                                                                                                                                      }</p>
+            
+            @Html.ValidationSummary(true)
+            <fieldset>
+                
+                
+                @Html.ValidationMessageFor(model => model.FromName)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.FromName)
+                    @Html.EditorFor(model => model.FromName)
+                    
+                </div>
+
+                
+                
+                @Html.ValidationMessageFor(model => model.FromEmail)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.FromEmail)
+                    @Html.EditorFor(model => model.FromEmail)
+                    
+                </div>
+
+                
+                
+                @Html.ValidationMessageFor(model => model.Message)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.Message)
+                    @Html.EditorFor(model => model.Message)
+                    
+                </div>
+                <p>
+                    <input type="submit" class="green large button submit" value="Send message" />
+                </p>
+            </fieldset>
+        }
+    </div>
+</div>
+
+

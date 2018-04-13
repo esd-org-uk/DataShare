@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.8</ProductVersion>
+    <ProjectGuid>{a4f98267-2eac-4604-8995-97aa4ce4ed80}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>DataShare</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <Name>DS.WebUI.WixSetup</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DbCreateCredDlg.wxs" />
+    <Compile Include="DS.WebUI.wxs" />
+    <Compile Include="GenericErrorDlg.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="RuntimeDbCredDlg.wxs" />
+    <Compile Include="SelectDbDlg.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixIIsExtension">
+      <HintPath>$(WixExtDir)\WixIIsExtension.dll</HintPath>
+      <Name>WixIIsExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixDataSourceExtension">
+      <HintPath>..\packages\msiext-1.4\WixExtensions\WixDataSourceExtension.dll</HintPath>
+      <Name>WixDataSourceExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixSqlExtension">
+      <HintPath>$(WixExtDir)\WixSqlExtension.dll</HintPath>
+      <Name>WixSqlExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AdditionalConfigDetailsDialog.wxi" />
+    <Content Include="AdditionalConfigurationDetails2.wxi" />
+    <Content Include="bin\Debug\en-us\DataShare.msi" />
+    <Content Include="bin\Debug\en-us\DataShare.wixpdb" />
+    <Content Include="bin\Release\en-us\DataShare.msi" />
+    <Content Include="bin\Release\en-us\DataShare.wixpdb" />
+    <Content Include="bitmaps\banner.bmp" />
+    <Content Include="bitmaps\Error.ico" />
+    <Content Include="bitmaps\success.bmp" />
+    <Content Include="bitmaps\Success.ico" />
+    <Content Include="bitmaps\topbanner.bmp" />
+    <Content Include="DataShare.bak" />
+    <Content Include="DatashareUrlUI.wxi" />
+    <Content Include="Dlls\ActiveDirectory.dll" />
+    <Content Include="Dlls\DataSource.dll" />
+    <Content Include="Dlls\StringTools.dll" />
+    <Content Include="error.bmp" />
+    <Content Include="SQLScripts\Combined_1_5_0_script.sql" />
+    <Content Include="_README.txt" />
+    <Content Include="ReviewDialog.wxi" />
+    <Content Include="SQLScripts\Combined_1_4_0_script.sql" />
+    <Content Include="SQLScripts\CreateTables.sql" />
+    <Content Include="SQLScripts\CreateUsers.sql" />
+    <Content Include="SQLScripts\InsertData.sql" />
+    <Content Include="SQLServerDialog.wxi" />
+    <Content Include="UpgradeDialog.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DS.WebUI\DS.WebUI.csproj">
+      <Name>DS.WebUI</Name>
+      <Project>{5ddeee88-ccb0-4efc-a52b-9de51ef21dc1}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+      <PackageThisProject>True</PackageThisProject>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="bin\Debug\" />
+    <Folder Include="bin\Debug\en-us\" />
+    <Folder Include="bin\Release\" />
+    <Folder Include="bin\Release\en-us\" />
+    <Folder Include="bitmaps" />
+    <Folder Include="Dlls" />
+    <Folder Include="SQLScripts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="en-US.wxl" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);WebApplicationSourceDir=$(SolutionDir)DS.WebUI\bin\</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <Target Name="BeforeBuild">
+    <MSBuild Projects="%(ProjectReference.FullPath)" Targets="Package" Properties="Configuration=$(Configuration);Platform=AnyCPU" Condition="'%(ProjectReference.PackageThisProject)'=='True'" />
+    <Copy SourceFiles="%(ProjectReference.RootDir)%(ProjectReference.Directory)obj\$(Configuration)\TransformWebConfig\transformed\web.config" OverwriteReadOnlyFiles="true" DestinationFolder="%(ProjectReference.RootDir)%(ProjectReference.Directory)obj\$(Configuration)\Package\PackageTmp\" Condition="'%(ProjectReference.PackageThisProject)'=='True'" />
+    <PropertyGroup>
+      <LinkerBaseInputPaths>%(ProjectReference.RootDir)%(ProjectReference.Directory)obj\$(Configuration)\Package\PackageTmp\</LinkerBaseInputPaths>
+      <DefineConstants>BasePath=%(ProjectReference.RootDir)%(ProjectReference.Directory)obj\$(Configuration)\Package\PackageTmp\</DefineConstants>
+    </PropertyGroup>
+    <HeatDirectory PreprocessorVariable="var.BasePath" OutputFile="DS.WebUI.wxs" Directory="%(ProjectReference.RootDir)%(ProjectReference.Directory)obj\$(Configuration)\Package\PackageTmp\" DirectoryRefId="WEBINSTALLATIONDIR" ComponentGroupName="%(ProjectReference.Filename)_Project" SuppressCom="true" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" Condition="'%(ProjectReference.PackageThisProject)'=='True'" />
+  </Target>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

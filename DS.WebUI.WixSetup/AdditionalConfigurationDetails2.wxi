@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Fragment>
+    <UI>
+
+      <Dialog Id="AdditionalConfigurationDetails2Dialog" Width="370" Height="270" Title="DataShare Configuration Details 2 of 2">
+
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next">
+          <!--<Publish Property="COUNCIL_OPENDATA_URL" Value="[COUNCIL_OPENDATA_URL]"></Publish>-->
+          <Publish Property="MAP_CENTRE_LATITUDE" Value="[MAP_CENTRE_LATITUDE]"></Publish>
+          <Publish Property="MAP_CENTRE_LONGITUDE" Value="[MAP_CENTRE_LONGITUDE]"></Publish>
+          <Publish Property="ANALYTICS_TRACKING_REF" Value="[ANALYTICS_TRACKING_REF]"></Publish>
+
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="The latitude/longitude must be filled in">(MAP_CENTRE_LATITUDE = "" OR MAP_CENTRE_LONGITUDE = "")</Publish>
+          <Publish Property="ERROR_TITLE" Value="The latitude/longitude must be filled in">(MAP_CENTRE_LATITUDE = "" OR MAP_CENTRE_LONGITUDE = "" )</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+
+
+        </Control>
+
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Please enter additional details for DataShare" />
+
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter DataShare additional details" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+
+        <!--<Control Id="LabelCouncilOpenDataURL" Type="Text" X="20" Y="50" Width="290" Height="20" Text="*Council Open Data URL:(Required)"></Control>
+        <Control Id="EditCouncilOpenDataURL" Type="Edit" X="30" Y="68" Width="200" Height="18" Property="COUNCIL_OPENDATA_URL" Text="[COUNCIL_OPENDATA_URL]"></Control>
+        <Control Id="HelpCouncilOpenDataURL" Type="Text" X="30" Y="86" Width="290" Height="20" Text="The URL of the Authority's entry on open data community's portal."></Control>-->
+        
+        
+        <Control Id="LabelMapCentreLatitude" Type="Text" X="20" Y="50" Width="290" Height="20" Text="The latitude of the point you wish any map view to be centred on."></Control>
+        <Control Id="EditMapCentreLatitude" Type="Edit" X="30" Y="70" Width="200" Height="18" Property="MAP_CENTRE_LATITUDE" Text="[MAP_CENTRE_LATITUDE]"></Control>
+        <!--<Control Id="HelpMapCentreLatitude" Type="Text" X="30" Y="86" Width="290" Height="20" Text=""></Control>-->
+
+
+        <Control Id="LabelMapCentreLongitude" Type="Text" X="20" Y="100" Width="290" Height="20" Text="The longitude of the point you wish any map view to be centred on."></Control>
+        <Control Id="EditMapCentreLongitude" Type="Edit" X="30" Y="120" Width="200" Height="18" Property="MAP_CENTRE_LONGITUDE" Text="[MAP_CENTRE_LONGITUDE]"></Control>
+        <!--<Control Id="HelpMapCentreLongitude" Type="Text" X="30" Y="144" Width="290" Height="20" Text=""></Control>-->
+
+        <Control Id="LabelAnalyticsTrackingRef" Type="Text" X="20" Y="150" Width="290" Height="20" Text="Google Analytics Tracking Id:(Optional)"></Control>
+        <Control Id="EditAnalyticsTrackingRef" Type="Edit" X="30" Y="170" Width="200" Height="18" Property="ANALYTICS_TRACKING_REF" Text="[ANALYTICS_TRACKING_REF]"></Control>
+
+
+      </Dialog>
+    </UI>
+
+  </Fragment>
+</Include>

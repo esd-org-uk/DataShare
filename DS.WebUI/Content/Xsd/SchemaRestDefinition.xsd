@@ -1,0 +1,73 @@
+﻿<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SchemaRestDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RestSchema">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="Title"/>
+              <xs:element type="xs:string" name="ShortDescription"/>
+              <xs:element type="xs:string" name="Description"/>
+              <xs:element type="xs:string" name="FriendlyUrl"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EsdLinks">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Links">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="EsdLink" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="Title"/>
+                          <xs:element type="xs:string" name="Type"/>
+                          <xs:element type="xs:short" name="Id"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RestColumnDefinitions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ColumnDefinitions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="RestColumnDefinition" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="Name"/>
+                          <xs:element type="xs:string" name="Description"/>
+                          <xs:element type="xs:string" name="Type"/>
+                          <xs:element type="xs:string" name="MaxSize"/>
+                          <xs:element type="xs:string" name="MinDate"/>
+                          <xs:element type="xs:string" name="MaxDate"/>
+                          <xs:element type="xs:string" name="MinCurrency"/>
+                          <xs:element type="xs:string" name="MaxCurrency"/>
+                          <xs:element type="xs:string" name="MinNumber"/>
+                          <xs:element type="xs:string" name="MaxNumber"/>
+                          <xs:element type="xs:string" name="IsRequired"/>
+                          <xs:element type="xs:string" name="HelpText" minOccurs="0"/>
+                          <xs:element type="xs:string" name="Uri"/>
+                          <xs:element type="xs:string" name="DisplayInitial"/>
+                          <xs:element type="xs:string" name="Sorted"/>
+                          <xs:element type="xs:string" name="IsTotalled"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,14 @@
+﻿@model IList<DS.Domain.Category>
+@{
+    ViewBag.Title = "Manage schemas - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    Manage schemas
+}
+
+<div class="container_16">
+   @Html.Partial("_categories", Model)
+</div>

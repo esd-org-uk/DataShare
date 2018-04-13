@@ -1,0 +1,12 @@
+﻿@model IList<DS.Domain.Category>
+@{
+    ViewBag.Title = "View - DataShare";
+}
+
+@section TitleContent
+{
+ View data
+}
+<div class="container_16">
+    @Html.Partial("_categories", Model)
+</div>

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DS.Domain.Category" HideInheritanceLine="true">
+    <Position X="4.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAQAAAgAEAAAAAAAAAAAAAAAAAACAAAAAAAgAA=</HashCode>
+      <FileName>Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DS.Domain.DataSetSchemaTagLookup">
+    <Position X="3.75" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSetSchemaTagLookup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tag" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DS.Domain.Tag">
+    <Position X="2.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DS.Domain.Council">
+    <Position X="7.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAEAQBAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Council.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Theme" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DS.Domain.Theme">
+    <Position X="9.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAEAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Theme.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DS.Domain.Base.TrackChanges">
+    <Position X="4.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAEAAAAAAE=</HashCode>
+      <FileName>Base\TrackChanges.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Council" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DS.Domain.DataSetDetail">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAACgAQEAAAAEAAgAIAAAAEAAAAAAEAAAAAAAEAAAA=</HashCode>
+      <FileName>DataSetDetail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DS.Domain.Contact">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Contact.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DS.Domain.DataSetSchema">
+    <Position X="6.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACQAAggCEAAAAAAAAAAIAAAAAAAAAAAAQAACAA=</HashCode>
+      <FileName>DataSetSchema.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Definition" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DataSets" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DS.Domain.DataSetSchemaDefinition">
+    <Position X="8.75" Y="4.5" Width="2" />
+    <AssociationLine Name="Columns" Type="DS.Domain.DataSetSchemaColumn">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.513" Y="0.541" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>DataSetSchemaDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Columns" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DS.Domain.DataSetSchemaColumn">
+    <Position X="9" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAEAACAAAAEAhAAAAAAAAAwBAAAAAAAA=</HashCode>
+      <FileName>DataSetSchemaColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DS.Domain.Base.ITrackChanges">
+    <Position X="3" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAEAAAAAAE=</HashCode>
+      <FileName>Base\ITrackChanges.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="8.83" />
+</ClassDiagram>

@@ -1,0 +1,15 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    ViewBag.Title = String.Format("Download {0} data - DataShare", Model[0].Category.Title);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section TitleContent
+{
+    Download data
+}
+
+<div class="container_16">
+   @Html.Partial("_schemas", Model)
+</div>
+

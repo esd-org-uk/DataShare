@@ -1,0 +1,32 @@
+﻿@model IList<DS.Domain.DataSetDetail>
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="container_16">
+    <div class="grid_16" id="Mainheading">
+    <h2>Update data sets</h2>
+    </div>
+    <div class="grid_16">
+    @Html.Raw(ViewBag.Message != null ? "<div class='note'>" + @ViewBag.Message+ "</div>" : "")
+
+    @{
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, sortFieldName: "sortField");
+        grid.Pager(WebGridPagerModes.NextPrevious);
+        @grid.GetHtml(tableStyle: "webGrid",
+                         htmlAttributes: new { id = "DataSetColumnList" },
+                headerStyle: "header",
+                alternatingRowStyle: "alt",                    
+                columns: grid.Columns(
+                            grid.Column("Title", style: "titlecol Title"),
+                            grid.Column("DateUpdated", "Updated", style: "datecol DateCreated"),
+                            grid.Column("NumOfRows", "Number of rows", style: "NumOfRows"),
+                                     grid.Column("FileSize","File size", format: (item) => item.CsvFileSize),
+                            grid.Column("Delete", format: (item) => Html.Raw(string.Format(@"<a href=""#"" class=""button red delete"">Delete</a><div class=""deleteConfirmation""><strong>Are you sure?</strong> This will delete all data in this set.<br /><a href=""/Admin/Upload/Delete/{0}/{1}"" class=""button red"">Yes</a> <a href=""#"" class=""button small grey noDelete"">No</a></div>", item.Id, item.Schema.Id)), style: "actionCol last center", canSort: false)
+                )
+        )
+    }
+
+    </div>
+</div>

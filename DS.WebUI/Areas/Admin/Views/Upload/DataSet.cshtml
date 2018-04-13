@@ -1,0 +1,32 @@
+﻿@model IList<DS.Domain.DataSetDetail>
+@{
+    ViewBag.Title = "Upoload file";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+Upload data
+}
+<div class="container_16">
+    
+      <h3 class="grid_16">Details for <span>Payments to suppliers over £500</span></h3>
+      <div class="grid_16">
+      @{
+          
+            var grid = new WebGrid(Model, canPage: true, rowsPerPage: 5);
+            grid.Pager(WebGridPagerModes.NextPrevious);
+            @grid.GetHtml(tableStyle: "webGrid",
+                    htmlAttributes: new { id = "DataSetList" },
+                    headerStyle: "header",
+                    alternatingRowStyle: "alt",
+                    columns: grid.Columns(
+                    grid.Column("Title", style: "titlecol"),
+                    grid.Column("DateCreated", "Updated", style: "datecol"),
+                    grid.Column("NumOfRows", "Number of rows"),
+                    grid.Column("Download", format: (item) => Html.Raw(string.Format(@"<a href=""{0}/{1}/CSV"" class=""download button grey"">CSV</a> <span>{2}</span> <a href=""{0}/{1}/XML"" class=""download button green"">XML</a> <span>{3}</span>", Request.Path, item.FriendlyUrl, item.CsvFileSize, item.XmlFileSize)),style: "actioncol nosort",canSort: false)
+                    )
+            )
+        }
+    </div>
+</div>

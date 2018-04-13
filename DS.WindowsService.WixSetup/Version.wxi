@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+ <!--<?define ProductVersion="${Major}.${Minor}.${Build}.${Revision}" ?>
+ <?define CompanyName="${CompanyName}" ?>
+ <?define Copyright="${Copyright}" ?>
+ <?define Trademark="${Trademark}" ?>
+ <?define ProductName="${ProductName}" ?>
+ <?define MSBuildProjectDirectory="${MSBuildProjectDirectory}" ?>-->
+  <?define ProductVersion="1.3.1.1" ?>
+  <?define CompanyName="Redbridge Council" ?>
+  <?define Copyright="Redbridge Council" ?>
+  <?define Trademark="Redbridge Council" ?>
+  <?define ProductName="DataShare Service" ?>
+  <?define MSBuildProjectDirectory="${MSBuildProjectDirectory}" ?>
+ <?ifndef Configuration?>
+  <?define Configuration="${Configuration}" ?>
+ <?endif?>
+</Include>

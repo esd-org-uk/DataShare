@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?include Version.wxi ?>
+<?define BinDir=$(var.MSBuildProjectDirectory)\target\$(var.Configuration)\bin ?>
+<?define Major=1 ?>
+<?define Minor=0 ?>
+<?define Build=0 ?>
+<?define Revision=0 ?>
+<?define ProductCode={1305872e-167a-4793-ba63-3b49846a3380} ?>
+<?define PackageCode={2700c75a-c3ea-47ae-b04e-095c12b7d0a5} ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="$(var.ProductCode)" Name="DataShare Windows Service" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.CompanyName)" UpgradeCode="66aced07-38c7-42d9-b373-771dc08d7130">
+		<Package InstallerVersion="200" Compressed="yes" Id="$(var.PackageCode)" />
+		
+    <Media Id="1" Cabinet="DataShareServiceMsi.cab" EmbedCab="yes" />
+		<Binary Id="success_bmp" SourceFile="$(sys.SOURCEFILEDIR)success.bmp" />
+		<Binary Id="error_bmp" SourceFile="$(sys.SOURCEFILEDIR)error.bmp" />
+		<Binary Id="DataSource" SourceFile="DataSource.dll" />
+
+    <Property Id="DATASHARE_DATABASENAME">Datashare</Property>
+    <Property Id="DATASHARE_URL">http://datashare.gov.uk</Property>
+    <Property Id="SMTP_RELAY"></Property>
+    <Property Id="SMTP_REPLYTO"></Property>
+
+
+    <!--start Adding test db from msiext-->
+    <Binary Id="AsiUI_SuccessIco" SourceFile="bitmaps\Success.ico" />
+    <Binary Id="AsiUI_ErrorIco" SourceFile="bitmaps\Error.ico" />
+    <!-- active directory -->
+    <CustomAction Id="AsiUI_DirectoryObjectPicker" BinaryKey="AsiUI_ADBin" DllEntry="DirectoryObjectPicker" Execute="immediate" Return="check" />
+    <Binary Id="AsiUI_ADBin" SourceFile="ActiveDirectory.dll" />
+
+    <!-- database connection -->
+    <CustomAction Id="AsiUI_ODBC_Connect" BinaryKey="AsiUI_DataSrcBin" DllEntry="ODBC_Connect" Execute="immediate" Return="ignore" />
+    <CustomAction Id="AsiUI_ODBC_GetString" BinaryKey="AsiUI_DataSrcBin" DllEntry="ODBC_GetString" Execute="immediate" Return="ignore" />
+    <CustomAction Id="AsiUI_SQLDMO_ListAvailableSQLServers" BinaryKey="AsiUI_DataSrcBin" DllEntry="SQLDMO_ListAvailableSQLServers" Return="ignore" />
+    <Binary Id="AsiUI_DataSrcBin" SourceFile="DataSource.dll" />
+
+    <!-- string tools -->
+    <CustomAction Id="AsiUI_String_Replace" BinaryKey="AsiUI_StrToolsBin" DllEntry="String_Replace" Execute="immediate" Return="ignore" />
+    <CustomAction Id="AsiUI_Regex_Replace" BinaryKey="AsiUI_StrToolsBin" DllEntry="Regex_Replace" Execute="immediate" Return="ignore" />
+    <CustomAction Id="AsiUI_String_Trim" BinaryKey="AsiUI_StrToolsBin" DllEntry="String_Trim" Execute="immediate" Return="ignore" />
+    <CustomAction Id="AsiUI_Regex_Match" BinaryKey="AsiUI_StrToolsBin" DllEntry="Regex_Match" Execute="immediate" Return="ignore" />
+    <Binary Id="AsiUI_StrToolsBin" SourceFile="StringTools.dll" />
+
+
+    <Property Id="RUNTIME_DATABASE_LOGON_TYPE" Value="SqlAuth" />
+    <!--<Property Id="CREATE_DATABASE_LOGON_TYPE" Value="SqlAuth" />-->
+    <!--end Adding test db from msiext-->
+    
+    <!--<CustomAction Id="SQLDMO_ListAvailableSQLServers" BinaryKey="DataSource" DllEntry="SQLDMO_ListAvailableSQLServers" Execute="immediate" Return="ignore" />-->
+		<!--<CustomAction Id="ODBC_Connect" BinaryKey="DataSource" DllEntry="ODBC_Connect" Execute="immediate" Return="ignore" />-->
+
+		<!-- Step 1: Define the directory structure -->
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+        <Directory Id="LBR" Name="LBR">
+				  <Directory Id="INSTALLFOLDER" Name="DataShareService" >
+					<Directory Id="FOLDERWATCH" Name="FolderWatch"></Directory>
+					<Directory Id="EMAILTEMPLATES" Name="EmailTemplates"></Directory>
+				</Directory>
+        </Directory>
+			</Directory>
+			<!--<Directory Id="IISROOT">
+				<Directory Id="WEBINSTALLATIONDIR" Name="DataShareWeb"></Directory>
+
+			</Directory>-->
+		</Directory>
+		<!--Variable name	Description	Dimensions
+		WixUIBannerBmp	Top banner	493 × 58
+		WixUIDialogBmp	Background bitmap used on the welcome and completion dialogs	493 × 312
+		WixUIExclamationIco	Exclamation icon on the WaitForCostingDlg	32 × 32
+		WixUIInfoIco	Information icon on the cancel and error dialogs	32 × 32
+		WixUINewIco	Button glyph on the BrowseDlg	16 × 16
+		WixUIUpIco	Button glyph on the BrowseDlg	16 × 16-->
+
+		<WixVariable Id="WixUIBannerBmp" Value="topbanner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="banner.bmp" />
+		<!--<WixVariable Id="WixUILicenseRtf" Value="DatashareLicense.rtf" />-->
+		
+		
+		
+		<!-- Step 2: Define the features to be included with the package -->
+
+		<Feature Id="Complete" Title="DataShare" Level="1" Description="Datashare email notification service"
+						 Display="expand" ConfigurableDirectory="INSTALLFOLDER">
+
+			<Feature Id="DatashareService" Title="Data share service ">
+        <ComponentGroupRef Id="LBRINITIALFOLDER" />
+        <ComponentGroupRef Id="DatashareServiceComponents" />
+        <ComponentGroupRef Id="ExtraFolders" />
+        
+      </Feature>
+			
+		</Feature>
+		
+		<!-- test for DataSource::ConfigDataSource_SQLServer -->
+		<CustomAction Id="ConfigDataSource_Set_ODBC_FLAG" Property="ODBC_FLAG" Value="ODBC_ADD_DSN" />
+		<CustomAction Id="ConfigDataSource_Set_DSN_NAME" Property="DSN_NAME" Value="CaTestDSN" />
+		<CustomAction Id="ConfigDataSource_Set_DSN_MSSQL_SERVER" Property="DSN_MSSQL_SERVER" Value="[DATABASE_SERVER]" />
+		<CustomAction Id="ConfigDataSource_Set_DSN_MSSQL_NETWORK" Property="DSN_MSSQL_NETWORK" Value="DBMSSOCN" />
+		<CustomAction Id="ConfigDataSource_Set_DSN_MSSQL_DATABASE" Property="DSN_MSSQL_DATABASE" Value="[DATABASE_NAME]" />
+		<CustomAction Id="ConfigDataSource_Set_DSN_MSSQL_TRUSTED_CONNECTION" Property="DSN_MSSQL_TRUSTED_CONNECTION" Value="true" />
+		<CustomAction Id="ConfigDataSource_SQLServer" BinaryKey="DataSource" DllEntry="ConfigDataSource_SQLServer" Execute="immediate" Return="check" />
+		<InstallExecuteSequence>
+			 <!--dsn--> 
+			<Custom Action="ConfigDataSource_Set_ODBC_FLAG" After="RegisterTypeLibraries">NOT Installed</Custom>
+			<Custom Action="ConfigDataSource_Set_DSN_NAME" After="ConfigDataSource_Set_ODBC_FLAG">NOT Installed</Custom>
+			<Custom Action="ConfigDataSource_Set_DSN_MSSQL_SERVER" After="ConfigDataSource_Set_DSN_NAME">NOT Installed</Custom>
+			<Custom Action="ConfigDataSource_Set_DSN_MSSQL_NETWORK" After="ConfigDataSource_Set_DSN_MSSQL_SERVER">NOT Installed</Custom>
+			<Custom Action="ConfigDataSource_Set_DSN_MSSQL_DATABASE" After="ConfigDataSource_Set_DSN_MSSQL_NETWORK">NOT Installed</Custom>
+			<Custom Action="ConfigDataSource_Set_DSN_MSSQL_TRUSTED_CONNECTION" After="ConfigDataSource_Set_DSN_MSSQL_DATABASE"><![CDATA[(NOT Installed) AND NOT (DATABASE_LOGON_TYPE = "DatabaseAccount")]]></Custom>
+			<Custom Action="ConfigDataSource_SQLServer" After="ConfigDataSource_Set_DSN_MSSQL_TRUSTED_CONNECTION">NOT Installed</Custom>
+		</InstallExecuteSequence>
+
+
+
+		
+		
+
+		<UIRef Id="CaTestUI" />
+		
+		<UI Id="CaTestUI">
+
+			
+			
+			<DialogRef Id="ErrorDlg" />
+			<DialogRef Id="FatalError" />
+			<DialogRef Id="FilesInUse" />
+			<DialogRef Id="MsiRMFilesInUse" />
+			<DialogRef Id="PrepareDlg" />
+			<DialogRef Id="ProgressDlg" />
+			<DialogRef Id="ResumeDlg" />
+			<DialogRef Id="UserExit" />
+			<!--<DialogRef Id="ChooseDatabaseDlg" />-->
+			<DialogRef Id="EnterSMTPDialog"/>
+      <!--<DialogRef Id="ReviewInstallationDialog"/>-->
+			<Property Id="WIXUI_INSTALLDIR"
+								Value="INSTALLFOLDER" />
+
+
+			<TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+			<TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+			<TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+			<Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+			<Property Id="WixUI_Mode" Value="InstallDir" />
+
+			<DialogRef Id="BrowseDlg" />
+			<DialogRef Id="DiskCostDlg" />
+			<DialogRef Id="ErrorDlg" />
+			<DialogRef Id="FatalError" />
+			<DialogRef Id="FilesInUse" />
+			<DialogRef Id="MsiRMFilesInUse" />
+			<DialogRef Id="PrepareDlg" />
+			<DialogRef Id="ProgressDlg" />
+			<DialogRef Id="ResumeDlg" />
+			<DialogRef Id="UserExit" />
+
+			<Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+			<Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+
+			<Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+
+      <!--<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="ChooseDatabaseDlg">NOT Installed</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>-->
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="SelectDbDlg">NOT Installed</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+
+
+      <!--START IMPORT DIALOGS-->
+      <Publish Dialog="SelectDbDlg" Control="Next" Event="NewDialog" Value="RuntimeDbCredDlg">NOT Installed</Publish>
+      <Publish Dialog="SelectDbDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">NOT Installed</Publish>
+
+
+      <!--<Publish Dialog="DbCreateCredDlg" Control="Back" Event="NewDialog" Value="SelectDbDlg">NOT Installed</Publish>
+      <Publish Dialog="DbCreateCredDlg" Control="Next" Event="NewDialog" Value="DatabaseDlg">NOT Installed</Publish>-->
+
+      <Publish Dialog="RuntimeDbCredDlg" Control="Back" Event="NewDialog" Value="SelectDbDlg">NOT Installed</Publish>
+      <Publish Dialog="RuntimeDbCredDlg" Control="Next" Event="NewDialog" Value="EnterDatashareUrlDialog">NOT Installed</Publish>
+
+      <!--<Publish Dialog="DatabaseDlg" Control="Back" Event="NewDialog" Value="RuntimeDbCredDlg" Order="1">Installed</Publish>
+      <Publish Dialog="DatabaseDlg" Control="Back" Event="NewDialog" Value="RuntimeDbCredDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="DatabaseDlg" Control="Next" Event="NewDialog" Value="EnterDatashareUrlDialog" Order="2">1</Publish>-->
+
+
+      <!--END IMPORT DIALOGS-->
+			<!--<Publish Dialog="ChooseDatabaseDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="1">Installed</Publish>
+			<Publish Dialog="ChooseDatabaseDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">NOT Installed</Publish>
+			<Publish Dialog="ChooseDatabaseDlg" Control="Next" Event="NewDialog" Value="EnterDatashareUrlDialog" Order="2">1</Publish>-->
+
+
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="RuntimeDbCredDlg" Order="1">Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="RuntimeDbCredDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Next" Event="NewDialog" Value="EnterSMTPDialog" Order="2">1</Publish>
+
+      <!--<Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="ChooseDatabaseDlg" Order="1">Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="ChooseDatabaseDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Next" Event="NewDialog" Value="EnterSMTPDialog" Order="2">1</Publish>-->
+
+      <Publish Dialog="EnterSMTPDialog" Control="Back" Event="NewDialog" Value="EnterDatashareUrlDialog" Order="1">Installed</Publish>
+      <Publish Dialog="EnterSMTPDialog" Control="Back" Event="NewDialog" Value="EnterDatashareUrlDialog" Order="2">NOT Installed</Publish>
+      <Publish Dialog="EnterSMTPDialog" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2">1</Publish>
+
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="EnterSMTPDialog">1</Publish>
+			<Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+			<Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+			<Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+			<Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+			<Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+			<Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+
+
+
+
+
+      <!--<Publish Dialog="ReviewInstallationDialog" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">Installed</Publish>
+      <Publish Dialog="ReviewInstallationDialog" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="ReviewInstallationDialog" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">1</Publish>-->
+
+
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">Installed AND PATCH</Publish>
+
+			<Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+			<Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+			<Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+			<Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+			<Property Id="ARPNOMODIFY" Value="1" />
+
+		</UI>
+		
+
+
+			
+		
+		<UIRef Id="WixUI_Common" />
+	</Product>
+	<?include ChooseDatabaseUI.wxi ?>
+	<?include DatashareServiceUISMTPSettings.wxi ?>
+  <?include DatashareUrlUI.wxi ?>
+  <?include ReviewDialog.wxi ?>
+</Wix>

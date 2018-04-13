@@ -1,0 +1,617 @@
+﻿@model ViewControllerData
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Configuration;
+@using System.Data;
+@using DS.Domain;
+
+
+@{
+    var cols = "";
+    foreach (var c in ViewBag.Schema.Definition.Columns)
+    {
+        cols += String.Format(@"<td{1}><a href=""#"">${{{0}}}</a></td>", c.ColumnName, !c.IsShownInitially ? @" class='hidden'" : "");
+    }
+
+    var ajaxUrl = Html.Raw(String.Format("{0}", Request.Url.GetLeftPart(UriPartial.Path)).Replace("View/", "View/Ajax/"));
+    var defaultSort = ViewBag.Schema.Definition.DefaultSortColumn;
+    var defaultSortDirection = ViewBag.Schema.Definition.DefaultSortColumnDirection;
+
+    var i = 0;
+
+    var searchOperatorItems = new List<SelectListItem>();
+    searchOperatorItems.Add(new SelectListItem
+    {
+        Text = "contains",
+        Value = "contains"
+    });
+    searchOperatorItems.Add(new SelectListItem
+    {
+        Text = "is equal to",
+        Value = "isequalto"
+    });
+
+    var searchNumberOperatorItems = new List<SelectListItem>();
+    searchNumberOperatorItems.Add(new SelectListItem
+    {
+        Text = "greater than",
+        Value = "greaterthan"
+    });
+    searchNumberOperatorItems.Add(new SelectListItem
+    {
+        Text = "greater than or equal to",
+        Value = "greaterthanequalto"
+    });
+    searchNumberOperatorItems.Add(new SelectListItem
+    {
+        Text = "less than",
+        Value = "lessthan"
+    });
+    searchNumberOperatorItems.Add(new SelectListItem
+    {
+        Text = "less than or equal to",
+        Value = "lessthanequalto"
+    });
+    searchNumberOperatorItems.Add(new SelectListItem
+    {
+        Text = "is equal to",
+        Value = "isequalto"
+    });
+
+    var defaultFilterList = (IList<FilterCriteria>)ViewBag.PreFilter;
+    FilterCriteria defaultFilter = null;
+    if (defaultFilterList != null && defaultFilterList.Any())
+    {
+        defaultFilter = defaultFilterList[0];
+    }
+}
+
+@section HeaderContent{
+    <link rel="stylesheet" href="@Url.Content("/Content/css/libs/leaflet.css")" />
+    <link rel="stylesheet" href="@Url.Content("/Content/css/libs/MarkerCluster/MarkerCluster.css")" />
+    <link rel="stylesheet" href="@Url.Content("/Content/css/libs/MarkerCluster/MarkerCluster.Default.css")" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+        <link rel="stylesheet" href="@Url.Content("/Content/css/libs/MarkerCluster/MarkerCluster.Default.ie.css")" />
+    <![endif]-->
+}
+
+@section TitleContent
+{
+<span>View</span> @ViewBag.Schema.Title&nbsp;<a id="MoreDetail" href="#" title="more information about @ViewBag.Schema.Title">More info</a>
+}
+
+@section FooterScripts
+{
+    <script src="@Url.Content("/Scripts/libs/jquery.scrollTo-min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/libs/jquery-jtemplates.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/libs/leaflet.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/libs/leaflet.markercluster.js")"></script>
+    <script src="@Url.Content("/Scripts/libs/jscoord-1.1.js")"></script>
+    <script type="text/javascript" src="//www.google.com/jsapi"></script> 
+    <script type="text/javascript">
+        google.load('visualization', '1', { packages: ['corechart', 'geomap'] });
+    </script> 
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            ajaxUrl = '@(ajaxUrl)';
+            setGlobalVariables();
+            wireUpEvents();
+            setUpPage();
+            //Modal for more detail link
+            var htmlstuff = "<h2>@Html.Raw(ViewBag.Schema.Title)</h2> @Html.Raw(ViewBag.FullDescription)";
+            $('#MoreDetail').click(
+                function() {
+                    $.colorbox({ 'open': true, speed: 800, opacity: 0.5, html: htmlstuff, maxWidth: '500px' });
+                });
+            $('#Help').click(
+                function() {
+                    $.colorbox({ 'open': true, speed: 800, opacity: 0.5, href: '/View/Help', maxWidth: '500px' });
+                });
+
+        });
+    </script>
+    <p style="display: none"><textarea id="template" rows="0" cols="0"><!--
+	{#template MAIN}
+            {#foreach $T.Data as record}
+                {#include ROW root=$T.record}
+			{#/for}
+            @{if (ViewBag.Schema.Definition.TotalisableColumns.Count > 0)
+            {
+                <tr class="totals">
+                {#foreach $T.Totals as record}
+				    {#include ROWFOOTER root=$T.record}
+			    {#/for}
+                </tr>
+              }}
+	{#/template MAIN}
+		
+	{#template ROW}
+		<tr class="{#cycle values=['alt','']}">
+            @{foreach (var c in ViewBag.Schema.Definition.Columns)
+              {
+                  <td class="@(c.Type.ToLower() == "text" || c.Type.ToLower() == "url" || c.Type.ToLower() == "image" ? "left" : "")">
+                      @{
+                         if (c.Type.ToLower() == "currency")
+                         {
+                        <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null || $T.@(c.ColumnName)=='0' } <a href='#' title='Filter by {$T.@(c.ColumnName)}'>{numberToCurrency($T.@(c.ColumnName), '.', ',', 2, '£')}</a> {#else} <span class="empty">N/A</span> {#/if}</text>
+                         }
+                         else if (c.Type.ToLower() == "number")
+                         {
+                        <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null || $T.@(c.ColumnName)=='0' } <a href='#' title='Filter by {$T.@(c.ColumnName)}'>{formatNumber($T.@(c.ColumnName),'.',',')}</a> {#else} <span class="empty">N/A</span> {#/if}</text>
+                         }
+                         else if (c.Type.ToLower() == "image")
+                         {
+                        <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null} <img src='{$T.@(c.ColumnName)}' class="tableImage" alt=' ' />{#else} <span class="empty">N/A</span> {#/if}</text>
+                         }
+                         else if (c.Type.ToLower() == "url")
+                         {
+                        <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null} <a href='{$T.@(c.ColumnName)}' class='externalbutton button secondary float_left' title='Go to {$T.@(c.ColumnName)}'>View</a> {#else} <span class="empty">N/A</span> {#/if}</text>
+                         }
+                         else
+                         {
+                        <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null} <a href='#' title='Filter by {$T.@(c.ColumnName)}'>{$T.@(c.ColumnName)}</a> {#else} <span class="empty">N/A</span> {#/if}</text>
+                         }
+
+                         if (!String.IsNullOrEmpty(c.LinkedDataUri))
+                         {
+                         <text>{#if $T.@(c.ColumnName) != '' &&  $T.@(c.ColumnName) != null} <a href="#" onclick="openLinkedData('@(c.LinkedDataUri)','{$T.@(c.ColumnName)}'); return false;" title="View linked information for {$T.@(c.ColumnName)} (external link)" class="externallink float_left">linked data</a>{#/if}</text>
+                         }}
+                  </td>
+              }}
+		</tr>
+	{#/template ROW}
+
+    @{if (ViewBag.Schema.Definition.TotalisableColumns.Count > 0)
+      {
+	    <text>{#template ROWFOOTER}</text>			
+          foreach (var c in ViewBag.Schema.Definition.Columns)
+          {
+              if (c.Type.ToLower() == "currency")
+              {
+                    <td>
+                        {#if $T.@(c.ColumnName) != null}
+                            {numberToCurrency($T.@(c.ColumnName), '.', ',', 2, '£')}
+                        {#/if}
+                    </td>
+              }
+              else if (c.Type.ToLower() == "number")
+              {
+                  <td>
+                        {#if $T.@(c.ColumnName) != null}
+                            {formatNumber($T.@(c.ColumnName), '.', ',')}
+                        {#/if}
+                    </td>
+              }
+              else
+              {
+                    <td>
+                        {#if $T.@(c.ColumnName) != null}
+                            {$T.@(c.ColumnName)}
+                        {#/if}
+                    </td>                
+              }
+
+          }
+            
+	    <text>{#/template ROWFOOTER}</text>
+      }}
+
+--></textarea></p> 
+
+<p style="display:none"><textarea id="filterTemplate" rows="0" cols="0"><!--
+	{#template MAIN}
+			<div class="FilterHolder" style="display:none;">
+                    <div class="optioncontainer">
+                        <select id="ColumnToSearch{$T}" name="filter[{$T}].ColumnToSearch" class="ColumnToSearch selectbox small">
+                            @{
+                                foreach (var c in ViewBag.Schema.Definition.SortedColumns)
+                                {
+                                    <option value="@(c.ColumnName)" class="@(c.Type.ToLower())">@c.Title</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="searchByText optioncontainer">
+                        <select id="SearchOperator{$T}" name="filter[{$T}].SearchOperator" class="SearchOperator selectbox small">
+                            @{foreach (var c in searchOperatorItems)
+                              {
+                                <option value="@(c.Value)">@c.Text</option>
+                              }
+                            }
+                        </select>
+                        <input type="text" id="SearchText{$T}" name="filter[{$T}].SearchText" class="text-box searchText"/>
+                    </div>
+                    <div class="searchByNumber optioncontainer" style="display:none;">
+                        <select id="SearchOperatorNumber{$T}" name="filter[{$T}].SearchOperatorNumber" class="SearchOperatorNumber selectbox small">
+                            @{foreach (var c in searchNumberOperatorItems)
+                              {
+                                <option value="@(c.Value)">@c.Text</option>
+                              }
+                            }
+                        </select>
+                        <input type="text" id="SearchNumber{$T}" name="filter[{$T}].SearchNumber" class="text-box searchNumber number"/>
+                    </div>
+                    <div class="searchByDate optioncontainer" style="display:none;">
+                        &nbsp;<label for="From{$T}">from</label>&nbsp;
+                        <input type="text" id="From{$T}" name="filter[{$T}].From" class="text-box datebox searchDate from date"/>
+				        &nbsp;<label for="To{$T}">to</label>&nbsp;
+                        <input type="text" id="To{$T}" name="filter[{$T}].To" class="text-box datebox searchDate to date"/>
+                    </div>
+                    <input type="button" value="-"  title="Remove filter" class="button blue small removeFilter" />
+                    <input id="AddFilter" type="button"  title="Add another filter" value="+" class="button blue small disabled" />
+                    <input id="Filter" type="submit" value="Filter" class="button grey" />
+                    <input id="ClearFilter" type="button" value="Clear" class="button grey" />       
+                </div>    
+	{#/template MAIN}
+--></textarea></p> 
+
+}
+<a href="#" id="LeftScroll" class="leftscroll scrollbutton">Scroll left</a>
+<a href="#" id="RightScroll" class="rightscroll scrollbutton">Scroll right</a>  
+<div class="container_16">
+      <form method="post" id="SearchForm" action="@Request.RawUrl">
+       <input id="OrderByColumn" name="OrderByColumn" type="hidden" value="@defaultSort" />
+       <input id="OrderByDirection" name="OrderByDirection" type="hidden" value="@defaultSortDirection" />
+       @Html.Hidden("Download", "")
+       <div class="grid_1">
+            <a id="Help" href="#" title="Help with viewing data in DataShare" class="button blue large">Help</a>
+       </div>
+       <div class="grid_15 right" id="ActionBar">
+           <span class="label">Views:</span>
+           <div id="viewTypeList">
+            <input type="radio" id="showtable" name="radio" checked/><label title="View data in table format" class="tableChart" for="showtable">Table</label>
+	          <input type="radio" id="showcolumnchart" name="radio"/><label title="View data as a Column chart" class="columnChart" for="showcolumnchart">Column</label>
+	          <input type="radio" id="showbarchart" name="radio"/><label title="View data as a Bar chart" class="barChart" for="showbarchart">Bar</label>
+              <input type="radio" id="showlinechart" name="radio"/><label title="View data as a Line chart" class="lineChart" for="showlinechart">Line</label>
+              <input type="radio" id="showpiechart" name="radio"/><label title="View data as a Pie chart" class="pieChart" for="showpiechart">Pie</label>
+              @{if (ViewBag.Schema.Definition.HasLatLngColumns)
+                {
+                   <text><input type="radio" id="showmap" name="radio"/><label class="mapChart" for="showmap">Map</label></text>
+                }
+              }
+            </div>
+            <input type="hidden" id="chartType" name="chartType" value="table"/>
+       </div>
+
+     
+      <div class="grid_16">
+          <div id="DataSetFilter" class="filterbar clearfix">
+                    <a href="#" id="downloadData" class="button green large float_right" onclick="ga('send','event','@ViewBag.Schema.Title','Download CSV','Custom');">Download</a>
+              <div id="AddedFilters" class="clearfix">
+                  @if (defaultFilter == null && defaultFilterList == null)
+                  {
+                      <div class="FilterHolder">
+                          <div class="optioncontainer">
+                              <select id="ColumnToSearch0" name="filter[0].ColumnToSearch" class="ColumnToSearch selectbox small">
+                                  @{
+                                      foreach (var c in ViewBag.Schema.Definition.SortedColumns)
+                                      {
+                                          <option value="@(c.ColumnName)" class="@(c.Type.ToLower())">@c.Title</option>
+                                      }
+                                  }
+                              </select>
+                          </div>
+                          <div class="searchByText optioncontainer">
+                              <select id="SearchOperator0" name="filter[0].SearchOperator" class="selectbox small">
+                                  @{
+                                      foreach (var c in searchOperatorItems)
+                                      {
+                                          <option value="@(c.Value)">@c.Text</option>
+                                      }
+                                  }
+                              </select>
+                              <input type="text" id="SearchText0" name="filter[0].SearchText" class="text-box searchText" value=""/>
+                          </div>
+                          <div class="searchByNumber optioncontainer" style="display: none">
+                              <select id="SearchOperatorNumber0" name="filter[0].SearchOperatorNumber" class="selectbox small">
+                                  @{
+                                      foreach (var c in searchNumberOperatorItems)
+                                      {
+                                          <option value="@(c.Value)">@c.Text</option>
+                                      }
+                                  }
+                              </select>
+                              <input type="text" id="SearchNumber0" name="filter[0].SearchNumber" class="text-box searchNumber number" value=""/>
+                          </div>
+                          <div class="searchByDate optioncontainer" style="display: none;">
+                              &nbsp;<label for="From0">from</label>&nbsp;
+                              <input type="text" id="From0" name="filter[0].From" class="text-box datebox searchDate from date" value=""/>
+                              &nbsp;<label for="To0">to</label>&nbsp;
+                              <input type="text" id="To0" name="filter[0].To" class="text-box datebox searchDate to date" value=""/>
+                          </div>
+                          <input type="button" value="-"  title="Remove filter" class="button blue small hidden removeFilter" />
+                          <input id="AddFilter" type="button" value="+" title="Add another filter" class="button blue small disabled addFilter" />
+                          <input id="Filter" type="button" value="Filter" class="button grey disabled" />
+                          <input id="ClearFilter" type="button" value="Clear" class="button grey disabled" />   
+                      </div>
+                  }
+                  else
+                  {
+                      foreach (var filterCriteria in defaultFilterList)
+                      {
+                        var fIndx = defaultFilterList.IndexOf(filterCriteria);
+                        var lastItem = fIndx == defaultFilterList.Count - 1;
+                        <div class="FilterHolder">
+                          <div class="optioncontainer">
+                              <select id='@(String.Format("ColumnToSearch{0}",fIndx))' name='@(String.Format("filter[{0}].ColumnToSearch",fIndx))' class='ColumnToSearch selectbox small'>
+                                  @{
+                                      foreach (var c in ViewBag.Schema.Definition.SortedColumns)
+                                      {
+                                          <option value="@(c.ColumnName)" class="@(c.Type.ToLower())" @(filterCriteria.ColumnToSearch != null && filterCriteria.ColumnToSearch.ToLower() == c.ColumnName.ToLower() ? "selected" : "")>@c.Title</option>
+                                      }
+                                  }
+                              </select>
+                          </div>
+                          <div class="searchByText optioncontainer">
+                              <select id='@(String.Format("SearchOperator{0}",fIndx))' name='@(String.Format("filter[{0}].SearchOperator",fIndx))' class='selectbox small'>
+                                  @{
+                                      foreach (var c in searchOperatorItems)
+                                      {
+                                          <option value="@(c.Value)" @(filterCriteria.SearchOperator != null && filterCriteria.SearchOperator.ToLower() == c.Value.ToLower() ? "selected" : "")>@c.Text</option>
+                                      }
+                                  }
+                              </select>
+                              <input type="text" id='@(String.Format("SearchText{0}",fIndx))' name='@(String.Format("filter[{0}].SearchText",fIndx))' class="text-box searchText" value="@(filterCriteria.SearchText)"/>
+                          </div>
+                          <div class="searchByNumber optioncontainer" style="display: none">
+                              <select id='@(String.Format("SearchOperatorNumber{0}",fIndx))' name='@(String.Format("filter[{0}].SearchOperatorNumber",fIndx))' class='selectbox' small'>
+                                  @{
+                                      foreach (var c in searchNumberOperatorItems)
+                                      {
+                                          <option value="@(c.Value)" @(filterCriteria.SearchOperatorNumber != null && filterCriteria.SearchOperatorNumber.ToLower() == c.Value.ToLower() ? "selected" : "")>@c.Text</option>
+                                      }
+                                  }
+                              </select>
+                              <input type="text" id='@(String.Format("SearchNumber{0}",fIndx))' name='@(String.Format("filter[{0}].SearchNumber",fIndx))' class='text-box' searchNumber number' value="@(filterCriteria.SearchNumber)"/>
+                          </div>
+                          <div class="searchByDate optioncontainer" style="display: none;">
+                              &nbsp;<label for='@(String.Format("From{0}",fIndx))'>from</label>&nbsp;
+                              <input type="text" id='@(String.Format("From{0}",fIndx))' name='@(String.Format("filter[{0}].From",fIndx))' class="text-box datebox searchDate from date" value="@(filterCriteria.From)"/>
+                              &nbsp;<label for='@(String.Format("To{0}",fIndx))'>to</label>&nbsp;
+                              <input type="text" id='@(String.Format("To{0}",fIndx))' name='@(String.Format("filter[{0}].To",fIndx))' class="text-box datebox searchDate to date" value="@(filterCriteria.To)"/>
+                          </div>
+                          @if (lastItem)
+                          {
+                              <input type="button" value="-"  title="Remove filter" class="button blue small removeFilter" />
+                              <input id="AddFilter" type="button" value="+" title="Add another filter" class="button blue small disabled addFilter" />
+                              <input id="Filter" type="button" value="Filter" class="button grey disabled" />
+                              <input id="ClearFilter" type="button" value="Clear" class="button grey disabled" />
+                          }
+                          else
+                          {
+                              <input type="button" value="-"  title="Remove filter" class="button blue small removeFilter" />
+                          }
+                      </div>
+                      }
+                  }      
+              </div>                    
+                    <div id="TempFilterHolder" class="hidden"></div>
+                    
+                    <a href="#" id="EditColumns">Edit columns</a>
+                    <ul id="EditColumnList" class="hidden">
+                    @{
+                        var index = 0;
+                        foreach (DataSetSchemaColumn c in ViewBag.Schema.Definition.SortedColumns)
+                        {
+                            <li>
+                                <label for="Col@(index)">@c.Title</label>
+                                <input type="checkbox" id="Col@(index)" name="VisibleColumns" @(c.IsShownInitially ? "checked='checked'" : "") value="@(index)_@(c.ColumnName)"/>
+                            </li>
+                            index++;
+                        }
+                    }
+                    </ul>                    
+                
+          </div>
+          <div id="DataBody" class="tableborder">
+              <table id="DataSetList">
+                <thead>
+                    <tr style="">
+                    @{
+                        if (Model.Data != null)
+                        {
+                            foreach (DataColumn column in Model.Data.Columns)
+                            {
+                                var def = ViewBag.Schema.Definition.Column(column.ColumnName); 
+                                <th class="@(def.IsDefaultSort ? def.DefaultSortDirection : "") @def.Type.ToLower() @(def.Type.ToLower() == "currency" || def.Type.ToLower() == "number" ? "" : "left")"><a href="@column.ColumnName" title="@def.HelpText"><span>@def.Title</span></a></th>                                     
+                            }
+                        }
+                    }
+                    </tr>
+                </thead>
+                <tbody id="dataList">
+                    @{if (Model.Data != null)
+                      {
+                          foreach (DataRow row in Model.Data.Rows)
+                          { 
+                            <tr @(Model.Data.Rows.IndexOf(row) % 2 == 0 ? "class=alt" : "")>
+                                @foreach (DataColumn column in Model.Data.Columns)
+                                {
+                                    var def = ViewBag.Schema.Definition.Column(column.ColumnName);
+                                    var data = "";
+                                    var type = ((string)def.Type).ToLower();
+                                    var value = row[column].ToString();
+                                    if (String.IsNullOrEmpty(value))
+                                    {
+                                        <td class="empty">N/A</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="@(type.ToLower() == "text" || type.ToLower() == "url" || type.ToLower() == "image" ? "left" : "")">
+                                        @{switch (type)
+                                          {
+                                              case "currency":
+                                                  data = String.Format("{0:c}", row[column]);
+                                                        <text><a href="#" title="Filter by @(data)">@data</a></text>
+                                                                                               break;
+                                              case "number":
+                                                                                               data = String.Format("{0:#,0.#########}", row[column]);
+                                                        <text><a href="#" title="Filter by @(data)">@data</a></text>
+                                                                                               break;
+                                              case "datetime":
+                                                                                               data = String.Format("{0:dd/MM/yyyy}", row[column]);
+                                                        <text><a href="#" title="Filter by  @(data)">@data</a></text>
+                                                                                                break;
+                                              case "image":
+                                                                                                data = row[column].ToString();
+                                                        <text><img src="@data" alt=" " class="tableImage" /></text>
+                                                                   break;
+                                              case "url":
+                                                                   data = row[column].ToString();
+                                                        <text><a href="@data" title="Go to @data" class="externalbutton button secondary float_left">View</a></text>
+                                                                                      break;
+                                              default:
+                                                                                      data = row[column].ToString();
+                                                        <text><a href="#" title="Filter by @(data)">@data</a></text>
+                                                                                               break;
+                                          }}
+                                        @{if (!String.IsNullOrEmpty(def.LinkedDataUri))
+                                          {
+                                              var linkedDataUrl = def.LinkedDataUri.Replace("#Data#", row[column].ToString());
+                                              <a href="@(linkedDataUrl)" title="View linked information for @(data) (external link)" class="externallink float_left">linked data</a>
+                                          }}
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                          }
+
+                          if (ViewBag.Schema.Definition.TotalisableColumns.Count > 0)
+                          {
+                                <tr class="totals" style="border-top:solid 2px #ccc">
+                                @{
+                              DataRow dataRow = Model.Totals.Rows[0];
+                              foreach (DataColumn column in Model.Totals.Columns)
+                              {
+
+                                  if (dataRow[column.ColumnName] != null)
+                                  {
+                                      //Get column definition
+                                      var def = ViewBag.Schema.Definition.Column(column.ColumnName);
+                                      var type = def.Type.ToString();
+
+                                      //display depending on tyoe                              
+                                      if (type.ToLower() == "currency")
+                                      {    
+                                                <td class="right">
+                                                    @String.Format("{0:c}", dataRow[column.ColumnName])                                        
+                                                </td>
+                                      }
+                                      else if (type.ToLower() == "number")
+                                      {
+                                                <td class="right">
+                                                    @String.Format("{0:#,0.##}", dataRow[column.ColumnName])
+                                                </td>
+                                      }
+                                      else
+                                      { 
+                                            <td>&nbsp;</td>
+                                      }
+                                  }
+                              }
+                                }
+                                </tr>
+                          }
+
+                      }
+                      else
+                      { 
+                        <tr>
+                            <td colspan="@ViewBag.Schema.Definition.Columns.Count">No records exist</td>
+                        </tr>
+                      }
+                }
+                </tbody>              
+            </table>
+            <div id="visualisationHolder">
+                <div id="visualisations" class="clearfix loading">
+                    <input type="hidden" id="getVisualisationData" name="getVisualisationData" value="false" />
+                    <div id="visualisationFilter">
+                        <div class="inlineblock">
+                            <label for="xAxis">Category axis</label>
+                            <select id="xAxis" name="xAxis" class="selectbox small">
+                                @{
+                                    foreach (var c in ViewBag.Schema.Definition.NonNumuericColumns)
+                                    {
+                                        if (c.Type == "DateTime")
+                                        {
+                                        <text><option value="@(c.Type)#@(c.ColumnName)#Day">@(c.Title) by day</option></text>
+                                        <text><option value="@(c.Type)#@(c.ColumnName)#Month">@(c.Title) by month</option></text>
+                                        <text><option value="@(c.Type)#@(c.ColumnName)#Year">@(c.Title) by year</option></text>
+                                        }
+                                        else if (c.Type != "Lat/Lng")
+                                        {
+                                        <text><option value="@(c.Type)#@(c.ColumnName)">@(c.Title)</option></text>        
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        @{ 
+                            var cssClass = ViewBag.Schema.Definition.NumuericColumns.Count == 0 ? "hidden" : "inlineblock";
+                            <div class="@(cssClass)">
+                                <label for="yAxis">Value axis</label>
+                                <select id="yAxis" name="yAxis" class="selectbox small">
+                                        @{foreach (var c in ViewBag.Schema.Definition.NumuericColumns)
+                                          {
+                                            <text><option value="@(c.Type)#@(c.ColumnName)">@(c.Title)</option></text>   
+                                          }
+                                    }
+                                </select>
+                            </div>
+                            <div class="@(cssClass)">
+                                <label for="yAxisAggregate">As</label>
+                                <select id="yAxisAggregate" name="yAxisAggregate" class="selectbox small">
+                                        <option value="sum">Sum</option>
+                                        <option value="count">Count</option>
+                                        <option value="avg">Average</option>
+                                </select>
+                        
+                            </div>
+                        
+                        }
+                        <input type="button" id="refreshVisualisation" class="button blue" value="Update" />
+                    </div>
+                    <div>
+                        <div id="aggregateError" class="warning clearboth"></div>
+                        <div id="visualisationGraph"></div>
+                        <div id="visualisationMap"></div>
+                        <div id="chartPaging">
+                            <div class="numberofrows">
+                                <a href="#" id="chartPrev" class="button small black">prev</a> page <span id="graphCurrentPage">1</span> of <span id="graphPageCount"></span>
+                                <a href="#" id="chartNext" class="button small black">next</a>
+                            </div>
+                        </div> 
+                        <input type="hidden" id="chartCurrentPage" name="chartCurrentPage" value="1" />
+                        <input type="hidden" id="chartNumberToShow" name="chartNumberToShow" value="@(ConfigurationManager.AppSettings["DefaultGraphPageSize"])" />
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="tablefooter clearfix">
+            <div id="tablePaging" class="pagingrow">                   
+                <span class="numberofrows">
+                    Show <select id="numberToShow" name="numberToShow">
+                            <option value="10" @(ViewBag.NumberToShow == 10 ? "selected" : "")>10</option>
+                            <option value="50" @(ViewBag.NumberToShow == 50 ? "selected" : "")>50</option>
+                            <option value="100" @(ViewBag.NumberToShow == 100 ? "selected" : "")>100</option>
+                            <option value="200" @(ViewBag.NumberToShow == 200 ? "selected" : "")>200</option>
+                        </select> rows</span><span class="backnextnav">
+                    <input type="button" id="prev" value="prev" class="button grey"/>
+                    &nbsp;Page <span id="pageNum">@Model.CurrentPage</span> of <span id="totalPages">@Model.TotalPages &nbsp;</span>
+                    <input type="button" id="next" value="next" class="button grey @(Model.TotalPages <= 1 ? "disabled" : "")"/>
+                    @Html.Hidden("CurrentPage", "1")
+                </span>
+                <span class="gotopage">Go to page: @Html.TextBox("PageNumber", "", new { @class = "text-box tiny" })
+                    <input type="button" id="GoToPage" value="go" class="button grey" />&nbsp;
+                </span> 
+            </div> 
+                      
+        </div>
+    </div>    
+    </form>
+ </div>
+ 

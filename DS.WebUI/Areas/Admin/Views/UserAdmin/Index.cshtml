@@ -1,0 +1,37 @@
+﻿@model System.Web.Security.MembershipUserCollection
+@{
+    ViewBag.Title = "Users - User admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    DataShare users
+}
+
+<div class="container_16">
+    <div class="clearfix">
+        @Html.Raw(ViewBag.Message)
+        @Html.ActionLink("Create new user", "CreateUser", new { }, new { @class = "button green" })
+        <ul class="biglist clickablelistrows">
+            @foreach (var user in Model.Cast<MembershipUser>())
+            {
+                <li class="clearfix">
+                    <h4 class="grid_6">@Html.ActionLink(user.UserName, "EditUser", new { userName = user.UserName })</h4>
+                    <div class="grid_6">@user.Email</div>
+                    <div class="prefix_1 grid_3 actionCol right">
+                        @Html.ActionLink("Edit", "EditUser", new { userName = user.UserName }, new { @class = "button blue" })
+                        <a href="#" class="button small red delete">Delete</a>
+                        <div class="deleteConfirmation">
+                            <strong>Are you sure?</strong> This will remove the user.<br />
+                            @Html.ActionLink("Yes", "DeleteUser", new { userName = user.UserName }, new { @class = "button small red" }) 
+                            <a href="" class="button small grey noDelete">No</a>
+                        </div>
+                        
+                    </div>
+                </li>
+            }
+        </ul>
+
+    </div>
+</div>

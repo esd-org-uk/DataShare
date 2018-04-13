@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Problem loading the page";
+    ViewBag.BodyClass = "ErrorPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container_16 errorbox clearfix" style="margin-top:30px">
+    <div class="grid_10">
+        <h3>We have a problem...</h3>
+        <p>We're really sorry, but something went wrong when we were trying to load the page. If this problem keeps occuring please <a href="/contactus/">contact us</a> and let us know.</p>
+        <p>If you don't want to tell us, that's fine as well. We're logging and checking all errors on the site, and we'll try to get the problem fixed as quickly as possible.</p>
+        <p><a href="/">Go back to the homepage and try again.</a></p>
+    </div>
+    <div class="grid_6">
+        <img src="@Url.Content("/Content/images/big/sadcloud.jpg")" alt="Black cloud on a sign." />
+    </div>
+    
+</div>
+
+

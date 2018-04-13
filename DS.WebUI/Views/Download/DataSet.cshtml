@@ -1,0 +1,96 @@
+﻿@using System.Collections.Specialized;
+@using System.Collections;
+@model IList<DS.Domain.DataSetDetail>
+
+@section TitleContent
+{
+	Download data
+}
+
+@section FooterScripts
+{
+<script type="text/javascript">
+    $(document).ready(function () {
+        var htmlstuff = "<h2>@Html.Raw(ViewBag.SchemaTitle)</h2>@Html.Raw(ViewBag.FullDescription)";
+        $('#MoreDetail').click(function () {
+            $.colorbox({ 'open': true, speed: 800, opacity: 0.5, html: htmlstuff, maxWidth: '500px' });
+        });
+    });
+</script>
+}
+
+<div class="container_16">
+	<div class="grid_16">
+	  <h3>Files available for <span>@ViewBag.SchemaTitle</span>&nbsp;<a id="MoreDetail" href="#" title="more information about @ViewBag.SchemaTitle">More info</a></h3>
+	  <form method="post" action="@Request.RawUrl" name="DataSetFilter" id="DataSetFilter" class="filterbar">
+				<input id="sId" name="sId" type="hidden" value="@ViewBag.SchemaId" />
+				<label for="SearchText">Title</label>
+				@Html.TextBox("SearchText", "", new { @class = "text-box" })
+				
+				<label for="from">and updated between</label>
+				@Html.TextBox("from","", new {@class="datebox" })
+				<label for="to">and</label>
+				@Html.TextBox("to", "", new { @class = "datebox" })
+
+				<a href="#" onclick="document['DataSetFilter'].submit()" class="button large grey search">Search</a>
+	  </form>
+      <div class="tableborder webGrid">
+	  @{
+		  if (Model.Count == 0)
+			  {
+				  <table id="DataSetList">
+					<tbody>
+						<tr class="noresults">
+                            <td><p class="information">No datasets match your search.</p></td>
+						</tr>
+					</tbody>
+				</table>
+			  }
+		  else
+		  {
+              var version = String.Format("?version={0}", DateTime.Today.ToShortDateString());
+              
+			  //temporary hack to handle report files
+			  if (ViewBag.IsExternalData)
+			  {
+				  var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, sortFieldName: "sortField");
+				  grid.Pager(WebGridPagerModes.NextPrevious);
+			  			  @grid.GetHtml(
+                    tableStyle: "webGrid",
+                    htmlAttributes: new { id = "DataSetList" },
+                    headerStyle: "header",        
+                    alternatingRowStyle: "alt",
+                    columns: grid.Columns(
+                             grid.Column("Title", style: "left titlecol Title"),
+                             grid.Column("DateCreated", "Updated", style: "left datecol DateCreated"),
+                            grid.Column("Download", format: (item) => 
+                                                    item.FileType == "KML" ? Html.Raw(string.Format(@"<a href=""http://maps.google.com/maps?f=q&hl=en&ie=UTF8&q={0}"" title=""View {1} on a Google maps"" class=""download button green MAP"" onclick=""ga('send','event','{4}','View KML','{1}');""><span class=""icon"">Map</span>Map</a> <a href=""{0}"" title=""Download {1} as KML"" class=""download button green KML"" onclick=""_gaq.push(['_trackEvent','{4}','Download KML','{1}']);""><span class=""icon"">Download as </span>KML {3}</a>", String.Format("{0}{1}", item.FileUrl, version), item.Title, item.CsvFileSizeText, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSizeText) : "", item.Schema.Title))
+                                                                           : item.FileType == "RSS" ? Html.Raw(string.Format(@"<a href=""{0}"" title=""Download {1} as {2}"" class=""download button green {2}"" onclick=""ga('send','event','{4}','Download {2}','{1}');""><span class=""icon"">Download as </span>{2} {3}</a>", item.FileUrl, item.Title, item.FileType, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSizeText) : "", item.Schema.Title))
+                                                                                                    : Html.Raw(string.Format(@"<a href=""{0}"" title=""Download {1} as {2}"" class=""download button green {2}"" onclick=""ga('send','event','{4}','Download {2}','{1}');""><span class=""icon"">Download as </span>{2} {3}</a>", String.Format("{0}{1}", item.FileUrl, version), item.Title, item.FileType, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSizeText) : "", item.Schema.Title)), style: "actioncol last", canSort: false)
+                    )
+                )
+              }
+              else
+			  {
+				  var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, sortFieldName: "sortField");
+				  grid.Pager(WebGridPagerModes.NextPrevious);
+				  @grid.GetHtml(tableStyle: "webGrid",
+					htmlAttributes: new { id = "DataSetList" },
+					headerStyle: "header",
+					alternatingRowStyle: "alt",
+					columns: grid.Columns(
+							 grid.Column("title","Title", style: "left titlecol Title"),
+							 grid.Column("DateCreated", "Updated", style: "left datecol DateCreated"),
+							 grid.Column("NumOfRows", "No. of rows", style: "NumOfRows"),
+                                                                                grid.Column("Download", format: (item) => Html.Raw(string.Format(@"<a href=""{0}/{1}/CSV{6}"" title=""Download {4} as CSV"" class=""download button green CSV"" onclick=""ga('send','event','{5}','Download CSV','{4}');""><span class=""icon"">Download as </span>CSV <span class=""subtle"">({2})</span></a><a href=""{0}/{1}/XML{6}"" title=""Download {4} as XML"" class=""download button green XML"" onclick=""_gaq.push(['_trackEvent','{5}','Download XML','{4}']);""><span class=""icon"">Download as </span>XML <span class=""subtle"">({3})</span></a>", Request.Path, item.FriendlyUrl, item.CsvFileSizeText, item.XmlFileSizeText, item.Title, item.Schema.Title, version)), style: "actioncol last", canSort: false)
+					)
+				)
+			  }
+		  }
+		}
+        </div>
+	</div>
+</div>
+
+ 
+	

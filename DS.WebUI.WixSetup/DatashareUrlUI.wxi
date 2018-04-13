@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <UI>
+
+      <Dialog Id="EnterDatashareUrlDialog" Width="370" Height="270" Title="!(loc.EnterDatashareUrlDialog_Header)">
+
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+          <Publish Property="DATASHARE_URL" Value="[DATASHARE_URL]"></Publish>
+          <Publish Property="USESSL_FORADMIN" Value="[USESSL_FORADMIN]"></Publish>
+          <Publish Property="INSTALL_IIS_SITE" Value="[INSTALL_IIS_SITE]"></Publish>
+          <!--<Condition Action="disable"><![CDATA[DATASHARE_URL = "" ]]></Condition>
+          <Condition Action="enable"><![CDATA[DATASHARE_URL <> "" ]]></Condition>-->
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="DataShare website domain must be filled in">(DATASHARE_URL = "" )</Publish>
+          <Publish Property="ERROR_TITLE" Value="DataShare website domain must be filled in">(DATASHARE_URL = "")</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+
+        </Control>
+
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Please enter DataShare website domain/website name." />
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter DataShare website domain" />
+
+        <Control Id="InstallIISSite" Type="RadioButtonGroup" X="30" Y="120" Width="330" Height="30" Property="INSTALL_IIS_SITE" >
+          <RadioButtonGroup Property="INSTALL_IIS_SITE">
+            <RadioButton Value="True" X="0" Y="0" Width="330" Height="15" Text="!(loc.Install_iis_site_radio_yes)" />
+            <RadioButton Value="False" X="0" Y="15" Width="330" Height="15" Text="!(loc.Install_iis_site_radio_no)" />
+          </RadioButtonGroup>
+          
+
+          <!--<Condition Action="hide">NOT LocalDatabaseServer = "yes" AND NOT SERVICE_USERNAME</Condition>
+          <Condition Action="show">LocalDatabaseServer = "yes" OR SERVICE_USERNAME</Condition>-->
+        </Control>
+
+
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+        <Control Id="DatashareUrlLabel" Type="Text" X="20" Y="50" Width="290" Height="20" Text="DataShare website domain: (e.g. data.mycouncil.gov.uk)"></Control>
+        <Control Id="DatashareUrl" Type="Edit" X="30" Y="70" Width="200" Height="18" Property="DATASHARE_URL" Text="[DATASHARE_URL]"></Control>
+        
+        <Control Id="UseSSLCheckBox" Type="CheckBox" X="30" Y="90" Width="290" Height="20" Property="USESSL_FORADMIN" CheckBoxValue="1" Text="Use HTTPS for admin section of DataShare(Certificate needed - you must manually apply the certificate to the website in IIS).">
+
+
+        </Control>
+        
+      </Dialog>
+    </UI>
+
+  </Fragment>
+</Include>

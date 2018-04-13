@@ -1,0 +1,11 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section TitleContent
+{
+View data
+}
+<div class="container_16">
+    @Html.Partial("_schemas", Model)
+</div>

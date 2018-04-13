@@ -1,0 +1,339 @@
+﻿@model DS.Domain.SystemConfigurationViewModel
+@{
+    ViewBag.Title = "System Configuration - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+	//ViewBag.ExtraButtons = "<a href='/Admin/Category/Create' class='button green float_right'>Create new</a>";
+}
+
+@section TitleContent
+{
+	Edit system configuration
+}
+
+<div class="container_16">
+
+    @using (Html.BeginForm("Index", "SystemConfig", FormMethod.Post, ""))
+    {
+        <input type="submit" value="Save" class="button large green float_right"/>    
+        <div class="clear"></div>
+
+        <fieldset class="well">
+            <legend>Council details</legend>
+
+            <div class="editor-field">
+                @Html.LabelFor(x => x.ConfigurationObject.CouncilName)
+                @Html.EditorFor(x => x.ConfigurationObject.CouncilName)
+                <span class="helptext">The name of the Authority.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.CouncilName)
+            </div>      
+            <div class="editor-field">
+                @Html.LabelFor(x => x.ConfigurationObject.CouncilUrl)
+                @Html.EditorFor(x => x.ConfigurationObject.CouncilUrl)
+                <span class="helptext">The URL to the council's main web site.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.CouncilUrl)
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.CouncilUri)
+                @Html.EditorFor(x => x.ConfigurationObject.CouncilUri)
+                <span class="helptext">The URI of the Authority's entry on the DCLG linked open data portal. e.g. http://opendatacommunities.org/id/london-borough-council/redbridge </span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.CouncilUri)
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.CouncilSpatialUri)
+                @Html.EditorFor(x => x.ConfigurationObject.CouncilSpatialUri)
+                <span class="helptext">The URI of the Authority's entry on the ONS linked open data portal. e.g. http://statistics.data.gov.uk/id/statistical-geography/E09000026 <br/>Changing this will reset the map view settings below.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.CouncilSpatialUri)
+            </div>
+       
+      
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.AnalyticsTrackingRef)
+                @Html.EditorFor(x => x.ConfigurationObject.AnalyticsTrackingRef)
+                <span class="helptext">The tracking ID of your Google Analytics property. Leave empty if you do not wish to use Google Analytics.</span>
+                @Html.ValidationMessageFor(x=>x.ConfigurationObject.AnalyticsTrackingRef)
+            </div>
+            
+            
+        </fieldset>
+        <fieldset class="well">
+            <legend>Email settings</legend>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.SendEmailForFeedback)
+                @Html.EditorFor(x => x.ConfigurationObject.SendEmailForFeedback)
+                <span class="helptext">The email address to send to whenever a contact us form is submitted. Leave blank if you do not wish to have an email sent each time a contact us form entry is submitted.</span>
+                
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.SmtpServer)
+                @Html.EditorFor(x => x.ConfigurationObject.SmtpServer)
+                <span class="helptext">The smtp server to to use when sending email. This is <strong>required</strong> if feedback email is set.</span>
+                
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.SmtpUsername)
+                @Html.EditorFor(x => x.ConfigurationObject.SmtpUsername)
+                <span class="helptext">The smtp username to use for stmp credentials. Leave blank if smtp server does not need a credential to send emails.</span>
+                
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.SmtpPassword)
+                @Html.PasswordFor(x => x.ConfigurationObject.SmtpPassword,new {@class="text-box single-line"})
+                <span class="helptext">The smtp password to use for stmp credentials. Leave blank if smtp server does not need a credential to send emails.</span>
+                
+            </div>
+        </fieldset>
+        <fieldset class="well">
+            <legend>Map view</legend>
+
+            <div class="editor-field">
+                @Html.LabelFor(x => x.ConfigurationObject.MapCentreLatitude)
+                @Html.TextBoxFor(x => x.ConfigurationObject.MapCentreLatitude, new {type="number", @class="text-box single-line", step="any"})
+                <span class="helptext">The latitude of the point you wish any map view to be centred on. Alternatively, drag the map marker below.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.MapCentreLatitude)
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.MapCentreLongitude)
+                @Html.TextBoxFor(x => x.ConfigurationObject.MapCentreLongitude, new {type="number", @class="text-box single-line", step="any"})
+                <span class="helptext">The longitude of the point you wish any map view to be centred on.Alternatively, drag the map marker below.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.MapCentreLongitude)
+            </div>
+            <div class="editor-field">
+
+                @Html.LabelFor(x => x.ConfigurationObject.MapDefaultZoom)
+                @Html.TextBoxFor(x => x.ConfigurationObject.MapDefaultZoom, new {type="number", @class="text-box single-line"})
+                <span class="helptext">The default zoom level you would like any map view to use from 1 to 18, where 1 is the entire world and 18 is the individual streets. Alternatively, adjust the zoom level on the map below.</span>
+                @Html.ValidationMessageFor(x => x.ConfigurationObject.MapDefaultZoom)
+            </div>
+            <div id="OpenMap" class="float_right"></div>
+        </fieldset>
+        <div class="clearfix"></div>
+        <p>
+            <input type="submit" value="Save" class="button large green float_right"/>    
+        </p>
+     
+        
+    }
+    
+
+</div>
+
+
+<script>
+    $(function () {
+        $('#radio').buttonset();
+        //Hide all disabled items by default
+        $('li.disabled').hide();
+        $('#radio').click(function (e) {
+            if ($(e.target).text() == "Offline") {
+                $('li.disabled', '.biglist').fadeIn(400);
+                $('li:not(.disabled)', '.biglist').fadeOut(400);
+            }
+            else if ($(e.target).text() == "Online") {
+                $('li.disabled').fadeOut(400);
+                $('li:not(.disabled)', '.biglist').fadeIn(400);
+            }
+            else {
+                $('li', '.biglist').fadeIn(400);
+            }
+            return false;
+        });
+    });
+</script>
+
+@section HeaderContent
+{
+    <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <script src="//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src="@Url.Content("/Scripts/libs/jscoord-1.1.js")"></script>
+}
+@section FooterScripts
+{
+    <script type="text/javascript">
+
+        function loadSpatialMapLayer(spatialGeoUrl) {
+            $.ajax({
+                url: spatialGeoUrl,
+                success: function(data) {
+                    var polygon = $(data.result.primaryTopic.extent.asgml).find("gml\\:poslist");
+                    var coordinateString = polygon.text();
+                    var coordinateArray = coordinateString.split(' ');
+                    var path = [];
+                    for (var i = 0; i < coordinateArray.length - 1; i += 2) {
+                        var osGridRef = new OSRef(coordinateArray[i], coordinateArray[i + 1]);
+                        var latlngObj = osGridRef.toLatLng(osGridRef);
+                        latlngObj.OSGB36ToWGS84();
+                        var point = L.latLng(latlngObj.lat, latlngObj.lng);
+                        path.push(point);
+                    }
+                    var boundary = L.polygon(path, { fill: false });
+                    layerGroup.clearLayers();
+                    layerGroup.addLayer(boundary).addTo(map);
+                    var boundaryBounds = boundary.getBounds();
+                    var boundaryCenter = boundaryBounds.getCenter();
+                    map.fitBounds(boundaryBounds, { animate: true });
+                    marker.setLatLng(boundaryCenter);
+                    var zoom = map.getZoom();
+                    $('#ConfigurationObject_MapCentreLatitude').val(boundaryCenter.lat);
+                    $('#ConfigurationObject_MapCentreLongitude').val(boundaryCenter.lng);
+                    $('#ConfigurationObject_MapDefaultZoom').val(zoom);
+                }
+            });
+        }
+
+        function loadSpatialMapLayerIE(spatialGeoUrl) {
+            if (window.XDomainRequest) {
+                
+                var xdr = new XDomainRequest();
+                var query = spatialGeoUrl;
+                xdr.onload = function() {
+                        var data = $.parseJSON(xdr.responseText);
+                        var polygon = $(data.result.primaryTopic.extent.asgml).find("gml\\:poslist");
+                        var coordinateString = polygon.text();
+                        var coordinateArray = coordinateString.split(' ');
+                        var path = [];
+                        for (var i = 0; i < coordinateArray.length - 1; i += 2) {
+                            var osGridRef = new OSRef(coordinateArray[i], coordinateArray[i + 1]);
+                            var latlngObj = osGridRef.toLatLng(osGridRef);
+                            latlngObj.OSGB36ToWGS84();
+                            var point = L.latLng(latlngObj.lat, latlngObj.lng);
+                            path.push(point);
+                        }
+                        var boundary = L.polygon(path, { fill: false });
+                        layerGroup.clearLayers();
+                        layerGroup.addLayer(boundary).addTo(map);
+                        var boundaryBounds = boundary.getBounds();
+                        var boundaryCenter = boundaryBounds.getCenter();
+                        map.fitBounds(boundaryBounds, { animate: true });
+                        marker.setLatLng(boundaryCenter);
+                        var zoom = map.getZoom();
+                        $('#ConfigurationObject_MapCentreLatitude').val(boundaryCenter.lat);
+                        $('#ConfigurationObject_MapCentreLongitude').val(boundaryCenter.lng);
+                        $('#ConfigurationObject_MapDefaultZoom').val(zoom);
+                        //alert(boundary);
+
+                    };
+                    xdr.onerror = function() { /* error handling here */
+                        alert("error loading the spatial layer");
+                    };
+                    xdr.ontimeout = function () {
+                        alert("timed out loading the spatial layer");
+                    };
+                // this also needs to be set
+                    xdr.onprogress = function() {
+                        window.console.log('progress');
+                    };
+                    xdr.open('GET', query);
+                    xdr.send();
+             
+            }
+        }
+
+        var layerGroup = L.layerGroup();
+
+
+        @if (Model.ConfigurationObject.MapCentreLatitude != "" && Model.ConfigurationObject.MapCentreLongitude != "")
+        {
+            <text>
+                var map = L.map('OpenMap').setView([@Model.ConfigurationObject.MapCentreLatitude, @Model.ConfigurationObject.MapCentreLongitude], @Model.ConfigurationObject.MapDefaultZoom);
+                var marker = L.marker([@Model.ConfigurationObject.MapCentreLatitude, @Model.ConfigurationObject.MapCentreLongitude], { draggable: true }).addTo(map);
+            </text>
+        }
+        else
+        {
+            <text>
+                var map = L.map('OpenMap').setView([51.505, -0.09], 13);
+                var marker = L.marker([51.5, -0.09], { draggable: true, title:'Drag me to set the latitude and longitude', alt:'Drag me to set the latitude and longitude' }).addTo(map);
+            </text>
+        }
+        @if (Model.ConfigurationObject.CouncilSpatialUri != "")
+        {
+            <text>
+        var spatialGeoUrl = '@Model.ConfigurationObject.CouncilSpatialUri' + '.json';
+        if ($.browser.msie && window.XDomainRequest) {
+            if (window.XDomainRequest) {
+                loadSpatialMapLayerIE(spatialGeoUrl);
+            }
+        }else{
+            loadSpatialMapLayer(spatialGeoUrl);
+        }
+
+                
+            </text>
+
+        }
+        var tileUrl = 'http://tile.openstreetmap.org/{z}/{x}/{y}.png';
+        L.tileLayer(tileUrl, {
+            attribution: 'Map data &copy; 2011 OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        function populateLatLngAndZoomLevel() {
+            var obj = marker.getLatLng();
+            var zoom = map.getZoom();
+            $('#ConfigurationObject_MapCentreLatitude').val(obj.lat);
+            $('#ConfigurationObject_MapCentreLongitude').val(obj.lng);
+            $('#ConfigurationObject_MapDefaultZoom').val(zoom);
+        }
+
+        marker.on('drag', populateLatLngAndZoomLevel);
+        map.on('zoomend', function() {
+            $('#ConfigurationObject_MapDefaultZoom').val(map.getZoom());
+        });
+
+
+        $(document).ready(function() {
+
+            $('#ConfigurationObject_CouncilSpatialUri').change(function() {
+                if ($(this).val() != '') {
+                    var spatialGeoUrl = $(this).val() + '.json';
+                    if ($.browser.msie && window.XDomainRequest) {
+                        if (window.XDomainRequest) {
+                            loadSpatialMapLayerIE(spatialGeoUrl);
+                        }
+                    }else{
+                        loadSpatialMapLayer(spatialGeoUrl);
+                    }
+
+                }
+            });
+
+            $('#ConfigurationObject_MapCentreLatitude').change(function() {
+                var latlng = marker.getLatLng();
+                latlng.lat = $('#ConfigurationObject_MapCentreLatitude').val();
+                marker.setLatLng(latlng);
+                map.setView(latlng, map.getZoom());
+
+            });
+            $('#ConfigurationObject_MapCentreLongitude').change(function() {
+                var latlng = marker.getLatLng();
+                latlng.lng = $('#ConfigurationObject_MapCentreLongitude').val();
+                marker.setLatLng(latlng);
+                map.setView(latlng, map.getZoom());
+
+            });
+            $('#ConfigurationObject_MapDefaultZoom').change(function() {
+                map.setZoom($('#ConfigurationObject_MapDefaultZoom').val());
+                var latlng = marker.getLatLng();
+                map.setView(latlng, map.getZoom());
+            });
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //Remove new style with animation
+            $('.new').delay(4000).switchClass("new", "");
+        });
+    </script>
+}
+

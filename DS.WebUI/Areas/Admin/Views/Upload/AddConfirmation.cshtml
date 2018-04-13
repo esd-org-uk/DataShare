@@ -1,0 +1,16 @@
+﻿@model DS.Domain.DataSetSchema
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+
+@section TitleContent
+{
+   Upload new dataset confirmation
+}
+
+<div class="container_16">
+    <h3 class="first">@ViewBag.Message</h3>
+    <a href="@String.Format("/Download/{0}/{1}", Model.Category.FriendlyUrl,Model.FriendlyUrl)">Download now</a>
+</div>

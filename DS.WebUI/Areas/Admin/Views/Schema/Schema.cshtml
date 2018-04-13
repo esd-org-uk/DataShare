@@ -1,0 +1,16 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    ViewBag.Title = "Manage Schemas - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+    var user = HttpContext.Current.User;
+}
+@section TitleContent
+{
+    Manage schemas - <span>Pick a schema</span>
+}
+
+<div class="container_16">    
+     @if (user.IsInRole("SchemaCreator") || user.IsInRole("SuperAdministrator")) { ViewBag.ExtraButtons = "<a href=" + string.Format(@"/Admin/Schema/{0}/SchemaSource", ViewBag.CategoryName) + " class='button green float_right'>Create new</a>"; }
+    @Html.Partial("_schemas", Model)
+</div>
+

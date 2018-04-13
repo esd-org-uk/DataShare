@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>EFCodeFirst</id>
+    <version>0.8</version>
+    <title>EFCodeFirst</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=206497</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>CTP5 of the Code First Programming Model and Productivity Improvements for Entity Framework 4 (included in .NET Framework 4).</description>
+    <summary>CTP5 of the Code First Programming Model and Productivity Improvements for Entity Framework 4 (included in .NET Framework 4).</summary>
+  </metadata>
+</package>

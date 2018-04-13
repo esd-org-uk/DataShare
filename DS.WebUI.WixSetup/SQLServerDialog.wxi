@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Fragment>
+    <UI Id="DatabaseNamingGUI">
+
+
+      <Dialog Id="DatabaseDlg" Width="370" Height="270" Title="!(loc.DatabaseNamingGuiDlg_Header)">
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="DataShare Database Settings" />
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter DataShare Database Details" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        
+        <Control Id="DBNameLabel" Type="Text"   X="20" Y="50" Width="290" Height="20" Text="DataShare Database Name:" />
+        <Control Id="DBName" Type="Edit"    X="30" Y="70" Width="320" Height="18" Property="DATABASE_NAME" Text="[DATABASE_NAME]" />
+
+
+        <Control Id="DBUserNameLabel" Type="Text"   X="20" Y="100" Width="290" Height="20" Text="DataShare Database Username:" >
+          <Condition Action="hide">NOT Installed AND NOT UPGRADECODE = ""</Condition>
+        </Control>
+        <Control Id="DBUserName" Type="Edit"    X="30" Y="120" Width="320" Height="18" Property="DATABASE_RUNTIME_USERNAME"  Text="[DATABASE_RUNTIME_USERNAME]">
+          <Condition Action="hide">NOT Installed AND NOT UPGRADECODE = ""</Condition>
+        </Control>
+
+
+        <Control Id="DBPasswordLabel" Type="Text"   X="20" Y="150" Width="290" Height="20" Text="DataShare Database password:" >
+          <Condition Action="hide">NOT Installed AND NOT UPGRADECODE = ""</Condition>
+        </Control>
+        <Control Id="DBPassword" Type="Edit"   X="30" Y="170" Width="320" Height="18" Property="DATABASE_RUNTIME_PASSWORD" Text="[DATABASE_RUNTIME_PASSWORD]" >
+          <Condition Action="hide">NOT Installed AND NOT UPGRADECODE = ""</Condition>
+        </Control>
+
+
+        <!--<Control Id="DBPasswordLabel" Type="Text"   X="20" Y="160" Width="290" Height="13" Text="Database Password:" />
+        <Control Id="DBPassword" Type="Edit"  Password="yes"  X="20" Y="175" Width="320" Height="15" Property="DATABASE_PASSWORD" />-->
+
+
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next">
+          <!--<Condition Action="disable">
+            (DATABASE_SERVER = "")
+          </Condition>
+          <Condition Action="enable">
+            <![CDATA[(DATABASE_SERVER <> "")]]>
+          </Condition>-->
+          <Publish Property="DATABASE_NAME" Value="[DATABASE_NAME]"></Publish>
+          <Publish Property="DATABASE_RUNTIME_USERNAME" Value="[DATABASE_RUNTIME_USERNAME]"></Publish>
+          <Publish Property="DATABASE_RUNTIME_PASSWORD" Value="[DATABASE_RUNTIME_PASSWORD]"></Publish>
+          
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="Database details must not be empty">(DATABASE_NAME = "" OR DATABASE_RUNTIME_USERNAME = "" OR DATABASE_RUNTIME_PASSWORD = "")</Publish>
+          <Publish Property="ERROR_TITLE" Value="Database details must not be empty">(DATABASE_NAME = "" OR DATABASE_RUNTIME_USERNAME = "" OR DATABASE_RUNTIME_PASSWORD = "")</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+        </Control>
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+      </Dialog>
+    </UI>
+
+  </Fragment>
+</Include>

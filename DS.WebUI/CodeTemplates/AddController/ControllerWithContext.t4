@@ -1,0 +1,85 @@
+﻿<#@ template language="C#" HostSpecific="True" inherits="DynamicTransform" #>
+using System.Linq;
+using System.Web.Mvc;
+using DS.DL.DataContext.Base.Interfaces;
+using DS.Domain;
+using DS.Service;
+using DS.WebUI.Controllers.Base;
+
+namespace <#= Model.Namespace #>.Controllers
+{   <# var modelName = Model.ModelType; #>
+    
+	public class <#= Model.ControllerName #>Controller : BaseController
+    {
+    	private static IRepository<<#= modelName #>> _rep; 
+        public <#= Model.ControllerName #>Controller()
+        {
+            _rep = EntityService.Repository<<#= modelName #>>();
+        }
+		
+        // GET: /<#= modelName #>s/
+		public ViewResult Index()
+        {
+            return View(_rep.GetAll().ToList());
+        }
+
+        // GET: /<#= modelName #>s/Details/5
+		public ViewResult Details(int id)
+        {
+			return View(_rep.Single(i => i.Id == id));
+        }
+
+        // GET: /<#= modelName #>s/Create
+		public ActionResult Create()
+        {
+            return View();
+        } 
+
+        // POST: /<#= modelName #>s/Create
+		[HttpPost]
+        public ActionResult Create(<#= modelName #> d)
+        {
+            if (ModelState.IsValid)
+            {
+              _rep.Add(d);
+              _rep.SaveChanges();
+              return RedirectToAction("Index");    
+            }
+            return View();
+        }
+                
+        // GET: /<#= modelName #>s/Edit/5
+        public ActionResult Edit(int id)
+        {
+		      return View(_rep.Single(i => i.Id == id));
+        }
+		        
+        // POST: /<#= modelName #>s/Edit/5
+		[HttpPost]
+        public ActionResult Edit(int id, FormCollection form)
+        {
+            var p = _rep.Single(i => i.Id == id);
+            if (TryUpdateModel(p))
+            {
+                _rep.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+		        
+        // GET: /<#= modelName #>s/Delete/5
+        public ActionResult Delete(int id)
+        {
+		    return View(_rep.Single(i => i.Id == id));
+        }
+		        
+        // POST: /<#= modelName #>s/Delete/5
+		[HttpPost]
+        public ActionResult Delete(int id, FormCollection collection)
+        {
+            _rep.Delete(_rep.Single(i => i.Id == id));
+            _rep.SaveChanges();
+            return RedirectToAction("Index");
+        }
+    }
+}

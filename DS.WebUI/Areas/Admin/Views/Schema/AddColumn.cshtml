@@ -1,0 +1,141 @@
+﻿@model DS.Domain.DataSetSchemaColumn
+
+
+@{
+    ViewBag.Title = "Define field - Edit schema - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+    var readonlyOption = Model == null ? false : Convert.ToBoolean(Model.IsStandardisedSchemaUrl);
+}
+
+@section TitleContent
+{
+    @(Model == null ? "Add field to" : "Update field in")  @ViewBag.Schema schema
+}
+
+<div class="container_16">
+    <div class="grid_16">
+        <p class="intro">
+            Please complete the details below for this field. Add help text to fields to show tips when hovering over the column headings. 
+        </p>
+        @Html.Raw(ViewBag.Message)
+        @using (Html.BeginForm(Model == null ? "AddColumn" : "EditColumn"))
+        {
+            if (Model != null)
+            {
+            @Html.HiddenFor(c => c.Id)
+            }
+            @Html.ValidationSummary(true)
+            
+
+            <input type="hidden" id="schemaName" name="schemaName" value="@ViewBag.SchemaName" />
+            <input type="hidden" id="categoryName" name="categoryName" value="@ViewBag.CategoryName" />
+            <!--Partial here-->
+            if (readonlyOption)
+            {
+                Html.RenderPartial("_ColumnFieldsEditDisplayOptionsOnly", Model);
+            }
+            else
+            {
+                Html.RenderPartial("_ColumnFieldsEditAll", Model);
+            }
+            <p>&nbsp;</p>
+            <p>
+                <input type="submit" class="green large button submit" value="@(Model == null ? "Add" : "Update")" />
+            </p>
+            
+
+        }
+    </div>
+</div>
+
+@section FooterScripts{
+    <script type="text/javascript">
+        var textHolder;
+        var currencyHolder;
+        var numberHolder;
+        var dateHolder;
+        var totalisableHolder;
+        var sortDirectionHolder;
+        var typeSelect;
+        $(document).ready(function () {
+            textHolder = $('#TextHolder');
+            currencyHolder = $('#CurrencyHolder');
+            numberHolder = $('#NumberHolder');
+            dateHolder = $('#DateHolder');
+            totalisableHolder = $('#TotalisableHolder');
+            sortDirectionHolder = $('#SortDirectionHolder');
+            typeSelect = $('#Type');
+            displaySortOptions();
+            $('#IsDefaultSort').change(function () {
+                displaySortOptions();
+            });
+            typeSelect.change(function () {
+                $('#TextHolder,#CurrencyHolder,#NumberHolder,#DateHolder,#TotalisableHolder').addClass('hidden');
+                setupColumn($(this).val());
+            });
+            function displaySortOptions() {
+                if ($('#IsDefaultSort').is(':checked')) {
+                    sortDirectionHolder.removeClass('hidden');
+                }
+                else {
+                    sortDirectionHolder.addClass('hidden');
+                }
+            }
+            function setupColumn(type) {
+                switch (type.toString().toLowerCase()) {
+                    case 'text':
+                        textHolder.removeClass('hidden');
+                        $('#MaxSize').val('');
+                        break;
+                    case 'number':
+                        numberHolder.removeClass('hidden');
+                        totalisableHolder.removeClass('hidden');
+                        $('#MaxSize').val(1);
+                        break;
+                    case 'currency':
+                        currencyHolder.removeClass('hidden');
+                        totalisableHolder.removeClass('hidden');
+                        $('#MaxSize').val(1);
+                        break;
+                    case 'datetime':
+                        dateHolder.removeClass('hidden');
+                        $('#MaxSize').val(1);
+                        break;
+                    case 'url':
+                    case 'image':
+                    case 'lat/lng':
+                        $('#MaxSize').val(1);
+                        break;
+                }
+            }
+            @{if (Model != null && Model.Type.ToLower() == "text")
+              {
+                <text>$('#TextHolder').removeClass('hidden');</text>
+              }
+              else
+              {
+                <text>setupColumn(typeSelect.val());
+                $('#MaxSize').val(200);
+                </text>
+            }}
+
+            var title = $('#Title');
+            var columnName = $('#ColumnName');
+            var manuallyChanged = $('#ColunmNameManuallyChanged');
+            
+            columnName.keydown(function (e) {
+                manuallyChanged.val(1);    
+            });
+            
+            title.keyup(function (e) {
+                if(manuallyChanged.val() == ''){
+                    var val = title.val();
+                    val = val.replace(/[^A-Za-z0-9]/g, '');
+                    columnName.val(val);
+                }
+            });
+        });
+
+    </script>
+}
+

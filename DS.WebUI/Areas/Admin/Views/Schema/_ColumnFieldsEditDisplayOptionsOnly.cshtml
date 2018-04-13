@@ -1,0 +1,179 @@
+﻿@model DS.Domain.DataSetSchemaColumn
+
+
+@Html.ValidationMessageFor(model => model.Title)
+<div class="editor-field">
+    @Html.LabelFor(model => model.Title)
+    <div class="text-display">@Html.DisplayFor(model => model.Title)</div>
+    @Html.HiddenFor(model => model.Title)
+    <span class="helptext">The text that will appear at the top of this column in the view section.</span>
+</div>
+
+@Html.ValidationMessageFor(model => model.ColumnName)
+<div class="editor-field">
+    @Html.LabelFor(model => model.ColumnName)
+    @Html.HiddenFor(model => model.ColumnName)
+    <div class="text-display">@Html.DisplayFor(model => model.ColumnName)</div>
+   
+</div>
+
+@Html.ValidationMessageFor(model => model.Type)
+<div class="editor-field">
+    @Html.LabelFor(model => model.Type)
+    @Html.HiddenFor(model => model.Type)
+    <div class="text-display">@Html.DisplayFor(model => model.Type)</div>
+</div>
+
+<h3>Validation</h3>
+@Html.ValidationMessageFor(model => model.IsRequired)
+<div class="editor-field">
+    @Html.LabelFor(model => model.IsRequired)
+    @Html.DisplayFor(model => model.IsRequired)
+    @Html.HiddenFor(model => model.IsRequired)
+
+    <span class="helptext">Does this field have to be entered in the CSV file.</span>
+</div>
+
+<div id="TextHolder" class="hidden">
+                @Html.ValidationMessageFor(model => model.MaxSize)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.MaxSize)
+                 
+                                 <div class="text-display">@Html.DisplayFor(model => model.MaxSize)</div>
+                                 @Html.HiddenFor(model => model.MaxSize)
+                          
+                    <span class="helptext">The number of characters this field can contain at most.</span>
+                </div>
+            </div>
+                
+            <div id="NumberHolder" class="hidden">
+                @Html.ValidationMessageFor(model => model.MinNumber)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MinNumber)
+                               <div class="text-display">@Html.DisplayFor(model => model.MinNumber)</div>
+                               @Html.HiddenFor(model => model.MinNumber)
+                    <span class="helptext">The lowest value this field can contain (optional).</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.MaxNumber)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MaxNumber)
+
+                              <div class="text-display">@Html.DisplayFor(model => model.MaxNumber)</div>
+                              @Html.HiddenFor(model => model.MaxNumber)
+              
+                       
+                    <span class="helptext">The highest value this field can contain (optional).</span>
+                </div>
+            </div>
+
+            <div id="CurrencyHolder" class="hidden">
+                @Html.ValidationMessageFor(model => model.MinCurrency)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MinCurrency)
+
+                                <div class="text-display">@Html.DisplayFor(model => model.MinCurrency)</div>
+                                @Html.HiddenFor(model => model.MinCurrency)
+               
+                    <span class="helptext">The lowest value this field can contain (optional).</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.MaxCurrency)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MaxCurrency)
+
+                                    <div class="text-display">@Html.DisplayFor(model => model.MaxCurrency)</div>
+                                    @Html.HiddenFor(model => model.MaxCurrency)
+  
+                    <span class="helptext">The highest value this field can contain (optional).</span>
+                </div>
+            </div>
+                
+            <div id="DateHolder" class="hidden">
+                @Html.ValidationMessageFor(model => model.MinDate)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MinDate)
+
+                            <div class="text-display">@(Model != null ? string.Format("{0:d}", Model.MinDate) : "")</div>
+                            @Html.Hidden("MinDate", Model != null ? string.Format("{0:d}", Model.MinDate) : "", new { @class = "text-box datebox" })
+                    <span class="helptext">The earliest date this field can contain (optional).</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.MaxDate)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.MaxDate)
+
+                            <div class="text-display">@(Model != null ? string.Format("{0:d}", Model.MaxDate) : "")</div>
+                            @Html.Hidden("MaxDate", Model != null ? string.Format("{0:d}", Model.MaxDate) : "", new { @class = "text-box datebox" })
+                    <span class="helptext">The most recent date this field can contain (optional).</span>
+                </div>
+            </div>
+
+            <h3>Display</h3>
+            @Html.ValidationMessageFor(model => model.IsShownInitially)
+            <div class="editor-field">
+                @Html.LabelFor(model => model.IsShownInitially)
+                @{
+                  if (Model == null)
+                  {
+                    @Html.CheckBoxFor(model => model.IsShownInitially, new { @checked = "checked" })
+                    <span class="helptext">Should this field be shown initially to all users.</span>
+                  }
+                  else
+                  {
+                    @Html.CheckBoxFor(model => model.IsShownInitially)
+                    <span class="helptext">Should this field be shown initially to all users.</span>
+                  }
+                }
+            </div>
+
+            <div id="TotalisableHolder" class="hidden">
+                @Html.ValidationMessageFor(model => model.IsTotalisable)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.IsTotalisable)
+                    @Html.EditorFor(model => model.IsTotalisable)
+                    <span class="helptext">Should this column show a total at the bottom.</span>
+                </div>
+            </div>
+                  @if ((ViewBag.AlreadySorted && Model == null) || (ViewBag.AlreadySorted && Model != null && !Model.IsDefaultSort))
+                  {
+            @(Model == null ? Html.Hidden("IsDefaultSort", "false") : Html.HiddenFor(model => model.IsDefaultSort))
+            @Html.HiddenFor(model => model.DefaultSortDirection)
+                  }
+                  else
+                  {
+            @Html.ValidationMessageFor(model => model.IsDefaultSort)
+            <div class="editor-field">
+                @Html.LabelFor(model => model.IsDefaultSort)
+                @Html.EditorFor(model => model.IsDefaultSort)
+                <span class="helptext">Should this column be the default column to sort by for this schema.</span>
+            </div>
+            <div id="SortDirectionHolder">
+                @Html.ValidationMessageFor(model => model.DefaultSortDirection)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.DefaultSortDirection)
+                    <label style="margin-left: 175px;">@Html.RadioButtonFor(model => model.DefaultSortDirection, "ASC")<span>Ascending (A-Z)</span></label>
+                    <label style="margin-left: 350px;">@Html.RadioButtonFor(model => model.DefaultSortDirection, "DESC")<span>Descending (Z-A)</span></label>
+                </div>
+            </div>
+                  }
+
+
+            @Html.ValidationMessageFor(model => model.HelpText)
+            <div class="editor-field">
+                @Html.LabelFor(model => model.HelpText)
+                          @Html.EditorFor(model => model.HelpText)
+                          @Html.HiddenFor(model => model.HelpText)
+   
+                <span class="helptext">This help text shows on hover of the column heading. It should help users to understand what that column represents (optional).</span>
+            </div>
+
+            <h3>Linked data</h3>
+            <div class="editor-field">
+                @Html.LabelFor(model => model.LinkedDataUri)
+
+                                      <div class="text-display">@Html.DisplayFor(model=>model.LinkedDataUri)</div>
+                                         @Html.HiddenFor(model => model.LinkedDataUri)
+                <span class="helptext">Enter the URI that contains the linked data for this column.
+                    <br />
+                    <br />
+                    #Data# can be entered in the the URI and it will be replaced with column data.</span>
+            </div>

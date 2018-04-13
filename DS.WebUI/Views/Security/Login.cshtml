@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ <div class="container_16">
+	<div class="grid_16">
+        <div id="LoginBox" class="clearfix">
+            <h2 class="blue">Login</h2>
+            @{
+            if( ViewData["ErrorMessage"] != null ){ 
+    	    <p class="warning">@ViewBag.ErrorMessage</p>
+    	    }
+    	        using (Html.BeginForm("Authenticate", "Security"))
+                {
+        	        <div class="editor-field">
+                        <label for="userName">User Name:</label> @Html.TextBox("userName", "", new { @class = "text-box" })
+                    </div>
+                    <div class="editor-field">
+        		        <label for="password">Password:</label> @Html.Password( "password","",new {@class = "text-box"})
+        		    </div>
+                    <div class="right" style="height:30px;">
+                        <label for="rememberMe">Remember me</label>&nbsp;<input type="checkbox" id="rememberMe" name="rememberMe" checked="checked" value="checked" />
+        		    </div>
+                    <div class="right">
+                        <input type="submit" class="button blue float_right" value="Login" />
+                    </div>
+                    @Html.Hidden( "returnUrl", HttpContext.Current.Request.QueryString["returnurl"])
+                }
+            
+            }
+       </div>
+   </div>
+</div>
+

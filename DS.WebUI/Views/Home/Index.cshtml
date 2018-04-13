@@ -1,0 +1,76 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    ViewBag.Title = "DataShare";    
+}
+
+<div id="sliderBox" class="container_16 clearfix">    
+    <div id="Bigimagecontainer" class="grid_11">
+
+        <div class="bigimage mouse">
+            <div class="message">
+                <h2>View</h2>
+                <a href="@Url.Action("Index", "View")" class="button secondary">View now</a>
+                <p>View, Filter, and Search all of the data we share.</p>            
+            </div>        
+        </div>
+
+        <div class="bigimage orb">
+            <div class="message">
+                <h2>Download</h2>
+                <a href="@Url.Action("Index", "Download")" class="button secondary">Download now</a>
+                <p>Download copies of our data in the same format it was uploaded.</p>            
+            </div>
+        </div>
+
+        <div class="bigimage hdd">
+            <div class="message">
+                <h2>About</h2>
+                <a href="@Url.Action("Index", "About")" class="button secondary">Read now</a>
+                <p>More information about DataShare including licence and code of conduct.</p>            
+            </div>
+        </div>
+    </div>
+
+    <ul class="grid_5">
+        <li><a href="@Url.Action("Index","View")">@{
+            if (System.Configuration.ConfigurationManager.AppSettings.Get("IsViewNew") == "true")
+            {
+                <text><img src="/Content/images/icons/NewMidStraight.png" alt="New" class="NewSmall" /></text>
+            }              
+        }<span>View</span>Take a look at all of the data we share.</a></li>
+        <li><a href="@Url.Action("Index", "Download")"><span>Download</span>Get the data we share for your own use.</a></li>
+        <li class="last"><a href="@Url.Action("Index", "About")"><span>About</span>Find out about the data we share. Licenses, usage, it's all here.</a></li>
+    </ul>
+</div>
+
+<div id="Featured" class="container_12 clearfix">       
+    <h3>Featured data</h3>
+    @foreach(var f in Model){
+        <div class="grid_4"> 
+            <div class="box">                 
+                <div>
+                    <div class="float_left">
+                        @if (String.IsNullOrEmpty(f.Category.ImageUrl))
+                        {
+                            <span class="image @f.Category.CssClass">
+                                @f.Category.Title
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="namedimage" style="background:#fff url(@f.Category.ImageUrl) no-repeat 0 0;background-size: 100%;">
+                                @f.Category.Title
+                            </span>
+                        }
+
+                    </div>
+                    <h4>@f.Title</h4>
+
+                    <p>@f.ShortDescription</p>
+                    <a href="@Url.Action(f.Category.FriendlyUrl + "/" + f.FriendlyUrl, "View")" title="View datasets for @f.Title" class="button green large featured"><span>View now</span></a>
+                    
+                </div>
+            </div>
+        </div>        
+    }
+</div>

@@ -1,0 +1,32 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{var controller = ViewContext.RouteData.Values["controller"].ToString();}
+<h3 class="grid_16 first">Please pick a dataset</h3>
+
+<div class="clearfix"></div>
+
+<ul class="biglist clickablelistrows">
+    @foreach(var c in Model)
+    {
+        var disable = !c.DataSets.Any() && controller != "Upload";        
+        if (!disable)
+        { 
+            <li class="clearfix">
+                <h4 class="grid_4">@Html.ActionLink(c.Title, c.Category.FriendlyUrl + "/" + c.FriendlyUrl, controller)</h4>
+                <div class="grid_2">@if (String.IsNullOrEmpty(c.Category.ImageUrl))
+                    {
+                        <span class="image @c.Category.CssClass">
+                            Category
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="namedimage" style="background:#fff url(@c.Category.ImageUrl) no-repeat 0 0;background-size: 100%;">
+                            Category
+                        </span>
+                    }
+                </div>
+                <div class="grid_8 description">@c.ShortDescription</div>
+            </li>
+        }
+    }
+</ul>

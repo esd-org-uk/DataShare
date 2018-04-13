@@ -1,0 +1,57 @@
+﻿@model DS.Domain.RegisterModel
+@{
+    ViewBag.Title = "Users - User admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    Create DataShare user
+}
+
+<div class="container_16">
+    <div class="grid_16">
+        @Html.Raw(ViewBag.Message)        
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                @Html.ValidationMessageFor(model => model.UserName)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.UserName)
+                    @Html.EditorFor(model => model.UserName)
+                    <span class="helptext">The name user will use to log into DataShare.</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.Email)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.Email)
+                    @Html.EditorFor(model => model.Email)
+                    <span class="helptext">The user's email address.</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.Password)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.Password)
+                    @Html.EditorFor(model => model.Password)
+                    <span class="helptext">The user's password.</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.ConfirmPassword)
+                    @Html.EditorFor(model => model.ConfirmPassword)
+                    <span class="helptext">Please confirm the password.</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.Role)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.Role)
+                    @Html.DropDownListFor(model => model.Role, new SelectList(new[] { "Uploader","SchemaEditor","SchemaCreator","SuperAdministrator" }))
+                    <span class="helptext">Select the role this user will perform.</span>
+                </div>
+                <p>
+                    <input type="submit" class="green large button submit" value="Create" />
+                </p>
+            </fieldset>
+            
+        }
+    </div>
+</div>
+

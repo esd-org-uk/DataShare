@@ -1,0 +1,334 @@
+﻿@model DS.Domain.DataSetSchema
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+@section HeaderContent{
+   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" />
+   <link rel="stylesheet" href="/areas/admin/Scripts/plugins/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
+   
+    <script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
+
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.gears.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.silverlight.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.flash.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.browserplus.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.html4.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/plupload.html5.js"></script>
+    <script type="text/javascript" src="/areas/admin/Scripts/plugins/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+}
+
+@section FooterScripts
+{
+@*<script type="text/javascript" src="/areas/admin/Scripts/plugins/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="/areas/admin/Scripts/plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var schemaId = @Model.Id;
+
+        $("#uploader").plupload({
+            // General settings
+            runtimes: 'flash,html5,browserplus,silverlight,gears,html4',
+            url: '@Url.Action("UploadCsv", "Upload")',
+            max_file_size: '1000mb',
+            max_file_count: 20, // user can add no more then 20 files at a time
+            chunk_size: '1mb',
+            unique_names: true,
+            multiple_queues: true,
+            multi_selection: false,
+            // Resize images on clientside if we can
+            resize: { width: 320, height: 240, quality: 90 },
+            rename: true,
+            sortable: false,
+            filters: [
+			    { title: "Csv files", extensions: "csv" }
+		    ],
+            // Flash settings
+            flash_swf_url: '/areas/admin/Scripts/plugins/plupload/js/plupload.flash.swf',
+            // Silverlight settings
+            silverlight_xap_url: '/areas/admin/Scripts/plugins/plupload/js/plupload.silverlight.xap'
+        });
+
+        var uploader = $('#uploader').plupload('getUploader');
+        uploader.bind('Error', function(up, err) {
+	       $('#Result').html("<div>Error: " + err.code +
+	            ", Message: " + err.message +
+	            (err.file ? ", File: " + err.file.name : "") +
+	            "</div>"
+	        );
+	        up.refresh(); // Reposition Flash/Silverlight
+	    });
+        
+        uploader.bind('QueueChanged', function (up) {
+            if (up.files.length > 0 && uploader.state != 2) 
+            {
+               performUpload(up);
+            }
+        });
+
+        uploader.bind('FileUploaded', function (up, file, res) {
+                up.removeFile(file);
+                validateAndSave(file);
+        });
+           
+        $('#uploader_browse .ui-button-text').html('Choose file');
+
+        function performUpload(up)
+        {
+            var title = $('#Title').val();
+            if (title.length == 0) {
+                    $('#Result').html('<p class="warning">Please enter a title</p>').fadeIn(400);
+                    $('#Title').focus();
+                    clearPluploader();
+            }
+            else
+            {
+                var newfileTitle = $('#Title').val();
+                $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckExistsAlready", "Upload")',
+                data: ({ schemaId: schemaId, title: newfileTitle}),
+                success: function (existsAlready) 
+                        {
+                            if(existsAlready == 'True'){
+                                $('#Result').html('<p class="warning">A dataset with this title already exists</p>').fadeIn(400);
+                                $('#Title').focus();
+                                clearPluploader();
+                            }
+                            else{
+                                $('#Result').html('');
+                                up.start();
+                            }
+                        },
+                error: function (ex) {
+                            clearPluploader();
+                            $('#Result').html('There was a problem, please enter a different title').fadeIn('slow');
+                            $('#Upload').removeClass('hidden');
+                            return true;
+                        }
+                });
+            }
+        }
+
+        function clearPluploader(){
+            var uploader = $('#uploader').plupload('getUploader');
+            $.each(uploader.files, function(i, file) {
+                   uploader.removeFile(file);
+            });
+           $('#uploader_browse .ui-button-text').html('Choose file');
+        }
+
+        function validateAndSave(file) {
+            var newfileTitle = $('#Title').val();
+            progressBarFinished = false;
+            uploadProgress(0);
+
+            $("#UploadForm").fadeOut('slow',
+                    function () {
+                        $("#uploadProgress").fadeIn('fast',
+                            function () {
+                                //ajax to validate data
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Action("SaveCsv", "Upload")',
+                                    data: ({ schemaId: schemaId, title: newfileTitle, fileName: file.id + '.csv'}),
+                                    success: function (response) {
+                                        clearPluploader();
+                                        progressBarFinished = true;
+                                        $("#progressBar").progressbar("destroy");
+                                        $("#progressBar").progressbar({ value: 100 });
+
+                                        if (response.Errors.length == 0) {
+                                            $('#uploadProgress').fadeOut('slow', function () { $('#Result').html('<div class="note">Uploaded successfully</div>').fadeIn('slow'); $('#UploadAnother').fadeIn('slow') });
+                                        }
+                                        else {
+                                            var errorHtml = '<h3>The following errors were found:</h3><ul>'
+                                            for (var i = 0; i < response.Errors.length; i++) {
+                                                errorHtml += '<li class="warning">' + response.Errors[i] + '</li>';
+                                            }
+                                            errorHtml += '</ul>'
+                                            $("#uploadProgress").fadeOut('fast', function () {
+                                                $('#Result').html(errorHtml).fadeIn('slow');
+                                                $("#UploadForm").fadeIn('slow');
+                                            });
+                                        }
+
+                                    },
+                                    error: function (ex) {
+                                        clearPluploader();
+                                        $('#Result').html('There was a problem opening the csv. Please try a different CSV file').fadeIn('slow');
+                                        $('#Upload').removeClass('hidden');
+                                    }
+                                });
+                            });
+                    });
+        }
+
+        function uploadProgress(percent) {
+            if (progressBarFinished == false) {
+                setTimeout(function () {
+                    $("#progressBar").progressbar({ value: percent });
+                    var next = percent + 5;
+                    if (next < 80) {
+                        uploadProgress(next);
+                    }
+                }, 1000);
+            }
+            else {
+                $("#progressBar").progressbar({ value: 100 });
+                $("#progressBar").progressbar("destroy");
+            }
+        }
+
+        $('#AddExternal').click(function () {
+            var title = $('#TitleExternal');
+            var url = $('#ExternalUrl');
+            var urlVal = url.val();
+            if (urlVal.substring(0, 4).toLowerCase() != 'http') {
+                urlVal = 'http://' + urlVal;
+            }
+            if (title.val().length == 0 && url.val().length == 0) {
+                $('#Result').html('<p class="warning">Please enter a title and a url</p>').fadeIn(400);
+                title.focus();
+                return false;
+            }
+            else if (title.val().length == 0) {
+                $('#Result').html('<p class="warning">Please enter a title</p>').fadeIn(400);
+                title.focus();
+                return false;
+            }
+            else if (url.val().length == 0) {
+                $('#Result').html('<p class="warning">Please enter a url</p>').fadeIn(400);
+                url.focus();
+                return false;
+            }
+            else if (isValidUrl(urlVal) == false) {
+                $('#Result').html('<p class="warning">Please enter a valid url.</p>').fadeIn(400);
+                url.focus();
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("GetData", "Upload")',
+                    data: ({ url: urlVal }),
+                    success: function (result) {
+                        if (result.FileSize > 0) {
+                            $('#Result').fadeOut('fast');
+                            $('form').submit();
+                        }
+                        else {
+                            $('#Result').html('<p class="warning">The Url entered could not be found.</p>').fadeIn(400);
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+        function isValidUrl(str) {
+            var v = new RegExp();
+            v.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");
+            if (!v.test(str)) {
+                return false;
+            }
+            return true;
+        }
+    });
+
+</script>
+}
+
+@section TitleContent
+{
+    @{if (Model.IsExternalData)
+    {
+        <text>Add new external data set - <span>@Model.Title</span></text>
+    }
+     else{
+         <text>Upload a new data set - <span>@Model.Title</span></text>
+     }}
+}
+
+<div class="container_16">    
+    @Html.Raw(ViewBag.Message)        
+    <div id="Result" class="grid_16" style="display:none;"></div>
+    
+    @{if (Model.IsExternalData){
+          using (Html.BeginForm())
+          {
+            <div class="grid_16">
+                <p class="intro">Please enter the url and file type of the external data source and add a title for this resource.</p>
+                @Html.HiddenFor(model => model.Id)
+                <div class="editor-field">
+                    <label for="TitleExternal">Title</label>
+                    <input type="text" id="TitleExternal" name="TitleExternal" class="text-box"/>
+                    <span class="helptext">The title to display in the download section for this upload (must be unique for this schema).</span>
+                </div>
+                <div class="editor-field">
+                    <label for="ExternalUrl">Url </label>
+                    <input type="text" id="ExternalUrl" name="ExternalUrl" class="text-box"/>
+                    <span class="helptext">The url for the external data source. No need to add the http:// (e.g. www.redbridge.gov.uk/datasource).</span>
+                </div>
+                <div class="editor-field">
+                    <label for="ExternalType">Type</label>
+                    <select id="ExternalType" name="ExternalType">
+                        <option>XML</option>
+                        <option>KML</option>
+                        <option>RSS</option>
+                        <option>CSV</option>
+                        <option>XLS</option>
+                        <option>Other</option>
+                    </select>
+                    <span class="helptext">The type of data source. This adds the correct icon and actions to download buttons.</span>
+                </div>
+                <p><input type="button" id="AddExternal" class="green large button submit" value="Add" /></p>
+            </div>    
+          }
+      }
+      else
+      {
+         <form  method="post" action="@Url.Action("UploadCsv", "Upload")">
+         <div class="grid_11">
+            <div id="UploadForm">
+                <p class="intro">Please select a CSV file to upload into <span>@Model.Title</span> and specify a title for it. The title is used to make identifying individual files easier in the download section, so please use sensible titles (e.g. Tenders Jan 2010).</p>
+                <div class="editor-field">
+                    <label for="Title">Title</label>
+                    <input type="text" id="Title" class="text-box" name="Title"/>
+                    <span class="helptext">The title to display in the download section for this upload (must be unique for this schema).</span>
+                </div>
+                <div class="editor-field">
+                    <label>CSV to upload</label>
+                </div>
+                <div id="uploader">
+		            <p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
+	            </div>
+            </div>
+            <div id="uploadProgress">
+                <h3>Validating CSV data....</h3><br />
+                <div id="progressBar"></div>
+            </div>
+             
+        </div>
+        </form>
+        
+          <div class="grid_11" id="UploadAnother" style="display:none">
+              @if (!Model.IsApproved)
+              {
+                  <p class="intro">You can preview the data you have uploaded into this schema.</p>
+                  <p class="center"><a href="@String.Format("/View/{0}/{1}?preview=true", Model.Category.FriendlyUrl, Model.FriendlyUrl)" target="_blank" class="button blue" style="margin-bottom: 30px">Preview uploaded data</a></p>
+              }
+              <p class="intro">Would you like to upload another file into this schema?</p>
+              <p class="center"><a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="button green" style="margin:20px">Upload another</a></p>        
+          </div>
+        
+        <div class="grid_5">
+            <div id="SupportingFiles">
+                <h3>Supporting files</h3>
+                <p>The following files are designed to help you collate and format your data correctly:</p>
+                <a href="/Admin/Upload/DownloadTemplate/@(Model.Id)/@(ViewBag.SchemaUrl)" class="button green CSV"><span class="icon"></span> Download template</a>
+                <a href="/Admin/Upload/DownloadDefinition/@(Model.Id)" class="button blue PDF"><span class="icon"></span> Download definition</a>
+            </div>
+        </div>
+    }}
+</div>

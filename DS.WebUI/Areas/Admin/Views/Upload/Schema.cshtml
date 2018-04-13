@@ -1,0 +1,15 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    ViewBag.Title = "Upload data - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    Upload data
+}
+
+<div class="container_16">
+    @Html.Partial("_schemas", Model)
+</div>
+

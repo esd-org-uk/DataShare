@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Developer area - DataShare";
+}
+
+
+@section TitleContent
+{
+    Developer area
+}
+
+<div class="container_16">
+    
+    <div class="grid_16">       
+        <img src="../../Content/images/big/nuts.jpg" alt="A close-up of some nuts." class="float_right" />
+        <h3>The DataShare API</h3>
+        <p>The DataShare API provides access to all the datasets stored in DataShare. The API implements <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">RESTful</a> interfaces to allow developers to perform simple queries on the available data. XML and JSON representations of the data are available.</p>
+        
+        <h3>Getting started</h3>
+        <p>The DataShare API lets you programmatically access tens of thousands of records and query the data in several ways, using the url and additional parameters to specify the data you would like returned.</p>
+        <hr />
+        <h4>Some simple API requests</h4>
+            <h5>Details of all categories</h5>
+            <p>Search for all available data categories, their descriptions and the URL stubs needed to access them.</p>
+            <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span></p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api">http://data.redbridge.gov.uk/api</a> returns <strong>a list of all available data categories</strong>.</p>
+            
+            <h5>Schema details</h5>
+            <p>Search for all available datasets within a category, their descriptions and the URL stubs needed to access them.</p>
+            <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span><span>Category/<span class="tip category">The category to be queried.</span></span></p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance">http://data.redbridge.gov.uk/api/finance</a> returns <strong>a list of all datasets</strong> in the <strong>Finance</strong> category.</p>
+        
+            <h5>Uploaded data files</h5>
+            <p>Details of the data files uploaded to a dataset.</p>
+            <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span><span>Category/<span class="tip category">The category that the dataset is in.</span></span><span>SchemaName/<span class="tip schema">The dataset to be queried.</span></span></p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500">http://data.redbridge.gov.uk/api/finance/payments-over-500</a> would return <strong>a list of all uploaded datasets</strong> for <strong>Payments over £500</strong> in the <strong>Finance</strong> category.</p>
+        
+            <h5>Full inventory</h5>
+            <p>A full list of all schemas, associated meta data and the data files uploaded to them.</p>
+            <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span><span>esdInventory<span class="tip category">The esdInventory request.</span></span></p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/esdInventory">http://data.redbridge.gov.uk/api/esdInventory</a> returns <strong>a list of all available data schemas, their associated data files and meta data</strong>.</p>
+
+            <h5>Dataset definition</h5>
+            <p>The definition of a dataset, including column names, types, etc.</p>
+            <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span><span>Category/<span class="tip category">The category that the dataset is in.</span></span><span>SchemaName/<span class="tip schema">The dataset to be queried followed by the definition request.</span></span>definition</p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/definition">http://data.redbridge.gov.uk/api/finance/payments-over-500/definition</a> would return <strong>a list of all the columns</strong> in the <strong>Payments over £500</strong> dataset in the <strong>Finance</strong> category.</p>
+        <hr />
+        <h4>A simple API request with a filter added</h4>
+            <p>All of the data in a dataset that contain a keyword(s) in one field can be returned by specifying a schema URL (as above) and adding the following:</p>
+            <p class="example">
+                <span>SearchType<span class="tip searchtype">The type of search to perform (see below for the full list).</span></span><span><span class="normal">?fieldToSearch=</span>FieldToSearch<span class="tip fieldtosearch">The field to perform the search on.</span></span><span><span class="normal">&searchText=</span>SearchText<span class="tip searchtext">The text to search for (This should be HTML encoded).</span></span><span><span class="normal">&format=</span>ReturnFormat<span class="tip format">The format to return the data in (options are XML or JSON).</span></span>
+            </p>
+            <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByTextContains?fieldToSearch=AccountDescription&searchText=Miscellaneous&format=xml">../SearchByTextContains?fieldToSearch=AccountDescription&searchText=Miscellaneous&format=xml</a> would return <strong>all data</strong> for <strong>Payments over £500</strong> in the <strong>Finance</strong> category <strong>paid to miscellaneous</strong>.</p>
+        <hr />
+
+        <h3>Search types</h3>
+        <h4>SearchByTextEquals</h4>
+        <p>Search for entries in the field <code>&lt;fieldToSearch&gt;</code> that exactly match the word (or words) <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+        
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByTextEquals?fieldToSearch=AccountDescription&searchText=Miscellaneous&format=xml">../SearchByTextEquals?fieldToSearch=AccountDescription&searchText=Miscellaneous&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByTextContains</h4>
+        <p>Search for entries in the field <code>&lt;fieldToSearch&gt;</code> that contain the word (or words) <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>    
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+            
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByTextContains?fieldToSearch=AccountDescription&searchText=Misc&format=xml">../SearchByTextContains?fieldToSearch=AccountDescription&searchText=Misc&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByNumberEquals</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are exactly equal to <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>  
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+              
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByNumberEquals?fieldToSearch=Amount&searchText=1480&format=xml">../SearchByNumberEquals?fieldToSearch=Amount&searchText=1480&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByNumberGreaterThan</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are greater than <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>        
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+        
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByNumberGreaterThan?fieldToSearch=Amount&searchText=1480&format=xml">../SearchByNumberGreaterThan?fieldToSearch=Amount&searchText=1480&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByNumberGreaterThanEqualTo</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are greater than or equal to <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>        
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByNumberGreaterThanEqualTo?fieldToSearch=Amount&searchText=1480&format=xml">../SearchByNumberGreaterThanEqualTo?fieldToSearch=Amount&searchText=1480&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByNumberLessThan</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are less than <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>        
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+        
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByNumberLessThan?fieldToSearch=Amount&searchText=1480&format=xml">../SearchByNumberLessThan?fieldToSearch=Amount&searchText=1480&format=xml</a></p>
+        <hr />
+
+        <h4>SearchByNumberLessThanEqualTo</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are less than or equal to <code>&lt;searchText&gt;</code>.</p>
+        <p>Parameters:</p>   
+        <ul>
+        <li>fieldToSearch</li>
+        <li>searchText</li>
+        <li>format</li>
+        </ul>
+             
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchByNumberLessThanEqualTo?fieldToSearch=Amount&searchText=1480&format=xml">../SearchByNumberLessThanEqualTo?fieldToSearch=Amount&searchText=1480&format=xml</a></p>
+        <hr />
+
+        <h4>SearchSchemaDate</h4>
+        <p>Search for entries in field <code>&lt;fieldToSearch&gt;</code> that are between <code>&lt;from&gt;</code> and <code>&lt;to&gt;</code>.</p>
+        <p>Parameters:</p> 
+        <ul>
+        <li>fieldToSearch</li>
+        <li>from (DD-MM-YYYY)</li>
+        <li>to (DD-MM-YYYY)</li>
+        <li>format</li>
+        </ul>
+               
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/SearchSchemaDate?fieldToSearch=TransactionDate&from=29/11/2005&to=11/10/2006&format=xml">../SearchSchemaDate?fieldToSearch=TransactionDate&from=29112005&to=11102006&format=xml</a></p>
+        <hr />
+
+        <h4>API request for a particular dataset file that was uploaded</h4>
+        <p>A list of all the files that have been uploaded for a dataset can be returned as follows:</p>
+        <p class="example"><span>http://data.redbridge.gov.uk/api/<span class="tip">The DataShare domain followed by /api/</span></span><span>Category/<span class="tip category">The category that the dataset is in.</span></span><span>SchemaName/<span class="tip schema">The dataset to be queried.</span></span><span>Dataset/<span class="tip" style="left: 38px;">The dataset file to show.</span></span><span><span class="normal">?format=</span>ReturnFormat<span class="tip" style="left: 115px">The format to return the data in (options are XML or JSON).</span></span></p>
+        <p class="information">Example: <a href="http://data.redbridge.gov.uk/api/finance/payments-over-500/january-2011">http://data.redbridge.gov.uk/api/finance/payments-over-500/january-2011</a> would return <strong>all data </strong> for <strong>Janurary 2011</strong> file uploaded to <strong>Payments over £500</strong> in the <strong>Finance</strong> category.</p>
+        
+        <h3>Restrictions</h3>
+        <p>There is a currently a limit on requests of 10,000 returned results. If you need to return more results than this please <a href="/contactus">get in touch with us</a>.</p>
+        
+        <hr />
+        <h3>URL search</h3>
+        <p>The following are examples of how to open a dataset's view page with a pre-defined search:</p>
+        <p class="information">Example search by text field:<br /> <a href="http://data.redbridge.gov.uk/view/finance/payments-over-500?filter[0].ColumnToSearch=Directorate&filter[0].SearchOperator=contains&filter[0].SearchText=LEA">?filter[0].ColumnToSearch=Directorate&filter[0].SearchOperator=contains&filter[0].SearchText=LEA</a></p>
+        <p class="information">Example search by number field:<br /> <a href="http://data.redbridge.gov.uk/view/finance/payments-over-500?filter[0].ColumnToSearch=Amount&filter[0].SearchOperatorNumber=greaterthan&filter[0].SearchNumber=100000">?filter[0].ColumnToSearch=Amount&filter[0].SearchOperatorNumber=greaterthan&filter[0].SearchNumber=100000</a></p>
+        <p class="information">Example search by date:<br /> <a href="http://data.redbridge.gov.uk/view/finance/payments-over-500?filter[0].ColumnToSearch=TransactionDate&filter[0].SearchOperatorDate=greaterthan&filter[0].From=01/01/2010&filter[0].To=31/01/2010">?filter[0].ColumnToSearch=TransactionDate&filter[0].SearchOperatorDate=greaterthan&filter[0].From=01/01/2010&filter[0].To=31/01/2010</a></p>
+               
+        <h3>Bugs and feature requests</h3>
+        <p>We're always trying to make DataShare better. So, if you spot any bugs or have any feedback, stories of how you're using DataShare, or feature requests please let us know via our <a href="/contactus">contact page</a>.</p>
+    </div>           
+    
+</div>

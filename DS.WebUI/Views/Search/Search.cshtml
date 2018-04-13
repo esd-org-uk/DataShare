@@ -1,0 +1,37 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+@section TitleContent
+{
+Search results
+}
+<div class="container_16">
+    <h3>Datasets matching <span class="green">"@ViewBag.SearchText"</span></h3>
+    @if (Model.Count > 0)
+    {
+    <ul class="biglist clickablelistrows">
+        @foreach (var c in Model)
+        {
+            var disable = c.DataSets.Count() == 0 && controller != "Upload";
+            if (!disable)
+            { 
+                <li class="clearfix">
+                    <h4 class="grid_4">@Html.ActionLink(c.Title, c.Category.FriendlyUrl + "/" + c.FriendlyUrl, "View")</h4>
+                    <div class="grid_2"><span class="image @c.Category.CssClass">Category</span></div>
+                    <div class="grid_7 description">@c.ShortDescription</div>
+                    <div class="grid_3 actionCol">
+                        <a href="@string.Format("/View/{0}/{1}", c.Category.FriendlyUrl, c.FriendlyUrl)" class = "button green">View</a>
+                        <a href="@string.Format("/Download/{0}/{1}", c.Category.FriendlyUrl, c.FriendlyUrl)" class = "button secondary grey">Download</a>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+    }
+    else { 
+        <p class="warning">There are no datasets that match your search term.  Please try again.</p>
+    }
+        
+</div>

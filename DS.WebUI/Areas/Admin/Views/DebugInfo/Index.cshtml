@@ -1,0 +1,57 @@
+﻿@model IEnumerable<DS.Domain.DebugInfo>
+@{
+    ViewBag.Title = "Service history - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+Service history
+}
+
+@section FooterScripts{
+
+<script type="text/javascript">
+    $(function () {
+        $('#radio').buttonset();
+
+        $('#radio').click(function (e) {
+            var showType = $(e.target).parent().attr('for');
+            if (typeof (showType) != 'undefined') {
+                window.location = '/Admin/DebugInfo/Filter?showtype='+ showType;
+            }
+        });
+    });
+</script>
+}
+@{
+    var showType = Request.QueryString["showtype"] != null ? Request.QueryString["showtype"] : "All";
+}
+<div class="container_16">
+    <p class="grid_16 intro">View history of events and emails sent by the nightly service.</p>
+    <div class="grid_16">
+        <div id="radio" class="float_left">
+        Show: <input type="radio" id="All" name="radio" @(showType == "All" ? "checked" : "")/><label for="All">All</label>
+                <input type="radio" id="EmailSent" name="radio" @(showType == "EmailSent" ? "checked" : "")/><label for="EmailSent">Reminder emails</label>
+	            <input type="radio" id="FolderWatchTriggered" name="radio" @(showType == "FolderWatchTriggered" ? "checked" : "")/><label for="FolderWatchTriggered">CSVs added</label>
+                <input type="radio" id="Error" name="radio" @(showType == "Error" ? "checked" : "")/><label for="Error">Error</label>
+                <input type="radio" id="Developer" name="radio" @(showType == "Developer" ? "checked" : "")/><label for="Developer">Developer</label>
+        </div>
+
+    @{
+     var grid = new WebGrid(Model, canPage: true, rowsPerPage: 50, sortFieldName: "sortField");
+				  grid.Pager(WebGridPagerModes.NextPrevious);
+				  @grid.GetHtml(tableStyle: "webGrid",
+                    htmlAttributes: new { id = "DebugInfoTable" },
+					headerStyle: "header",
+					alternatingRowStyle: "alt",
+					columns:grid.Columns(
+					grid.Column("Type", format: (item) => Html.Raw(string.Format(@"<span class=""{0} icon"">{0}<span>", item.Type)), style: "typecol"),		
+                    grid.Column("Description","Description", style: "left titlecol Title"),
+                    grid.Column("DateCreated", "Date created", style: "left datecol DateCreated")
+                            
+					)
+				)
+        }
+    </div>
+</div>

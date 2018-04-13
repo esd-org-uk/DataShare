@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+     xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'
+     xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension"
+     xmlns:sql='http://schemas.microsoft.com/wix/SqlExtension'>
+  <!-- definitions START-->
+  <?define SkuName = "DataShare"?>
+  <?define ProductName = "DataShare"?>
+
+  
+  <?define MinProductVersion="1.3.0" ?>
+  <?define UpgradeCode="{f8271709-2ed5-48b8-8344-a569c799d619}"?>
+  <?define Manufacturer="Redbridge Council"?>
+  <!-- To change the installer to be a new version 
+  #step 1 
+  change the RTMProductVersion to a higher number 
+  #step 2 
+  generate new package code and replace existing package code guid
+  
+  #step 3 
+  generate new product code and replace existing product code
+  see below: 
+  -->
+  <?define RTMProductVersion="1.5.0" ?>
+  <?define PackageCode="{082cbbad-2eea-4728-827c-fccdc44b43ac}"?>
+  <?define ProductCode="{c4dde142-844d-409d-b532-c4df3ba76001}"?>
+  
+  
+  <!-- definitions END-->
+
+  <Product Id="$(var.ProductCode)"
+           Name="$(var.ProductName)"
+           Language="1033"
+           Version="$(var.RTMProductVersion)"
+           Manufacturer="$(var.Manufacturer)"
+           UpgradeCode="$(var.UpgradeCode)">
+    <Package Id="$(var.PackageCode)" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated"/>
+
+    <MediaTemplate EmbedCab="yes" />
+    <WixVariable Id="WixUIBannerBmp" Value="bitmaps\topbanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="bitmaps\banner.bmp" />
+
+
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Minimum="$(var.MinProductVersion)"
+                      IncludeMinimum="no"
+                      OnlyDetect="yes"
+                      Language="1033"
+                      Property="NEWPRODUCTFOUND" />
+      <UpgradeVersion Minimum="$(var.MinProductVersion)"
+                      IncludeMinimum="yes"
+                      Maximum="$(var.RTMProductVersion)"
+                      IncludeMaximum="no"
+                      Language="1033"
+                      Property="UPGRADECODE"
+                      />
+    </Upgrade>
+    <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+
+    <Property Id='WEBINSTALLATIONDIR'>
+      <RegistrySearch Id='FindInstallLocation2' Root='HKLM'
+                      Key='Software\Microsoft\Windows\CurrentVersion\Uninstall\[UPGRADECODE]'
+                      Name='InstallLocation2' Type='directory' />
+    </Property>
+    <Property Id="UPGRADEVERSION" Value="$(var.RTMProductVersion)"></Property>
+    <Property Id="UPGRADECODE"></Property>
+    <Property Id="WEBSITENAME" Value="DataShareWeb" />
+    <Property Id="WEBSITEAPPPOOL" Value="DataShareAppPool" />
+
+    <Property Id="INSTALL_IIS_SITE" Value="True"></Property>
+    <Property Id='WEBINSTALLATIONDIR_FOR_COPY'>
+      <RegistrySearch Id='FindInstallLocation' Root='HKLM'
+                      Key='Software\Microsoft\Windows\CurrentVersion\Uninstall\$(var.UpgradeCode)'
+                      Name='InstallLocation' Type='directory' />
+    </Property>
+    <!--start initial values for installers-->
+    <Property Id="DATABASE_NAME" Value="DataShare" />
+    <Property Id="DATABASE_RUNTIME_USERNAME" Value="DataShare" />
+    <Property Id="DATABASE_RUNTIME_PASSWORD" />
+
+    <Property Id="DATABASE_RUNTIME_PASSWORD" Value="PutPasswordHere">
+      <RegistrySearch Id='CheckIfUpgrade' Root='HKLM'
+                Key='Software\Microsoft\Windows\CurrentVersion\Uninstall\$(var.UpgradeCode)'
+                Name='InstallLocation' Type='directory' />
+    </Property>
+
+    <Property Id="DATASHARE_URL" Value="data.mycouncil.gov.uk" Secure="yes"/> <!--preloaded values  - user can change on installation dialogs-->
+    <Property Id="COUNCIL_URL" Value="http://" />
+    <Property Id="COUNCIL_URI" Value="http://opendatacommunities.org/id/london-borough-council/mycouncil" />
+    <!--end initial values for installers-->
+    <Property Id="RUNTIME_DATABASE_LOGON_TYPE" Value="WinAuth" />
+    <Property Id="CREATE_DATABASE_LOGON_TYPE" Value="SqlAuth" />
+    <!-- Check to see if IIS is installed. It it's not, error out. -->
+    <Property Id="IIS_MAJOR_VERSION">
+      <RegistrySearch Id="CheckIISVersion"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\InetStp"
+                      Name="MajorVersion"
+                      Type="raw" />
+    </Property>
+    <Condition Message="IIS must be installed">
+      Installed OR IIS_MAJOR_VERSION
+    </Condition>
+    <Property Id="ISSQLSERVERSERVICEINSTALLED">
+      <RegistrySearch Id="IsSqlServerServiceInstalled" Root="HKLM" Key="SYSTEM\CurrentControlSet\services\MSSQLSERVER"
+                      Name="Description" Type="raw" />
+    </Property>
+
+    <!-- Go find the IIS root directory from the registry. On most machines 
+				 that defaults to C:\inetpub\wwwroot. This will be the directory we 
+				 install into. -->
+    <Property Id="IISROOT">
+      <RegistrySearch Id="IISROOT"
+                      Type="directory"
+                      Root="HKLM"
+                      Key="Software\Microsoft\InetStp"
+                      Name="PathWWWRoot" />
+    </Property>
+
+    <Condition Message="IIS does not appear to be installed correctly, the  
+											 root directory is not set.">
+      Installed OR IISROOT
+    </Condition>
+    <Property Id='ASP_NET_MVC_3_0_DLL_64BIT'>
+      <RegistrySearch Id='regsearch' Root="HKLM"
+                      Key="SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\ASP.NET MVC 3"
+                      Type="raw" />
+    </Property>
+    <Property Id='ASP_NET_MVC_3_0_DLL_32BIT'>
+      <RegistrySearch Id='regsearch32bit' Root="HKLM"
+                      Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\ASP.NET MVC 3" Type="raw" />
+    </Property>
+    <Condition
+      Message='ASP.NET MVC 3.0 is required to proceed with the installation. It can be installed via the Web Platform Installer.'>
+      Installed OR ASP_NET_MVC_3_0_DLL_64BIT OR ASP_NET_MVC_3_0_DLL_32BIT
+    </Condition>
+
+    <!--end conditional checking-->
+
+
+    <Binary Id='CreateUsers' SourceFile='SqlScripts\CreateUsers.sql' />
+    <Binary Id='CreateTables' SourceFile='SqlScripts\CreateTables.sql' />
+    <Binary Id='InsertData' SourceFile='SqlScripts\InsertData.sql' />
+    <Binary Id='Combined_1_4_0_script' SourceFile='SqlScripts\Combined_1_4_0_script.sql' />
+    <Binary Id='Combined_1_5_0_script' SourceFile='SqlScripts\Combined_1_5_0_script.sql' />
+
+    <Property Id="QtExecCmdLine" Value='&quot;cmd.exe&quot; /Q /C For %X in (&quot;[WEBINSTALLATIONDIR]web.config&quot; &quot;[WEBINSTALLATIONDIR]Content\images\CouncilLogo.png&quot; ) do copy /y %X [DATASHAREFOLDER]' />
+    
+
+
+
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+      <!--<Custom Action="cmd_rename_web_config_bak_to_web_config" After="CostFinalize">((NOT UPGRADECODE ="") AND (NOT REMOVE="ALL")) </Custom>
+      <Custom Action="prop_rename_web_config_bak_to_web_config" After="cmd_copy_webconfig_backup_to_webroot">((NOT UPGRADECODE ="") AND (NOT REMOVE="ALL"))</Custom>-->
+
+      
+      <Custom Action="cmd_create_web_config_backup_when_upgrading" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR_FOR_COPY = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_create_web_config_backup_when_upgrading" Before="InstallFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR_FOR_COPY = "") AND (UPGRADECODE="")</Custom>
+
+      <Custom Action="cmd_create_web_config_backup" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_create_web_config_backup" Before="InstallFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+
+      <Custom Action="cmd_create_logo_backup" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_create_logo_backup" Before="InstallFiles">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+
+      <Custom Action="cmd_create_oldwebconfig_backup" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_create_oldwebconfig_backup" Before="InstallFiles">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+
+
+      <Custom Action="cmd_create_logo_backup_upgrade" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_create_logo_backup_upgrade" Before="InstallFiles">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+
+      <Custom Action="cmd_rename_logo_bak_to_councillogo" After="InstallFiles">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+      <Custom Action="prop_rename_logo_bak_to_councillogo" Before="InstallFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (UPGRADECODE="")</Custom>
+
+      <Custom Action="QtExecExample" Before="InstallInitialize">
+        NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (NOT UPGRADECODE="")
+      </Custom>
+      
+      <Custom Action="cmd_copy_webconfig_backup_to_webroot" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (NOT UPGRADECODE="")</Custom>
+      <Custom Action="prop_copy_webconfig_backup_to_webroot" Before="InstallFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (NOT UPGRADECODE="")</Custom>
+
+      <Custom Action="cmd_copy_logo_backup_to_images" After="CostFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (NOT UPGRADECODE="")</Custom>
+      <Custom Action="prop_copy_logo_backup_to_images" Before="InstallFinalize">NOT Installed AND (NOT REMOVE="ALL") AND (NOT WEBINSTALLATIONDIR = "") AND (NOT UPGRADECODE="")</Custom>
+
+    </InstallExecuteSequence>
+    
+    <CustomAction Id="QtExecExample" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="immediate" Return="ignore" />
+    
+    <CustomAction Id="cmd_rename_web_config_bak_to_web_config" Property="prop_rename_web_config_bak_to_web_config"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIR]web.config.bak [WEBINSTALLATIONDIR]web.config"
+                  Execute="immediate" />
+
+    <CustomAction Id="prop_rename_web_config_bak_to_web_config" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="cmd_create_web_config_backup_when_upgrading"
+                  Property="prop_create_web_config_backup_when_upgrading"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIR_FOR_COPY]web.config [WEBINSTALLATIONDIR_FOR_COPY]web.config.bak"
+                  Execute="immediate" />
+
+    <CustomAction Id="prop_create_web_config_backup_when_upgrading" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="cmd_create_web_config_backup" Property="prop_create_web_config_backup"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIR]web.config [WEBINSTALLATIONDIR]web.config.bak"
+                  Execute="immediate" />
+
+    <CustomAction Id="prop_create_web_config_backup" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="check" Impersonate="no" />
+
+
+    <CustomAction Id="cmd_rename_logo_bak_to_councillogo" Property="prop_rename_logo_bak_to_councillogo"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png.bak [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png"
+                  Execute="immediate" />
+
+    <CustomAction Id="prop_rename_logo_bak_to_councillogo" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <CustomAction Id="cmd_create_oldwebconfig_backup" Property="prop_create_oldwebconfig_backup"
+          Value="&quot;cmd.exe&quot; /Q /C move /Y [WEBINSTALLATIONDIR]web.config [WEBINSTALLATIONDIR]web.config.original"
+          Execute="immediate"  />
+
+    <CustomAction Id="prop_create_oldwebconfig_backup" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+
+
+    <CustomAction Id="cmd_copy_webconfig_backup_to_webroot" Property="prop_copy_webconfig_backup_to_webroot"
+      Value="&quot;cmd.exe&quot; /Q /C copy [DATASHAREFOLDER]web.config [WEBINSTALLATIONDIR]web.config"
+      Execute="immediate"  />
+
+    <CustomAction Id="prop_copy_webconfig_backup_to_webroot" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+
+
+    <CustomAction Id="cmd_copy_logo_backup_to_images" Property="prop_copy_logo_backup_to_images"
+  Value="&quot;cmd.exe&quot; /Q /C copy [DATASHAREFOLDER]CouncilLogo.png [WEBINSTALLATIONDIR]Content\images\CouncilLogo.png"
+  Execute="immediate"  />
+
+    <CustomAction Id="prop_copy_logo_backup_to_images" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+
+
+
+    <CustomAction Id="cmd_create_logo_backup_upgrade" Property="prop_create_logo_backup_upgrade"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png.bak"
+                  Execute="immediate"  />
+
+    <CustomAction Id="prop_create_logo_backup_upgrade" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+    
+    <CustomAction Id="cmd_create_logo_backup_upgrade2" Property="prop_create_logo_backup_upgrade2"
+                  Value="&quot;cmd.exe&quot; /Q /C xcopy /d /e/ y [DATASHAREFOLDER]WebBackup\*.* [WEBINSTALLATIONDIR]*.*"
+                  Execute="immediate"  />
+
+    <CustomAction Id="prop_create_logo_backup_upgrade2" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <CustomAction Id="cmd_create_logo_backup" Property="prop_create_logo_backup"
+                  Value="&quot;cmd.exe&quot; /Q /C copy /Y [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png [WEBINSTALLATIONDIRCONTENT_IMAGES]CouncilLogo.png.bak"
+                  Execute="immediate" />
+
+    <CustomAction Id="prop_create_logo_backup" BinaryKey="WixCA" DllEntry="CAQuietExec"
+                  Execute="deferred" Return="ignore" Impersonate="no" />
+    
+    <!--start Adding test db from msiext-->
+    <Binary Id="AsiUI_SuccessIco" SourceFile="bitmaps\Success.ico" />
+    <Binary Id="AsiUI_ErrorIco" SourceFile="bitmaps\Error.ico" />
+    <!-- active directory -->
+    <CustomAction Id="AsiUI_DirectoryObjectPicker" BinaryKey="AsiUI_ADBin" DllEntry="DirectoryObjectPicker"
+                  Execute="immediate" Return="check" />
+    <Binary Id="AsiUI_ADBin" SourceFile="Dlls\ActiveDirectory.dll" />
+
+    <!-- database connection -->
+    <CustomAction Id="AsiUI_ODBC_Connect" BinaryKey="AsiUI_DataSrcBin" DllEntry="ODBC_Connect" Execute="immediate"
+                  Return="ignore" />
+    <CustomAction Id="AsiUI_ODBC_GetString" BinaryKey="AsiUI_DataSrcBin" DllEntry="ODBC_GetString" Execute="immediate"
+                  Return="ignore" />
+    <CustomAction Id="AsiUI_SQLDMO_ListAvailableSQLServers" BinaryKey="AsiUI_DataSrcBin"
+                  DllEntry="SQLDMO_ListAvailableSQLServers" Return="ignore" />
+    <Binary Id="AsiUI_DataSrcBin" SourceFile="Dlls\DataSource.dll" />
+
+    <!-- string tools -->
+    <CustomAction Id="AsiUI_String_Replace" BinaryKey="AsiUI_StrToolsBin" DllEntry="String_Replace" Execute="immediate"
+                  Return="ignore" />
+    <CustomAction Id="AsiUI_Regex_Replace" BinaryKey="AsiUI_StrToolsBin" DllEntry="Regex_Replace" Execute="immediate"
+                  Return="ignore" />
+    <CustomAction Id="AsiUI_String_Trim" BinaryKey="AsiUI_StrToolsBin" DllEntry="String_Trim" Execute="immediate"
+                  Return="ignore" />
+    <CustomAction Id="AsiUI_Regex_Match" BinaryKey="AsiUI_StrToolsBin" DllEntry="Regex_Match" Execute="immediate"
+                  Return="ignore" />
+    <Binary Id="AsiUI_StrToolsBin" SourceFile="Dlls\StringTools.dll" />
+
+
+
+    <!--end Adding test db from msiext-->
+
+
+    <ComponentGroup Id="ProductComponents" Directory="WEBINSTALLATIONDIR">
+      <ComponentGroupRef Id="DS.WebUI_Project" />
+      <Component Id="DeleteWebConfigBackup" Guid="fe53e886-c8d4-448b-bf77-5296d30edd1f" KeyPath="yes">
+        <RemoveFile Name="web.config.bak" On="uninstall" Id="RemoveWebConfigBak"></RemoveFile>
+        <RemoveFile Name="web.config.original" On="uninstall" Id="RemoveWebConfigOriginal"></RemoveFile>
+      </Component>
+
+
+      <!-- this changes the web config after installation-->
+      <Component Id="ChangeConnectionStringConfig" Guid="8ab58821-888c-4f32-84b3-36fa53d6b000" KeyPath="yes">
+        <Condition><![CDATA[(NOT USESSL_FORADMIN) AND UPGRADECODE = "" AND (NOT Installed)]]></Condition>
+
+
+        <util:XmlFile Id="AppConfigSetConnStr" Action="setValue" Permanent="yes" File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/connectionStrings/add[\[]@name=&quot;DataShareContext&quot;[\]]"
+                      Name="connectionString"
+                      Value="Data Source=[DATABASE_SERVER];Initial Catalog=[DATABASE_NAME];Persist Security Info=True;User ID=[DATABASE_RUNTIME_USERNAME];Password=[DATABASE_RUNTIME_PASSWORD];" />
+
+        <util:XmlFile Id="AppConfigSetDatashareUrl2" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;RootURL&quot;[\]]" Name="value"
+                      Value="http://[DATASHARE_URL]" />
+
+        <util:XmlFile Id="AppConfigSetUseSSLForAdminSSLFalse" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;UseSSLForAdmin&quot;[\]]" Name="value"
+                      Value="false" />
+
+        <util:XmlFile Id="AppConfigSetfilePath" Action="setValue" Permanent="yes" File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;FilePath&quot;[\]]" Name="value"
+                      Value="[WEBINSTALLATIONDIR]" />
+
+        <util:XmlFile Id="AppConfigSetMediaAssetDirectory" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;MediaAssetFolder&quot;[\]]"
+                      Name="value"
+                      Value="[DSUPLOADEDFILES]" />
+
+
+      </Component>
+      <Component Id="ChangeConnectionStringConfigSSL" Guid="07248725-8a55-48aa-b8d1-daa0dd677384" KeyPath="yes">
+        <Condition><![CDATA[USESSL_FORADMIN AND UPGRADECODE = "" AND NOT Installed]]></Condition>
+
+
+        <util:XmlFile Id="AppConfigSetConnStrSSL" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/connectionStrings/add[\[]@name=&quot;DataShareContext&quot;[\]]"
+                      Name="connectionString"
+                      Value="Data Source=[DATABASE_SERVER];Initial Catalog=[DATABASE_NAME];Persist Security Info=True;User ID=[DATABASE_RUNTIME_USERNAME];Password=[DATABASE_RUNTIME_PASSWORD];" />
+
+        <util:XmlFile Id="AppConfigSetDatashareUrl2SSL" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;RootURL&quot;[\]]" Name="value"
+                      Value="http://[DATASHARE_URL]" />
+
+        <util:XmlFile Id="AppConfigSetUseSSLForAdminSSL" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;UseSSLForAdmin&quot;[\]]" Name="value"
+                      Value="true" />
+        <util:XmlFile Id="AppConfigSetfilePath2" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;FilePath&quot;[\]]" Name="value"
+                      Value="[WEBINSTALLATIONDIR]" />
+        <util:XmlFile Id="AppConfigSetMediaAssetDirectory2" Action="setValue" Permanent="yes"
+                      File="[WEBINSTALLATIONDIR]web.config"
+                      ElementPath="/configuration/appSettings/add[\[]@key=&quot;MediaAssetFolder&quot;[\]]"
+                      Name="value"
+                      Value="[DSUPLOADEDFILES]" />
+
+      </Component>
+
+      <Component Id="SqlComponent" Guid="4885828f-9f2d-49b1-9693-9f41166fd5c0" KeyPath="yes">
+        <Condition>NOT CREATE_DATABASE_LOGON_TYPE = "SqlAuth" AND UPGRADECODE = ""</Condition>
+        <sql:SqlDatabase Id="SqlDatabase" Database="[DATABASE_NAME]" Server="[DATABASE_SERVER]"
+                         CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+
+          <sql:SqlString Id="SetDBOnline" SQL="ALTER DATABASE [DATABASE_NAME] SET ONLINE " ExecuteOnInstall="yes"
+                         Sequence="1">
+          </sql:SqlString>
+          <sql:SqlString Id="CreateDBRunTimeUser"
+                         SQL="                       
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+	EXEC [DATABASE_NAME].dbo.sp_fulltext_database @action = 'enable'
+end
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'[DATABASE_RUNTIME_USERNAME]')
+CREATE USER [DATABASE_RUNTIME_USERNAME] WITHOUT LOGIN WITH DEFAULT_SCHEMA=dbo
+
+If not Exists (select loginname from master.dbo.syslogins where name = '[DATABASE_RUNTIME_USERNAME]')
+Begin
+	CREATE LOGIN [DATABASE_RUNTIME_USERNAME] with PASSWORD = '[DATABASE_RUNTIME_PASSWORD]' ,  DEFAULT_DATABASE = [DATABASE_NAME];
+  alter authorization on database::[DATABASE_NAME] to [DATABASE_RUNTIME_USERNAME];
+END
+	Exec sp_addrolemember N'db_owner', N'[DATABASE_RUNTIME_USERNAME]';
+	
+
+                         "
+                         ExecuteOnInstall="yes" Sequence="2">
+          </sql:SqlString>
+          <sql:SqlScript Id='CreateUsers' BinaryKey='CreateUsers' ExecuteOnInstall='yes' Sequence='3' />
+          <sql:SqlScript Id='CreateTables' BinaryKey='CreateTables' ExecuteOnInstall='yes' Sequence='4' />
+          <sql:SqlScript Id='InsertData' BinaryKey='InsertData' ExecuteOnInstall='yes' Sequence='5' />
+          <sql:SqlString Id="InsertSystemConfiguration"
+                         SQL="                       
+				IF NOT EXISTs(SELECT * FROM [DATABASE_NAME].dbo.SYS_DS_ConfigurationSettings WHERE SettingId = 1)
+				INSERT INTO [DATABASE_NAME].dbo.SYS_DS_ConfigurationSettings
+				(SettingId
+				,CouncilName
+				,CouncilUrl
+				,CouncilUri
+				,MapCentreLatitude
+				,MapCentreLongitude
+				,MapDefaultZoom
+				,AnalyticsTrackingRef
+				)
+				VALUES
+				(1,'','','','52.5897007687178','-0.98876953125','6','')
+												"
+                         ExecuteOnInstall="yes" Sequence="6">
+
+          </sql:SqlString>
+          <sql:SqlScript Id='Combined_1_4_0_script' BinaryKey='Combined_1_4_0_script' ExecuteOnInstall='yes'
+                         Sequence='7' />
+          <sql:SqlScript Id='Combined_1_5_0_script' BinaryKey='Combined_1_5_0_script' ExecuteOnInstall='yes'
+                         Sequence='8' />
+        </sql:SqlDatabase>
+      </Component>
+
+
+      <Component Id="SqlComponentCurrentUser" Guid="dcb77ea0-c751-4bbc-9304-ef83542ff9f1" KeyPath="yes">
+        <Condition>CREATE_DATABASE_LOGON_TYPE = "SqlAuth" AND UPGRADECODE = ""</Condition>
+        <sql:SqlDatabase Id="SqlDatabaseSqlAuth" Database="[DATABASE_NAME]" User="SQLUser" Server="[DATABASE_SERVER]"
+                         CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="yes">
+
+          <sql:SqlString Id="SetDBOnlineSqlAuth" SQL="ALTER DATABASE [DATABASE_NAME] SET ONLINE "
+                         ExecuteOnInstall="yes" Sequence="1">
+          </sql:SqlString>
+          <sql:SqlString Id="CreateDBRunTimeUserSqlAuth"
+                         SQL="                       
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+	EXEC [DATABASE_NAME].dbo.sp_fulltext_database @action = 'enable'
+end
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'[DATABASE_RUNTIME_USERNAME]')
+CREATE USER [DATABASE_RUNTIME_USERNAME] WITHOUT LOGIN WITH DEFAULT_SCHEMA=dbo
+
+If not Exists (select loginname from master.dbo.syslogins where name = '[DATABASE_RUNTIME_USERNAME]')
+Begin
+	CREATE LOGIN [DATABASE_RUNTIME_USERNAME] with PASSWORD = '[DATABASE_RUNTIME_PASSWORD]' ,  DEFAULT_DATABASE = [DATABASE_NAME];
+  alter authorization on database::[DATABASE_NAME] to [DATABASE_RUNTIME_USERNAME];
+END
+  	Exec sp_addrolemember N'db_owner', N'[DATABASE_RUNTIME_USERNAME]';
+	
+                         "
+                         ExecuteOnInstall="yes" Sequence="2">
+          </sql:SqlString>
+          <sql:SqlScript Id='CreateUsersSqlAuth' BinaryKey='CreateUsers' ExecuteOnInstall='yes' Sequence='3' />
+          <sql:SqlScript Id='CreateTablesSqlAuth' BinaryKey='CreateTables' ExecuteOnInstall='yes' Sequence='4' />
+          <sql:SqlScript Id='InsertDataSqlAuth' BinaryKey='InsertData' ExecuteOnInstall='yes' Sequence='5' />
+          <sql:SqlString Id="InsertSystemConfigurationSqlAuth"
+                         SQL="           
+      IF NOT EXISTs(SELECT * FROM [DATABASE_NAME].dbo.SYS_DS_ConfigurationSettings WHERE SettingId = 1)
+				INSERT INTO [DATABASE_NAME].dbo.SYS_DS_ConfigurationSettings
+				(SettingId
+				,CouncilName
+				,CouncilUrl
+				,CouncilUri
+				,MapCentreLatitude
+				,MapCentreLongitude
+				,MapDefaultZoom
+				,AnalyticsTrackingRef
+				)
+				VALUES
+				(1,'','','','52.5897007687178','-0.98876953125','6','')
+												"
+                         ExecuteOnInstall="yes" Sequence="6">
+          </sql:SqlString>
+
+          <sql:SqlScript Id='Combined_1_4_0_scriptSqlAuth' BinaryKey='Combined_1_4_0_script' ExecuteOnInstall='yes'
+                         Sequence='7' />
+          <sql:SqlScript Id='Combined_1_5_0_scriptSqlAuth' BinaryKey='Combined_1_5_0_script' ExecuteOnInstall='yes'
+                         Sequence='8' />
+        </sql:SqlDatabase>
+      </Component>
+
+
+      <Component Id="SqlComponentforUpgradeSQLAuth" Guid="8b75c571-e1e1-4d2c-96d4-6aa476f3c980" KeyPath="yes">
+        <Condition>CREATE_DATABASE_LOGON_TYPE = "SqlAuth" AND NOT UPGRADECODE = ""</Condition>
+        <sql:SqlDatabase Id="SqlDatabaseSQLAuthUpgrade" Database="[DATABASE_NAME]" Server="[DATABASE_SERVER]"
+                         CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+          <sql:SqlScript Id='Combined_1_5_0_script_upgrade_sqlauth' BinaryKey='Combined_1_5_0_script' ExecuteOnInstall='yes'
+                  Sequence='1' />
+        </sql:SqlDatabase>
+        
+      </Component>
+
+      <Component Id="SqlComponentforUpgradeWinAuth" Guid="040ddeab-f947-4edc-bdc9-eda5c75bce12" KeyPath="yes">
+        <Condition>NOT CREATE_DATABASE_LOGON_TYPE = "SqlAuth" AND NOT UPGRADECODE = ""</Condition>
+        <sql:SqlDatabase Id="SqlDatabaseWinAuthUpgrade" Database="[DATABASE_NAME]" Server="[DATABASE_SERVER]"
+                         CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+          <sql:SqlScript Id='Combined_1_5_0_script_upgrade_winauth' BinaryKey='Combined_1_5_0_script' ExecuteOnInstall='yes'
+                  Sequence='1' />
+        </sql:SqlDatabase>
+        
+      </Component>
+</ComponentGroup>
+
+
+    <Feature Id="ProductFeature" Title="DS.Web.WixSetup" Level="1">
+      <ComponentRef Id="DeleteFolderBin"></ComponentRef>
+      <ComponentRef Id="DELETEALL"></ComponentRef>
+      <ComponentRef Id="DELETEALL2"></ComponentRef>
+      <ComponentRef Id="DELETEALL3"></ComponentRef>
+      <ComponentRef Id="DELETEALL4"></ComponentRef>
+      <ComponentRef Id="DELETEALL5"></ComponentRef>
+      <ComponentRef Id="DELETEALL6"></ComponentRef>
+      <ComponentRef Id="DELETECOUNCILLOGOBAK"></ComponentRef>
+      <ComponentRef Id="DELETESTYLECHIRPCSS"></ComponentRef>
+
+      <ComponentGroupRef Id="ProductComponents" />
+
+      <ComponentRef Id="InstallWebsite" />
+      <ComponentRef Id="InstallWebsiteWithHTTPS" />
+
+      <ComponentRef Id="DatashareWebUIAppPool" />
+      <ComponentRef Id="CreateFoldersForDatashare" />
+      <ComponentRef Id="CreateFoldersForDatashare1" />
+      <ComponentRef Id="CreateFoldersForDatashare2" />
+      <ComponentRef Id="CreateFoldersForLBR" />
+
+    </Feature>
+
+
+    <!--<Feature Id="Feature_CreateLBRFolder" Title="Folder Locations" Level="1" ConfigurableDirectory="LBRFOLDERLOCATION">
+      <ComponentRef Id="CreateFoldersForLBR" />
+    </Feature>-->
+
+
+    <!-- UI Reference that is needed to run the dialogs-->
+    <UIRef Id="CaTestUI" />
+    <UIRef Id="WixUI_Common" />
+    <UIRef Id="DatabaseNamingGUI" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <!-- start conditional checking-->
+    <PropertyRef Id="NETFRAMEWORK40FULL" />
+    <Condition
+      Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
+    </Condition>
+
+
+    <util:User Id='SQLUser' Name='[CREATE_DATABASE_USERNAME]' Password='[CREATE_DATABASE_PASSWORD]' />
+
+  </Product>
+
+  <Fragment>
+
+    <DirectoryRef Id="LBR">
+      <Component Id="CreateFoldersForLBR" Guid="0eeb6625-c1df-43c0-b4b7-3cf917dc0c91" KeyPath="yes">
+        <CreateFolder />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="DATASHAREFOLDER">
+      <Component Id="CreateFoldersForDatashare" Guid="3fd558d1-89b2-4a62-be59-9b2d3fa0da47" KeyPath="yes">
+        <CreateFolder />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DBLOG">
+      <Component Id="CreateFoldersForDatashare1" Guid="498f2711-cb44-452e-aa16-6e7b4a9c1a86" KeyPath="yes">
+        <CreateFolder />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="DSUPLOADEDFILES">
+      <Component Id="CreateFoldersForDatashare2" Guid="1acf0c80-3536-49f0-95b2-2cab0ed1c12d" KeyPath="yes">
+        <CreateFolder />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="WEBINSTALLATIONDIRBIN">
+      <Component Id="DeleteFolderBin" Guid="1acf0c80-3536-49f0-95b2-2cab0ed3e12d" KeyPath="yes">
+        <RemoveFile Name="*.dll" On="both" Id="RemoveBinFiles"></RemoveFile>
+      </Component>
+    </DirectoryRef>
+<Component Id="DELETEALL" Guid="a60feafe-adf5-40ce-8afd-a2dca0470979" Directory="WEBINSTALLATIONDIRAREA" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir" On="both" Property="WEBINSTALLATIONDIRAREA" />
+</Component>
+
+<Component Id="DELETEALL2" Guid="8862d5ed-1d32-4f3c-90ba-68e5e265bca8" Directory="WEBINSTALLATIONDIRBIN" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir2" On="both" Property="WEBINSTALLATIONDIRBIN" />
+</Component>
+    <Component Id="DELETEALL3" Guid="d5cb5629-69dd-4124-87fa-549469f7ec4b" Directory="WEBINSTALLATIONDIRCONTENT" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir3" On="uninstall" Property="WEBINSTALLATIONDIRCONTENT" />
+</Component>
+<Component Id="DELETEALL4" Guid="ddc30aee-1812-4bac-bd56-31a3c4de19c8" Directory="WEBINSTALLATIONDIRSCRIPTS" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir4" On="both" Property="WEBINSTALLATIONDIRSCRIPTS" />
+</Component>
+<Component Id="DELETEALL5" Guid="967786e9-17c3-442a-9f33-73f5e70c4365" Directory="WEBINSTALLATIONDIRVIEWS" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir5" On="both" Property="WEBINSTALLATIONDIRVIEWS" />
+</Component>
+    <Component Id="DELETEALL6" Guid="5d6dd4d4-2adb-47df-9575-0f3b399950b1" Directory="WEBINSTALLATIONDIRXSLTEMPLATES" KeyPath="yes">
+    <util:RemoveFolderEx Id="RemoveiDocDir6" On="both" Property="WEBINSTALLATIONDIRXSLTEMPLATES" />
+</Component>
+    <Component Id="DELETECOUNCILLOGOBAK" Guid="1cf9e1af-d1ed-40f5-8c09-ac20bc9ecd57" Directory="WEBINSTALLATIONDIRCONTENT_IMAGES" KeyPath="yes">
+      <RemoveFile Name="CouncilLogo.png.bak" On="uninstall" Id="RemoveCouncilLogoBak"></RemoveFile>
+</Component>
+
+    <Component Id="DELETESTYLECHIRPCSS" Guid="f272d028-189d-45ae-9e93-a5ae13906e56" Directory="WEBINSTALLATIONDIRCONTENT_CSS" KeyPath="yes">
+      <RemoveFile Name="style.chirp.less.css" On="uninstall" Id="RemoveStyleChirpLessCss"></RemoveFile>
+    </Component>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LBR" Name="LBR">
+        <Directory Id="DATASHAREFOLDER" Name="DATASHARE">
+          <Directory Id="DBLOG" Name="DatabaseInstallationLog">
+          </Directory>
+          <Directory Id="DSUPLOADEDFILES" Name="DS_UploadedFiles"></Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="IISROOT">
+        <Directory Id="WEBINSTALLATIONDIR" Name="DataShareWeb">
+
+          <Directory Id="WEBINSTALLATIONDIRBIN" Name="bin"></Directory>
+         <Directory Id="WEBINSTALLATIONDIRAREA" Name="Areas"></Directory>
+            
+          
+           <Directory Id="WEBINSTALLATIONDIRCONTENT" Name="Content">
+             <Directory Id="WEBINSTALLATIONDIRCONTENT_IMAGES" Name="images"></Directory>
+             <Directory Id="WEBINSTALLATIONDIRCONTENT_CSS" Name="css"></Directory>
+           </Directory>
+          <Directory Id="WEBINSTALLATIONDIRSCRIPTS" Name="Scripts"></Directory>
+          <Directory Id="WEBINSTALLATIONDIRVIEWS" Name="Views"></Directory>
+          <Directory Id="WEBINSTALLATIONDIRXSLTEMPLATES" Name="XslTemplates"></Directory>
+
+          <!--Start APP POOL CREATION-->
+          <Component Id="DatashareWebUIAppPool" Guid="41582a2f-d464-4b64-8d22-57eb190d090c" KeyPath="yes"
+                     Permanent="yes">
+            <Condition><![CDATA[(INSTALL_IIS_SITE = "True") AND UPGRADECODE=""]]></Condition>
+            <iis:WebAppPool Id="DatashareWebUIAppPool"
+                            Name="[DATASHARE_URL]"
+                            Identity="localSystem"
+                            ManagedPipelineMode="Integrated"
+                            ManagedRuntimeVersion="v4.0" />
+          </Component>
+          <!--END APP POOL CREATION-->
+
+          <!--Start WEBSITE CREATION-->
+          <Component Id="InstallWebsiteWithHTTPS" Guid="857437f5-df57-45b7-aa5a-bb36aa802298" KeyPath="yes"
+                     Permanent="no">
+            <Condition><![CDATA[USESSL_FORADMIN AND (INSTALL_IIS_SITE = "True") AND UPGRADECODE=""]]></Condition>
+
+            <!-- Install to default web site -->
+            <iis:WebSite Id="DatashareWebUIWebsite" Description='[DATASHARE_URL]' Directory='WEBINSTALLATIONDIR'
+                         AutoStart='yes' StartOnInstall='yes' 
+                         ConfigureIfExists="no" >
+              <iis:WebAddress Id="AllUnassigned" Port="80" Header="[DATASHARE_URL]" />
+              <iis:WebAddress Id="SecureUnassigned" Port="443" Header="[DATASHARE_URL]" Secure="yes" />
+              <iis:WebApplication Id="DatashareWebUIApplication" Name="test" WebAppPool="DatashareWebUIAppPool"></iis:WebApplication>
+            </iis:WebSite>
+          </Component>
+          
+          <Component Id="InstallWebsite" Guid="a7a506c0-05a4-45e3-ab3b-1f15b8dbd4b9" KeyPath="yes" Permanent="no">
+            <Condition><![CDATA[NOT USESSL_FORADMIN AND (INSTALL_IIS_SITE = "True") AND UPGRADECODE=""]]></Condition>
+
+            <!-- Install to default web site -->
+            <iis:WebSite Id="DatashareWebUIWebsiteNormal" Description='[DATASHARE_URL]' Directory='WEBINSTALLATIONDIR'
+                         AutoStart='yes' StartOnInstall='yes'
+                         ConfigureIfExists="no">
+              <iis:WebAddress Id="AllUnassignedNormal" Port="80" Header="[DATASHARE_URL]"  />
+              <iis:WebApplication Id="DatashareWebUIApplicationNormal" Name="test" WebAppPool="DatashareWebUIAppPool"></iis:WebApplication>
+            </iis:WebSite>
+          </Component>
+          <!--END WEBSITE CREATION-->
+        </Directory>
+
+      </Directory>
+
+
+    </Directory>
+
+
+    <UI Id="CaTestUI">
+
+
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+      <DialogRef Id="UserExit" />
+      <DialogRef Id="BrowseDlg" />
+      <DialogRef Id="DiskCostDlg" />
+      <DialogRef Id="SelectDbDlg" />
+
+
+      <Property Id="WIXUI_INSTALLDIR"
+                Value="WEBINSTALLATIONDIR" />
+
+
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <Property Id="WixUI_Mode" Value="InstallDir" />
+
+
+      <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+      <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="SelectDbDlg">NOT Installed AND UPGRADECODE = ""</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="UpgradeDlg">NOT Installed AND NOT UPGRADECODE = ""</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+      
+      <Publish Dialog="UpgradeDlg" Control="Next" Event="NewDialog" Value="SelectDbDlg">NOT Installed AND NOT UPGRADECODE = ""</Publish>
+      <!--<Publish Dialog="UpgradeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">NOT Installed AND NOT UPGRADECODE = ""</Publish>-->
+      <Publish Dialog="UpgradeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">NOT Installed AND NOT UPGRADECODE = ""</Publish>
+
+
+      
+      <Publish Dialog="SelectDbDlg" Control="Next" Event="NewDialog" Value="DbCreateCredDlg">NOT Installed</Publish>
+      <Publish Dialog="SelectDbDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">NOT Installed</Publish>
+
+
+      <Publish Dialog="DbCreateCredDlg" Control="Back" Event="NewDialog" Value="SelectDbDlg">NOT Installed</Publish>
+      <Publish Dialog="DbCreateCredDlg" Control="Next" Event="NewDialog" Value="DatabaseDlg">NOT Installed</Publish>
+      
+
+      
+      <Publish Dialog="DatabaseDlg" Control="Back" Event="NewDialog" Value="DbCreateCredDlg" Order="1">Installed</Publish>
+      <Publish Dialog="DatabaseDlg" Control="Back" Event="NewDialog" Value="DbCreateCredDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="DatabaseDlg" Control="Next" Event="NewDialog" Value="EnterDatashareUrlDialog" Order="2">NOT Installed AND UPGRADECODE = ""</Publish>
+      <Publish Dialog="DatabaseDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">NOT Installed AND NOT UPGRADECODE = ""</Publish>
+
+
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="DatabaseDlg" Order="1">Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Back" Event="NewDialog" Value="DatabaseDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="EnterDatashareUrlDialog" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2">1</Publish>
+
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="EnterDatashareUrlDialog">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]"
+               Order="1">
+        1
+      </Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">Installed AND PATCH</Publish>
+
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+      <Property Id="ARPNOMODIFY" Value="1" />
+
+
+    </UI>
+
+
+  </Fragment>
+
+
+  <!-- includes START -->
+  <?include DatashareUrlUI.wxi ?>
+  <?include AdditionalConfigDetailsDialog.wxi ?>
+  <?include AdditionalConfigurationDetails2.wxi ?>
+
+  <?include SQLServerDialog.wxi ?>
+  <?include UpgradeDialog.wxi ?>
+  <!-- includes END -->
+</Wix>

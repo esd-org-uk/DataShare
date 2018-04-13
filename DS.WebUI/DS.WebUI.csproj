@@ -1,0 +1,773 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DS.WebUI</RootNamespace>
+    <AssemblyName>DS.WebUI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+      </Objects>
+    </PublishDatabaseSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseToTest|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseToStaging|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseToLive|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNightlyService|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNightlyServiceDebug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseToInstall|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\DS.WebUI.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="AjaxMin">
+      <HintPath>..\packages\AjaxMin.4.48.4489.28432\lib\net20\AjaxMin.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DataAnnotationsExtensions.0.4.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions.ClientValidation, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.0.5.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="dotless.Core, Version=1.3.1.0, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\dotless.1.3.1.0\lib\dotless.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EcmaScript.NET">
+      <HintPath>..\packages\YUICompressor.NET.2.0.0.0\lib\NET20\EcmaScript.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.1.1\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender.v4.0">
+      <HintPath>..\packages\HibernatingRhinos.Profiler.Appender.v4.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\YUICompressor.NET.2.0.0.0\lib\NET20\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.1\lib\40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SquishIt.Framework">
+      <HintPath>..\packages\SquishIt.0.9.5\lib\SquishIt.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SquishIt.Less, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SquishIt.Less.0.9.5\lib\SquishIt.Less.dll</HintPath>
+    </Reference>
+    <Reference Include="SquishIt.Mvc">
+      <HintPath>..\packages\SquishIt.Mvc.0.9.5\lib\SquishIt.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap.2.6.2\lib\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages" />
+    <Reference Include="System.Web.Helpers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Visualization">
+      <HintPath>..\packages\Visualization.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivator, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Yahoo.Yui.Compressor">
+      <HintPath>..\packages\YUICompressor.NET.2.0.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
+    <Compile Include="App_Start\SquishItLess.cs" />
+    <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ChangePasswordController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FeedbackController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DebugInfoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SchemaController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SystemConfigController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UploadController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserAdminController.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\Base\BaseController.cs" />
+    <Compile Include="Controllers\ContactUsController.cs" />
+    <Compile Include="Controllers\DeveloperController.cs" />
+    <Compile Include="Controllers\DownloadController.cs" />
+    <Compile Include="Controllers\Extensions\ActionResultExtensions.cs" />
+    <Compile Include="Controllers\Extensions\ControllerExtenstions.cs" />
+    <Compile Include="Controllers\Extensions\DataTableExtensions.cs" />
+    <Compile Include="Controllers\Extensions\DateExtensions.cs" />
+    <Compile Include="Controllers\Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Controllers\Extensions\RegExExtensions.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\ViewController.cs" />
+    <Compile Include="DependencyResolution\IoC.cs" />
+    <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="IUpload.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="apple-touch-icon.png" />
+    <Content Include="App_Data\functions_services.xml" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\draghandle.gif" />
+    <Content Include="Areas\Admin\Scripts\jscoord-1.1.js" />
+    <Content Include="Content\css\images\layers-2x.png" />
+    <Content Include="Content\css\images\layers.png" />
+    <Content Include="Content\css\images\marker-icon-2x.png" />
+    <Content Include="Content\css\images\marker-icon.png" />
+    <Content Include="Content\css\images\marker-shadow.png" />
+    <Content Include="Content\css\libs\leaflet.css" />
+    <Content Include="Content\css\libs\MarkerCluster\MarkerCluster.css" />
+    <Content Include="Content\css\libs\MarkerCluster\MarkerCluster.Default.css" />
+    <Content Include="Content\css\libs\MarkerCluster\MarkerCluster.Default.ie.css" />
+    <Content Include="Areas\Admin\Content\css\style.less">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Admin\Content\css\style.css">
+      <DependentUpon>style.less</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Admin\Content\css\style.min.css">
+      <DependentUpon>style.less</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Admin\Content\images\backgrounds\pbar-ani.gif" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\x\40px-button.png" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\x\alert-overlay.png" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\x\bargradient.png" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\x\greygradient.png" />
+    <Content Include="Areas\Admin\Content\images\backgrounds\x\super-button-overlay.png" />
+    <Content Include="Areas\Admin\Content\images\categories\categoryimages.jpg" />
+    <Content Include="Areas\Admin\Content\images\categories\catsprites.jpg" />
+    <Content Include="Areas\Admin\Content\images\colorbox\border.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\controls.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderBottomCenter.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderBottomLeft.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderBottomRight.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderMiddleLeft.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderMiddleRight.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderTopCenter.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderTopLeft.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\internet_explorer\borderTopRight.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\loading.gif" />
+    <Content Include="Areas\Admin\Content\images\colorbox\loading_background.png" />
+    <Content Include="Areas\Admin\Content\images\colorbox\overlay.png" />
+    <Content Include="Areas\Admin\Content\images\CouncilLogo.png" />
+    <Content Include="Areas\Admin\Content\images\DataSpaceLogo.png" />
+    <Content Include="Areas\Admin\Content\images\DataSpaceLogoBeta.png" />
+    <Content Include="Areas\Admin\Content\images\icons\2_64x64.png" />
+    <Content Include="Areas\Admin\Content\images\icons\36_64x64.png" />
+    <Content Include="Areas\Admin\Content\images\icons\51_64x64.png" />
+    <Content Include="Areas\Admin\Content\images\icons\adminicons.png" />
+    <Content Include="Areas\Admin\Content\images\icons\bulletarrow.png" />
+    <Content Include="Areas\Admin\Content\images\icons\currentlydisabled.png" />
+    <Content Include="Areas\Admin\Content\images\icons\sortarrows.gif" />
+    <Content Include="Areas\Admin\Content\images\icons\sortarrows.png" />
+    <Content Include="Areas\Admin\Content\images\icons\sprites.gif" />
+    <Content Include="Areas\Admin\Content\images\icons\sprites.png" />
+    <Content Include="Areas\Admin\Content\images\icons\upload.png" />
+    <Content Include="Areas\Admin\Content\images\icons\validationsprites.png" />
+    <Content Include="Areas\Admin\Content\images\masks\circle60pxglow.png" />
+    <Content Include="Areas\Admin\Content\images\masks\rightFader.gif" />
+    <Content Include="Areas\Admin\Content\images\masks\rightFader.png" />
+    <Content Include="Areas\Admin\Content\images\redbridge.png" />
+    <Content Include="Areas\Admin\Scripts\plugins.min.js">
+      <DependentUpon>plugins.js</DependentUpon>
+    </Content>
+    <Content Include="Areas\Admin\Scripts\plugins.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\css\plupload.queue.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\css\jquery.plupload.queue.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\backgrounds.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\buttons-disabled.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\buttons.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\delete.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\done.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\error.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\throbber.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\img\transp50.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.plupload.queue\jquery.plupload.queue.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.ui.plupload\css\jquery.ui.plupload.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.ui.plupload\img\plupload-bw.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.ui.plupload\img\plupload.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\jquery.ui.plupload\jquery.ui.plupload.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.browserplus.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.flash.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.flash.swf" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.full.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.gears.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.html4.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.html5.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.silverlight.js" />
+    <None Include="Areas\Admin\Scripts\plugins\plupload\js\plupload.silverlight.xap" Condition="$(IsDesktopBuild) == true" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\jquery.tinymce.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\langs\en.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\autoresize\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\alert.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\button.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\buttons.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\confirm.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\corners.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\horizontal.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\vertical.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\window.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\inlinepopups\template.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\preview\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\preview\example.html" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\preview\jscripts\embed.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\preview\preview.html" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\save\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\cell.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\css\cell.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\css\row.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\css\table.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\js\cell.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\js\merge_cells.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\js\row.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\js\table.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\merge_cells.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\row.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\table\table.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\visualchars\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\abbr.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\acronym.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\attributes.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\cite.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\css\attributes.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\css\popup.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\del.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\ins.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\abbr.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\acronym.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\attributes.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\cite.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\del.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\element_common.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\js\ins.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\xhtmlxtras\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\about.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\anchor.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\charmap.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\color_picker.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\editor_template.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\editor_template_src.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\image.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\img\colorpicker.jpg" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\img\icons.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\about.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\anchor.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\charmap.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\color_picker.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\image.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\link.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\js\source_editor.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\langs\en.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\link.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\content.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\dialog.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\buttons.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\items.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\menu_arrow.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\menu_check.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\progress.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\img\tabs.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\skins\default\ui.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\themes\advanced\source_editor.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\tiny_mce.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\tiny_mce_popup.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\utils\editable_selects.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\utils\form_utils.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\utils\mctabs.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\utils\validate.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\css\advimage.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\editor_plugin_src.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\image.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\img\sample.gif" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\js\image.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\advimage\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\editor_plugin_src.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\js\pastetext.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\js\pasteword.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\pastetext.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\paste\pasteword.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\css\searchreplace.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\editor_plugin.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\editor_plugin_src.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\js\searchreplace.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\langs\en_dlg.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\tiny_mce\plugins\searchreplace\searchreplace.htm" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\cancel.png" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\jquery.uploadify.v2.1.4.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\jquery.uploadify.v2.1.4.min.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\swfobject.js" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\uploadify.css" />
+    <Content Include="Areas\Admin\Scripts\plugins\uploadify\uploadify.swf" />
+    <Content Include="Areas\Admin\Scripts\script.min.js">
+      <DependentUpon>script.js</DependentUpon>
+    </Content>
+    <Content Include="Areas\Admin\Scripts\script.js" />
+    <Content Include="Areas\Admin\UploadedFiles\DoNotDelete.txt" />
+    <Content Include="Content\css\libs\colorbox.css" />
+    <Content Include="Content\css\iefixes.css" />
+    <Content Include="Content\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\css\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\css\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\css\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\css\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\css\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\css\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\css\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\css\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\css\jquery-ui-1.8.9.custom.css" />
+    <Content Include="Content\css\libs\jquery.qtip.min.css" />
+    <Content Include="Content\css\style.less" />
+    <Content Include="Areas\Admin\Views\UserAdmin\User.cshtml" />
+    <Content Include="Content\css\style.css">
+      <DependentUpon>style.less</DependentUpon>
+    </Content>
+    <Content Include="Content\css\style.min.css">
+      <DependentUpon>style.less</DependentUpon>
+    </Content>
+    <Content Include="Content\images\backgrounds\loading.gif" />
+    <Content Include="Content\images\backgrounds\x\40px-button.png" />
+    <Content Include="Content\images\backgrounds\x\alert-overlay.png" />
+    <Content Include="Content\images\backgrounds\x\bargradient.png" />
+    <Content Include="Content\images\backgrounds\x\greygradient.png" />
+    <Content Include="Content\images\backgrounds\x\super-button-overlay.png" />
+    <Content Include="Content\images\big\arrow.jpg" />
+    <Content Include="Content\images\big\nuts.jpg" />
+    <Content Include="Content\images\big\sadcloud.jpg" />
+    <Content Include="Content\images\categories\categoryimages.jpg" />
+    <Content Include="Content\images\categories\catsprites.jpg" />
+    <Content Include="Content\images\colorbox\border.png" />
+    <Content Include="Content\images\colorbox\controls.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderBottomCenter.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderBottomLeft.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderBottomRight.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderMiddleLeft.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderMiddleRight.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderTopCenter.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderTopLeft.png" />
+    <Content Include="Content\images\colorbox\internet_explorer\borderTopRight.png" />
+    <Content Include="Content\images\colorbox\loading.gif" />
+    <Content Include="Content\images\colorbox\loading_background.png" />
+    <Content Include="Content\images\colorbox\overlay.png" />
+    <Content Include="Content\images\CouncilLogo.png" />
+    <Content Include="Content\images\DataSpaceLogoBeta.png" />
+    <Content Include="Content\images\icons\16_16\chartbar.png" />
+    <Content Include="Content\images\icons\16_16\chartcolumn.png" />
+    <Content Include="Content\images\icons\16_16\chartline.png" />
+    <Content Include="Content\images\icons\16_16\chartmap.png" />
+    <Content Include="Content\images\icons\16_16\chartpie.png" />
+    <Content Include="Content\images\icons\16_16\charttable.png" />
+    <Content Include="Content\images\icons\DownloadSmall.png" />
+    <Content Include="Content\images\icons\NewBig.png" />
+    <Content Include="Content\images\icons\NewMid.png" />
+    <Content Include="Content\images\icons\NewMidAlt.png" />
+    <Content Include="Content\images\icons\NewMidgrey.png" />
+    <Content Include="Content\images\icons\NewMidStraight.png" />
+    <Content Include="Content\images\icons\NewTrans.png" />
+    <Content Include="Content\images\icons\sortarrows.gif" />
+    <Content Include="Content\images\icons\sprites.gif" />
+    <Content Include="Content\images\icons\sprites.png" />
+    <Content Include="Content\images\big\underconstruction.jpg" />
+    <Content Include="Content\images\DataSpaceLogo.png" />
+    <Content Include="Content\images\icons\bulletarrow.png" />
+    <Content Include="Content\images\icons\sortarrows.png" />
+    <Content Include="Content\images\icons\view.png" />
+    <Content Include="Content\images\icons\ViewSmall.png" />
+    <Content Include="Content\images\masks\circle60pxglow.png" />
+    <Content Include="Content\images\masks\rightFader.gif" />
+    <Content Include="Content\images\masks\rightFader.png" />
+    <Content Include="Content\images\misc\rightfader.png" />
+    <Content Include="Content\images\redbridge.png" />
+    <Content Include="Content\images\redbridgesprited.png" />
+    <Content Include="Content\images\slider\sliderimages.jpg" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\libs\google.marker.cluster.packed.js" />
+    <Content Include="Scripts\libs\head.min.js" />
+    <Content Include="Scripts\libs\jquery-1.5.1.min.js" />
+    <Content Include="Scripts\libs\jquery-jtemplates.js" />
+    <Content Include="Scripts\libs\jquery-ui-1.8.10.custom.min.js" />
+    <Content Include="Scripts\libs\jquery.colorbox-min.js" />
+    <Content Include="Scripts\libs\jquery.lint.js" />
+    <Content Include="Scripts\libs\jquery.multiselect.js" />
+    <Content Include="Scripts\libs\jquery.multiselect.min.js" />
+    <Content Include="Scripts\libs\jquery.qtip.min.js" />
+    <Content Include="Scripts\libs\jquery.scrollTo-min.js" />
+    <Content Include="Scripts\libs\jquery.ui.position.js" />
+    <Content Include="Scripts\libs\jquery.validate.min.js">
+      <DependentUpon>jquery.validate.chirp.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\libs\jscoord-1.1.js" />
+    <Content Include="Scripts\libs\leaflet.js" />
+    <Content Include="Scripts\libs\leaflet.markercluster.js" />
+    <Content Include="Scripts\plugins.min.js">
+      <DependentUpon>plugins.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\script.min.js">
+      <DependentUpon>script.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\UploadedFiles\ReadMe.txt" />
+    <Content Include="SqlScripts\1.4.0\CreateTable_DS_SchemaESDFunctionServiceLink.sql" />
+    <Content Include="SqlScripts\1.4.0\CreateTable_SYS_DS_ConfigurationSettings.sql" />
+    <Content Include="SqlScripts\1.4.0\DS_DataSetSchema_Add_IsStandardisedUrlSchema.sql" />
+    <Content Include="SqlScripts\1.4.0\DS_DataSetSchema_Add_SchemaUrlImportfield.sql" />
+    <Content Include="SqlScripts\1.4.0\SYS_DS_ConfigurationSettings_Add_CouncilSpatialUri.sql" />
+    <Content Include="SqlScripts\1.5.0\DS_DataSetSchemaColumns_DefaultDisplayWeight_column_add.sql" />
+    <Content Include="SqlScripts\1.5.0\SYS_DS_ConfigurationSettings_SendEmailForFeedback.sql" />
+    <Content Include="XslTemplates\csv.xslt" />
+    <Content Include="XslTemplates\rdf.xslt" />
+    <Content Include="Areas\Admin\Views\Web.config" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\Schema.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\DataSet.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Schemas.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Upload\AddConfirmation.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\Schema.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\AddColumn.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Feedback\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DebugInfo\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserAdmin\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserAdmin\Group.cshtml" />
+    <Content Include="Areas\Admin\Views\UserAdmin\EditUser.cshtml" />
+    <Content Include="Areas\Admin\Views\ChangePassword\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemConfig\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\_ColumnFieldsEditDisplayOptionsOnly.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\_ColumnFieldsEditAll.cshtml" />
+    <Content Include="Areas\Admin\Views\Schema\SchemaSource.cshtml" />
+    <None Include="CodeTemplates\AddController\ControllerWithContext.t4" />
+    <None Include="CodeTemplates\AddController\ControllerWithRepository.t4" />
+    <None Include="CodeTemplates\AddModel\Repository.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\Create.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\Delete.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\Details.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\Edit.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\Empty.t4" />
+    <None Include="CodeTemplates\AddView\CSHTML\List.t4" />
+    <Content Include="Scripts\libs\dd_belatedpng.js" />
+    <Content Include="Scripts\plugins.js" />
+    <Content Include="Scripts\script.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Scripts\libs\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\libs\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\libs\jquery.validate.chirp.js" />
+    <Content Include="Scripts\libs\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\libs\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\libs\jquery.validate-vsdoc.js" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Download\Index.cshtml" />
+    <Content Include="Views\About\Index.cshtml" />
+    <Content Include="Views\Download\Schema.cshtml" />
+    <Content Include="Views\Download\DataSet.cshtml" />
+    <Content Include="Views\View\Index.cshtml" />
+    <Content Include="Views\View\Schema.cshtml" />
+    <Content Include="Views\Developer\Index.cshtml" />
+    <Content Include="Views\About\Licence.cshtml" />
+    <Content Include="Views\ContactUs\Index.cshtml" />
+    <Content Include="Views\Shared\_Categories.cshtml" />
+    <Content Include="Views\Shared\_Schemas.cshtml" />
+    <Content Include="Web.ReleaseToTest.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.ReleaseToStaging.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\ContactUs\Confirm.cshtml" />
+    <Content Include="Views\Security\Login.cshtml" />
+    <Content Include="Web.ReleaseToLive.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\View\ExternalDataSet.cshtml" />
+    <Content Include="Views\Shared\Offline.cshtml" />
+    <Content Include="Views\About\History.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Search\Search.cshtml" />
+    <Content Include="Views\View\DataSet.cshtml" />
+    <Content Include="Views\View\Help.cshtml" />
+    <Content Include="Web.ReleaseToInstall.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <None Include="Content\Xsd\SchemaRestDefinition.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\PublishProfiles\Release to Test.pubxml" />
+    <None Include="Properties\PublishProfiles\ReleaseToInstall.pubxml" />
+    <None Include="Properties\PublishProfiles\ReleaseToLive.pubxml" />
+    <None Include="Properties\PublishProfiles\ReleaseToStaging.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DS.DL\DS.DL.csproj">
+      <Project>{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}</Project>
+      <Name>DS.DL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DS.Domain\DS.Domain.csproj">
+      <Project>{AE084CC7-4923-4162-A873-E80ABD336117}</Project>
+      <Name>DS.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DS.Extensions\DS.Extensions.csproj">
+      <Project>{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}</Project>
+      <Name>DS.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DS.Service\DS.Service.csproj">
+      <Project>{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}</Project>
+      <Name>DS.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="Scripts\mylibs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>62550</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://datashare</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://datashare/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://localhost:8765</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

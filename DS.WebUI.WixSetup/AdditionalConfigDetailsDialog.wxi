@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<!-- TODO: Put your code here. -->
+  <Fragment>
+    <UI>
+
+      <Dialog Id="AdditionalConfigurationDetailsDialog" Width="370" Height="270" Title="DataShare Configuration Details 1 of 2">
+
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next">
+          <Publish Property="COUNCIL_NAME" Value="[COUNCIL_NAME]"></Publish>
+          <Publish Property="COUNCIL_URL" Value="[COUNCIL_URL]"></Publish>
+          <Publish Property="COUNCIL_URI" Value="[COUNCIL_URI]"></Publish>
+
+
+          <Publish Property="ERROR_MESSAGE">1</Publish>
+          <Publish Property="ERROR_MESSAGE" Value="Council name/Council URL/Council Uri must be filled in">(COUNCIL_NAME = "" OR COUNCIL_URL = "" OR COUNCIL_URI = "")</Publish>
+          <Publish Property="ERROR_TITLE" Value="Council name/Council URL/Council Uri must be filled in">(COUNCIL_NAME = "" OR COUNCIL_URL = "" OR COUNCIL_URI = "")</Publish>
+          <Publish Event="SpawnDialog" Value="GenericErrorDlg">ERROR_MESSAGE</Publish>
+
+        </Control>
+
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Please enter additional details for the DataShare" />
+
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="Enter DataShare additional details" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+
+        <Control Id="LabelCouncilName" Type="Text" X="20" Y="52" Width="290" Height="18" Text="Council Name:"></Control>
+        <Control Id="EditCouncilName" Type="Edit" X="30" Y="70" Width="200" Height="18" Property="COUNCIL_NAME" Text="[COUNCIL_NAME]" ></Control>
+        <!--<Control Id="HelpCouncilName" Type="Text" X="30" Y="86" Width="290" Height="20" Text="The name of the Authority."></Control>-->
+
+        <Control Id="LabelCouncilUrl" Type="Text" X="20" Y="102" Width="290" Height="18" Text="The URL to the council's main web site. e.g. http://www.redbridge.gov.uk"></Control>
+        <Control Id="EditCouncilUrl" Type="Edit" X="30" Y="120" Width="200" Height="18" Property="COUNCIL_URL" Text="[COUNCIL_URL]"></Control>
+        <!--<Control Id="HelpCouncilUrl" Type="Text" X="30" Y="144" Width="290" Height="20" Text="The URL to the council's main web site."></Control>-->
+
+
+        <Control Id="LabelCouncilUri" Type="Text" X="20" Y="150" Width="290" Height="20" Text="The URI of the Authority's entry on the DCLG linked open data portal. e.g. http://opendatacommunities.org/id/london-borough-council/redbridge "></Control>
+        <Control Id="EditCouncilUri" Type="Edit" X="30" Y="170" Width="200" Height="18" Property="COUNCIL_URI" Text="[COUNCIL_URI]"></Control>
+        <!--<Control Id="HelpCouncilUri" Type="Text" X="30" Y="204" Width="290" Height="20" Text="The URI of the Authority's entry on the ONS linked data portal."></Control>-->
+
+     
+      </Dialog>
+    </UI>
+
+  </Fragment>
+</Include>

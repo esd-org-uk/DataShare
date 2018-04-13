@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+    var user = HttpContext.Current.User;
+    Response.Write("<!--DataShare version " + typeof(DS.WebUI.MvcApplication).Assembly.GetName().Version  + "-->" );
+}
+
+<div class="container_16 clearfix" id="Mainheading">
+    <div class="grid_16">
+        <h2>Administration</h2>
+    </div>
+</div>
+<div class="container_12 clearfix">
+<p class="intro grid_12">Welcome to the DataShare administration area. From here you can upload new data, create schemas, edit the categories, and perform other administration tasks as required.</p>
+</div>
+<div class="container_12 clearfix" id="NavBox">
+        @if (user.IsInRole("Uploader") || user.IsInRole("SchemaEditor") || user.IsInRole("SchemaCreator") || user.IsInRole("SuperAdministrator"))
+        {
+            <div class="grid_4">
+                <a href="@Url.Action("Index", "Upload")" class="introbox upload png_bg">
+                    <h2>Upload and edit <strong class="blue">data</strong></h2>
+                    Upload new, or edit existing data sets.
+                </a>
+            </div>
+        }
+        @if (user.IsInRole("SchemaEditor") || user.IsInRole("SchemaCreator") || user.IsInRole("SuperAdministrator"))
+        {
+            <div class="grid_4">
+                <a href="@Url.Action("Index", "Schema")"  class="introbox schemas png_bg">
+                    <h2>Create and edit <strong class="blue">schemas</strong></h2>
+                    Create and manage schema definitions.
+                </a>
+            </div>
+        }
+        @if(user.IsInRole("SuperAdministrator"))
+        {
+            <div class="grid_4">
+                    <a href="@Url.Action("Index", "Category")" class="introbox settings png_bg">
+                        <h2>Add and edit <strong class="blue">categories</strong></h2>
+                        Manage DataShare categories.
+                   </a>
+            </div>
+            <div class="grid_4">
+                    <a href="@Url.Action("Index", "UserAdmin")" class="introbox usermanager png_bg">
+                        <h2>Add and edit <strong class="blue">users</strong></h2>
+                        Manage DataShare administrators, uploaders and editors.
+                   </a>
+            </div>
+            <div class="grid_4">
+                    <a href="@Url.Action("Index", "Feedback")" class="introbox feedback png_bg">
+                        <h2>View <strong class="blue">feedback</strong></h2>
+                        See feedback and queries submitted by visitors.
+                   </a>
+            </div>
+            <div class="grid_4">
+                    <a href="/exceptions.axd" class="introbox viewerrors png_bg">
+                        <h2>View <strong class="blue">errors</strong></h2>
+                        See all errors that have occurred on DataShare
+                   </a>
+            </div>        
+            <div class="grid_4">
+                <a href="@Url.Action("Index", "DebugInfo")" class="introbox nightlyservice png_bg">
+                    <h2>View <strong class="blue">service history</strong></h2>
+                    Details of events and emails sent by the automated service.
+                </a>
+            </div>
+            <div class="grid_4">
+                    <a href="@Url.Action("Index", "SystemConfig")" class="introbox settings png_bg">
+                        <h2>Edit <strong class="blue">system configuration</strong></h2>
+                        Manage DataShare system configuration.
+                   </a>
+            </div>
+        }
+</div>

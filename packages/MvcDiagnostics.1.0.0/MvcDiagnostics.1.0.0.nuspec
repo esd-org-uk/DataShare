@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MvcDiagnostics</id>
+    <version>1.0.0</version>
+    <title>MvcDiagnostics</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://aspnet.codeplex.com/license</licenseUrl>
+    <projectUrl>http://aspnet.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple ASP.NET page used to diagnose issues with an ASP.NET MVC installation. See http://bradwilson.typepad.com/blog/2010/03/diagnosing-aspnet-mvc-problems.html for more details.</description>
+    <summary>A simple ASP.NET page used to diagnose issues with an ASP.NET MVC installation.</summary>
+  </metadata>
+</package>

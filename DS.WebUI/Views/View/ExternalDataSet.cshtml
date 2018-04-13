@@ -1,0 +1,51 @@
+﻿@using System.Collections.Specialized;
+@using System.Collections;
+@model IList<DS.Domain.DataSetDetail>
+@{
+    ViewBag.Title = String.Format("View {0} - DataShare",ViewBag.SchemaTitle);
+}           
+           
+@section TitleContent
+{
+	View data
+}
+
+@section FooterScripts
+{
+<link rel="stylesheet" href="@Url.Content("/Content/css/libs/colorbox.css")" type="text/css" />
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#MoreDetail').click(function () {
+
+            $.colorbox({ 'open': true, speed: 800, opacity: 0.5, html: "<h2>@ViewBag.SchemaTitle</h2> @Html.Raw(ViewBag.FullDescription)", maxWidth: '500px' });
+
+        });
+    });
+</script>
+}
+
+<div class="container_16">
+	<div class="grid_16">
+	    <h3>Data available for <span>@ViewBag.SchemaTitle</span>&nbsp;<a id="MoreDetail" href="#" title="more information about @ViewBag.SchemaTitle">More info</a></h3>
+        <div class="tableborder webGrid" style="border-top-width:3px">
+	      @{
+                var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10, sortFieldName: "sortField");
+			    grid.Pager(WebGridPagerModes.NextPrevious);
+			    @grid.GetHtml(
+                    htmlAttributes: new { id = "DataSetList" },
+                    headerStyle: "header",
+                    alternatingRowStyle: "alt",
+                    columns: grid.Columns(
+                                grid.Column("Title", style: "left Title "),
+                                grid.Column("DateCreated", "Updated", style: "left datecol DateCreated"),
+                                grid.Column("View", format: (item) => item.FileType == "KML" ? Html.Raw(string.Format(@"<a href=""http://maps.google.com/maps?f=q&hl=en&ie=UTF8&q={0}"" title=""View {1} on Google maps"" class=""download button green MAP"" onclick=""ga('send','event','{4}','View KML','{1}');""><span class=""icon"">Map</span>Map</a>", item.FileUrl, item.Title, item.CsvFileSize, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSize) : "", item.Schema.Title))
+                                                                                                                                    : item.FileType == "RSS" ? Html.Raw(string.Format(@"<a href=""{0}"" title=""View {1} as {2}"" class=""download button green {2}"" onclick=""ga('send','event','{4}','View {2}','{1}');""><span class=""icon"">View as </span>{2} {3}</a>", item.FileUrl, item.Title, item.FileType, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSize) : "", item.Schema.Title))
+                                                                                                                                    : Html.Raw(string.Format(@"<a href=""{0}"" title=""View {1} as {2}"" class=""download button green {2}"" onclick=""ga('send','event','{4}','View {2}','{1}');""><span class=""icon"">View as </span>{2} {3}</a>", item.FileUrl, item.Title, item.FileType, item.XmlFileSize != 0 ? string.Format(@"<span class=""subtle"">({0})</span>", item.XmlFileSize) : "", item.Schema.Title)), style: "actioncol last", canSort: false)
+                    )
+                )
+            }
+        </div>
+    </div>
+</div>
+

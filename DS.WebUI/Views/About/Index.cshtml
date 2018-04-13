@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "About - DataShare";
+ }
+
+@section TitleContent
+{
+    About DataShare
+}
+
+<div class="container_16">    
+    <div class="grid_10">
+        <h3>Introduction</h3>
+        <p>Achieving greater transparency of public bodies is a central theme of the Government's programme.  The Secretary of State for Communities and Local Government has instructed local authorities to take a proactive stance to publishing all information. In so doing making sure that it is easy to find and understand.</p>
+        <p>Government guidance states that data must be published without restriction. Public data should be released in an "open format" that is reusable, available to everyone to be exploited for social and/or commercial purposes.</p>
+        <p>DataShare is being developed by the <a href="http://www.redbridge.gov.uk">London Borough of Redbridge</a> as a way to make accessing and inspecting this data easier for everyone; as well as simpler for developers wishing to use the data in their applications, web sites and widgets. Details of the site's past and planned improvements can be seen below in our release notes.</p>
+        <p>Depending on the data set itself our data will generally be made available for viewing online, or downloading in CSV, XML or KML format. In some cases, other data formats are also used. An API is also available for developers; details can be found in our <a href="/developer">Developer's area</a>.</p>
+        <h3>Available data sets</h3>
+        <p>To support our commitment to transparency, involvement and innovation we will work towards making all public data (that is not sensitive or personal) freely available to view and download in a variety of formats.  All data sets that are currently available can be found in our <a href="@Url.Action("Index","View")">View</a> and <a href="@Url.Action("Index","Download")">Download</a> areas.</p>
+        <h4>Personal data</h4>
+        <p>In some data sets you may see the term <strong>Redacted personal data</strong>.  This is used to protect personal data and prevent any individual being identified.</p>
+        <p>The <a href="https://ico.org.uk/for-the-public/">Information Commissioner's Office</a> has details on your rights under the Data Protection Act 1998, and what you should expect from us.</p>
+        <h3>Using our data</h3>
+        <p>The usage of our data is subject to our <a href="@Url.Action("Licence","About")">licence and code of conduct</a>. If you do use any of the data provided by us in apps, widgets, web sites or mashups, then please <a href="@Url.Action("Index","ContactUs")">let us know</a>.  We'll provide links to the most useful so other users can benefit from the work you have done.</p>
+        <h3>Contacting us</h3>
+        <p>If you have any comments or wish to know more about DataShare please <a href="@Url.Action("Index","ContactUs")">contact us</a>.</p>
+        <p>While we are committed to publishing as much open data information as possible, some data takes considerable time and expense to make available.  By identifying the datasets users would find the most interesting, we can prioritise our work to have them released.  Please use the online <a href="@Url.Action("Index","ContactUs")">contact us form</a> to suggest a dataset for inclusion in DataShare.</p>
+        @if (ViewBag.CouncilTitle == "London Borough of Redbridge")
+        {
+            <p>Requests under the Freedom of Information Act 2000 should be made using the <a href="http://www.redbridge.gov.uk/cms/the_council/about_the_council/freedom_of_information/foi_form.aspx">Freedom of Information online form</a>.</p>
+        }
+        <h3>@Html.ActionLink("View release notes", "Version")</h3>
+  @*      <dl>
+            <dt>June 2014 - version 1.4</dt>
+            <dd>
+                <ul>
+                    <li>Standardised classification of data sets.</li>
+                    <li>Improvements to developer API.</li>
+                    <li>Ability to import data set definitions from other DataShare instances.</li>
+                    <li>Integration with <a href="http://data.gov.uk">data.gov.uk</a></li>
+                </ul>
+                <hr />
+            </dd>
+            <dt>October 2013 - version 1.3</dt>
+            <dd>
+                <ul>
+                    <li>Open source mapping.</li>
+                    <li>Bug fixes.</li>
+                </ul>
+                <hr />
+            </dd>
+            
+            <dt>May 2011 - version 1.2</dt>
+            <dd>
+                <ul>
+                    <li>Data visualisations.</li>
+                    <li>Ability to search for data sets.</li>
+                </ul>
+                <hr />
+            </dd>
+            <dt>March 2011 - version 1.1</dt>
+            <dd>
+                <ul>
+                    <li>View open data sets online.</li>
+                    <li>Sort and filter data.</li>
+                    <li>Add/remove columns.</li>
+                    <li>Download filtered data.</li>
+                    <li>Data sets are able to include linked data via URIs.</li>
+                    <li>Enriched developer API.</li>
+                </ul>
+                <hr />
+            </dd>
+            
+            <dt>January 2011 - version 1.0</dt>
+            <dd>
+                <ul>
+                    <li>Categorisation of data sets.</li>
+                    <li>Download open data files.</li>
+                    <li>Simple URL driven API.</li>
+                </ul>
+            </dd>
+        </dl>*@
+        <h3>Acknowledgements</h3>
+        <p>The filetype icons used on this site are part of the excellent <a href="http://www.famfamfam.com/lab/icons/silk/">Silk icon set</a> by FamFamFam. Most other logos are from <a href="http://www.smashingmagazine.com/2010/09/01/icandies-icon-set-60-free-icons-your-user-interfaces-and-apps/">IconEden's iCandies icon set</a>.</p>
+        <p>Map visualisations provided by <a href="http://www.openstreetmap.org/">OpenStreetMap</a> using the <a href="http://leafletjs.com/">Leaflet open-source library</a>.</p>
+    </div>
+    <div class="grid_6 center">
+        <img src="../../Content/images/big/arrow.jpg" alt="A big arrow" />
+    </div>
+</div>

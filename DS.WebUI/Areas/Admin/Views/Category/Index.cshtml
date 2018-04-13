@@ -1,0 +1,111 @@
+﻿@model IList<DS.Domain.Category>
+@{
+    ViewBag.Title = "Categories - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+    ViewBag.ExtraButtons = "<a href='/Admin/Category/Create' class='button green float_right'>Create new</a>";
+}
+
+@section TitleContent
+{
+    Manage categories
+}
+
+<div class="container_16">
+   @Html.Raw(ViewBag.Message)
+   <div class="grid_16 buttonbar">
+    <div id="radio" class="float_left">
+    Show: <input type="radio" id="allitems" name="radio" /><label for="allitems">All</label>
+	      <input type="radio" id="offlineitems" name="radio" /><label for="offlineitems">Offline</label>
+	      <input type="radio" id="onlineitems" name="radio" checked /><label for="onlineitems">Online</label>
+    </div>
+    @if (ViewBag.ExtraButtons != null)
+    {
+        @Html.Raw(ViewBag.ExtraButtons);
+    }
+    else
+    {
+        <h3>Pick a category to manage</h3>
+    }
+</div>
+
+
+<div class="clearfix"></div>
+    @{if (ViewBag.CreatedCategory != null)
+      {
+        <div class="note">Category @ViewBag.CreatedCategory created successfully.</div>
+      }      
+    }
+    <ul class="biglist clickablelistrows">
+        @foreach (var c in Model)
+        {
+            <li class="clearfix @(ViewBag.CreatedCategory == c.Title ? "new" : "") @(c.IsDisabled ? "disabled" : "")">                
+                <h4 class="grid_4">@Html.ActionLink(c.Title, c.FriendlyUrl, new { }, new { @class = "default" })</h4>                
+                <div class="grid_2">
+                    @if (String.IsNullOrEmpty(c.ImageUrl))
+                    {
+                        <span class="image @c.CssClass">
+                            Category
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="namedimage" style="background:#fff url(@c.ImageUrl) no-repeat 0 0;background-size: 100%;">
+                            Category
+                        </span>
+                    }
+                
+                </div>
+                <div class="grid_8 description">@c.Description</div>               
+                <div class="grid_2 actionCol right">
+                    @Html.ActionLink("Edit", c.FriendlyUrl, new { }, new { @class = "button blue" })                                
+                    @if(!c.IsDisabled){
+                        <a href="#" class="button delete secondary">Take offline</a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Enable", c.FriendlyUrl + "/Enable", new { }, new { @class = "button green" });
+                    }                    
+                    @{if (ViewBag.CreatedCategory == c.Title)
+                      {
+                        @Html.ActionLink("Create schema", c.FriendlyUrl+"/Create", "Schema", new { }, new { @class = "button blue" })
+                      }
+                    }
+                    <div class="deleteConfirmation"><strong>Are you sure?</strong> This will disable all schemas and data sets in this category.<br />@Html.ActionLink("Yes", c.FriendlyUrl + "/Delete", new { }, new { @class = "button small red", @title = "Take " + c.Title + "Offline" }) <a href="" class="button small grey noDelete">No</a></div>
+                </div>  
+            </li>
+        }
+    </ul>
+</div>
+<script>
+    $(function () {
+        $('#radio').buttonset();
+        //Hide all disabled items by default
+        $('li.disabled').hide();
+        $('#radio').click(function (e) {
+            if ($(e.target).text() == "Offline") {
+                $('li.disabled', '.biglist').fadeIn(400);
+                $('li:not(.disabled)', '.biglist').fadeOut(400);
+            }
+            else if ($(e.target).text() == "Online") {
+                $('li.disabled').fadeOut(400);
+                $('li:not(.disabled)', '.biglist').fadeIn(400);
+            }
+            else {
+                $('li', '.biglist').fadeIn(400);
+            }
+            return false;
+        });
+    });
+</script>
+
+
+@section FooterScripts
+{
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Remove new style with animation
+        $('.new').delay(4000).switchClass("new", "");
+    });
+</script>
+}
+

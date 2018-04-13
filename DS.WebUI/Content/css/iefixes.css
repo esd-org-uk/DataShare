@@ -1,0 +1,79 @@
+﻿/*=Tables*/
+#DataSetFilter
+{	
+	_padding:5px 10px;
+	position:relative;
+	zoom:1;		
+}
+
+/*Buttons not aligning in ie6*/
+.FilterHolder .button{_margin-top:9px;}
+#DataSetFilter .removeFilter,
+.FilterHolder #AddFilter{_margin-top:0;}
+
+#DataSetFilter .searchText{margin-right:3px;}/* plus/minus buttons too close to search box*/
+
+#DataSetFilter .optioncontainer{display:inline;zoom:1} /*Fix display:inline-block not working*/
+
+.tableborder
+{
+	overflow:hidden; /*Fix ie6/7 scroll issues*/
+	overflow-x:scroll;
+	width:934px;	
+}
+
+
+/*go button appears over column select menu*/
+#DataSetFilter{z-index:3000;}
+#EditColumnList{z-index:1000}
+
+/*Odd bug in ie6 where height on this causing heading to move up - so this fallback shows text only*/
+#MoreDetail{_background-image:none;_font-size:11px;_height:auto;_text-indent:0;top:-25px;_width:auto}
+
+/*Position fixed for IE6 (scroll buttons)
+http://www.howtocreate.co.uk/fixedPosition.html */
+.scrollbutton{position:absolute;top: expression( ( 490 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );}
+#LeftScroll{left: expression( ( 10 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );}
+#RightScroll
+{
+	right: auto;
+	left: expression( ( -10 - RightScroll.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+}
+
+/*Ui-multiselect*/
+/* remove label borders in IE6 because IE6 does not support transparency */
+* html .ui-multiselect-checkboxes label { border:none }
+
+/*==================================
+qTip2 - Pretty powerful tooltips
+*/
+
+* html .ui-tooltip-titlebar .ui-state-default{top: 16px;}
+#qtip-overlay{filter:alpha(opacity=70);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";}
+.ui-tooltip-shadow .ui-tooltip-titlebar,
+.ui-tooltip-shadow .ui-tooltip-content{
+	filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
+	-ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
+}
+
+
+/*==========================================================================================
+    ColorBox 
+
+    The following fixes png-transparency for IE6.  
+    It is also necessary for png-transparency in IE7 & IE8 to avoid 'black halos' with the fade transition
+    
+    Since this method does not support CSS background-positioning, it is incompatible with CSS sprites.
+    Colorbox preloads navigation hover classes to account for this.
+    
+    !! Important Note: AlphaImageLoader src paths are relative to the HTML document,
+    while regular CSS background images are relative to the CSS document.
+*/
+.cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderTopLeft.png, sizingMethod='scale');}
+.cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderTopCenter.png, sizingMethod='scale');}
+.cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderTopRight.png, sizingMethod='scale');}
+.cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderBottomLeft.png, sizingMethod='scale');}
+.cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderBottomCenter.png, sizingMethod='scale');}
+.cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderBottomRight.png, sizingMethod='scale');}
+.cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderMiddleLeft.png, sizingMethod='scale');}
+.cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=/Content/images/colorbox/internet_explorer/borderMiddleRight.png, sizingMethod='scale');}

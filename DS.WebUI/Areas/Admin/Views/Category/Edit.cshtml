@@ -1,0 +1,56 @@
+﻿@model DS.Domain.Category
+
+@{
+    ViewBag.Title = "Edit category - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    Edit category
+}
+
+<div class="container_16">
+    
+    <div class="grid_16">
+        <p class="intro">Change the title or description for an existing category.</p>
+        @Html.Raw(ViewBag.Message)        
+        @using (Html.BeginForm())
+        {
+           
+            @Html.HiddenFor(model => model.Id)
+            @Html.ValidationSummary(true,"Unable to amend category, please correct the following:")
+
+
+                @Html.ValidationMessageFor(model => model.Title)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.Title)
+                    @Html.EditorFor(model => model.Title)
+                    <span class="helptext">The category name (Max length 75 characters).</span>
+                    
+                </div>
+
+                @Html.ValidationMessageFor(model => model.Description)
+                <div class="editor-field">                    
+                    @Html.LabelFor(model => model.Description)
+                    @Html.TextAreaFor(model => model.Description, new { @class = "multi-line text-box short"})
+                    <span class="helptext">The short description that appears next to the title in category listings (Max length 500 characters).</span>
+                </div>
+
+                @Html.ValidationMessageFor(model => model.ImageUrl)
+                <div class="editor-field">
+                    
+                    @Html.LabelFor(model => model.ImageUrl)
+                    @Html.EditorFor(model => model.ImageUrl)
+                    <span class="helptext">The URL of an image to represent this category.  Images should be 80 pixels square. If no URL is specified a generic image will be used.</span>
+                </div>
+
+                <p>
+                    <input type="submit" class="green large button submit" value="Save category" />
+                </p>
+
+        }
+    </div>
+</div>
+

@@ -1,0 +1,40 @@
+﻿@model DS.Domain.Group
+@{
+    ViewBag.Title = "Groups - User admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+    @(Model == null ? "Create" : "Amend") DataShare Group
+}
+
+<div class="container_16">
+    <div class="grid_16">
+        @Html.Raw(ViewBag.Message)        
+        @using (Html.BeginForm(Model == null ? "CreateGroup" : "EditGroup"))
+        {
+            if (Model != null)
+            {
+                @Html.HiddenFor(model => model.Id)
+            }
+            @Html.ValidationSummary(true)
+            <fieldset>
+                @Html.ValidationMessageFor(model => model.Title)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.Title)
+                    @Html.EditorFor(model => model.Title)
+                </div>
+                @Html.ValidationMessageFor(model => model.Description)
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.Description)
+                    @Html.EditorFor(model => model.Description)
+                </div>
+                <p>
+                    <input type="submit" class="green large button submit" value="@(Model == null ? "Create" : "Update")" />
+                </p>
+            </fieldset>
+        }
+    </div>
+</div>
+

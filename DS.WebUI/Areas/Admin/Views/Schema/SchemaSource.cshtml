@@ -1,0 +1,169 @@
+﻿@model DS.Domain.SchemaSourceViewModel
+@{
+    ViewBag.Title = "Create schema - Admin - DataShare";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section TitleContent
+{
+Create schema
+}
+
+@section HeaderContent{
+    <script src="@Url.Content("/Areas/Admin/Scripts/plugins/tiny_mce/tiny_mce.js")" type="text/javascript"></script>
+      <script type="text/javascript">
+          $(document).ready(function () {
+
+              tinyMCE.init({
+                  // General options
+                  mode: "specific_textareas",
+                  editor_selector: "mceEditor",
+                  theme: "advanced",
+                  plugins: "advimage,inlinepopups,searchreplace,table,visualchars,xhtmlxtras",
+                  width: "99%",
+                  // Theme options
+                  theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontsizeselect,cut,copy,paste,pastetext,pasteword",
+                  theme_advanced_buttons2: ",search,replace,|,bullist,numlist,|,abbr,acronym,|,undo,redo,|,link,unlink,anchor,table,image,cleanup,code,forecolor,backcolor",
+                  theme_advanced_buttons3: "",
+                  theme_advanced_toolbar_location: "top",
+                  theme_advanced_toolbar_align: "left",
+                  theme_advanced_statusbar_location: "bottom",
+                  theme_advanced_resizing: false
+              });
+
+              //Set up tabs with transition effect
+              tabHolder = $("#Steps");
+              tabHolder.tabs({
+                  fx: { opacity: 'toggle', duration: 'fast' }, show: function (event, ui) { if (ui.index == 1) { $('#TopSave').fadeIn(400) } }
+              });
+
+              //update hidden textarea when submitting form/moving to next tab
+              $('#submitButton').focus(function () {
+                  tinyMCE.triggerSave();
+              });
+
+          });
+    </script>
+}
+
+<div class="container_16">
+    <p class="intro grid_16">A schema is a container for data sets. Create a new schema using the options below.</p>
+    <div id="Steps" class="grid_16">
+         <ul>
+            <li class="tab" id="li-use-url"><a href="#step-url-selection">Schema Source</a></li>
+        </ul>
+        @Html.Raw(ViewBag.Message)
+        
+        @using (Html.BeginForm())
+        {
+            
+                
+            
+            <div id="step-url-selection" >
+                <div class="clearfix">
+                    <br/>
+                    <div class="editor-field">
+                        <p class="paragraph">Do you want to import a schema from another source?</p>
+                        <div >
+                            <input type="radio" name="useUrl" value="yes" id="useUrlYes" checked="checked" />Yes
+                            <input type="radio" name="useUrl" value="no" id="useUrlNo" />No
+                        </div>
+                        <br/>
+                        <span class="information">Select Yes if you would like to create a schema based on another datashare website or No to create one from scratch.</span>    
+                    </div>
+                    <br/>
+                    <div class="editor-field" id="div-standardised-url">
+                        <p class="paragraph">Is this URL source used as a standardised schema across other DataShare websites?</p>
+                        <div >
+                            <input type="radio" name="IsStandardisedSchemaUrl" value="true" id="standardUneditableYes" checked="checked" />Yes
+                            <input type="radio" name="IsStandardisedSchemaUrl" value="false" id="standardUneditableNo" />No
+                        </div>
+                        <br/>
+                        <span class="information">Select Yes if this is a National standardised schema that should not be changed, or No to allow the schema to be edited.</span>
+                    </div>
+                    <br/>
+                    @Html.ValidationMessageFor(model=>model.SchemaDefinitionFromUrl)
+                    <div class="editor-field" id="div-url-from-another">
+                        <label >URL of DataShare schema</label>
+                        
+                        @Html.EditorFor(model => model.SchemaDefinitionFromUrl)    
+                        
+                        <span class="helptext">The Url of the definition to import from if using a standard DataShare schema definition from another source.</span>
+                    </div>
+
+                    <div class="right">
+                        <input type="submit" class="large button blue float_right" value="Import" id="btnSaveUrl" />
+                        @Html.ActionLink("Next", "Create", "Schema", null,new {@class="large button blue float_right", style="display:none;", id="btnNormalCreate"})
+                        
+
+                    </div>
+                        
+
+                </div>
+
+
+            </div>
+                
+        }
+            
+    </div>
+</div>
+
+@section FooterScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('#useUrlYes')[0].checked) {
+                UseUrlSetYes();
+            }
+            
+            $('#a-step-1').click(function () {
+                $('#useUrlNo').trigger('click');
+                UseUrlSetNo();
+            });
+            
+            $('#useUrlYes').click(function () {
+                if ($('#useUrlYes')[0].checked) {
+                    $('#btnSaveUrl').show();
+                    $('#btnNormalCreate').hide();
+                    UseUrlSetYes();
+                }
+            });
+            $('#useUrlNo').click(function () {
+                if ($('#useUrlNo')[0].checked) {
+                    $('#btnSaveUrl').hide();
+                    $('#btnNormalCreate').show();
+                    UseUrlSetNo();
+                }
+            });
+
+
+        });
+        function UseUrlSetYes() {
+            $('#TopSave').hide();
+            $('#step-2 .button').hide();
+            $('#btnFinish').hide();
+            $('#fs-add-classification').hide();
+            $('#step-3 .button').hide();
+            $('#div-url-from-another').show();
+            $('#div-standardised-url').show();
+            $('#btnSaveUrl').show();
+            $('#Next').val("Finish");
+            $('#SchemaDefinitionFromUrl').val('');
+        }
+
+        
+        function UseUrlSetNo() {
+
+            $('#step-2 .button').show();
+            $('#btnFinish').show();
+            $('#fs-add-classification').show();
+            $('#step-3 .button').show();
+            $('#div-url-from-another').hide();
+            $('#div-standardised-url').hide();
+            $('#btnSaveUrl').hide();
+            $('#Next').val("Next");
+            $('#SchemaDefinitionFromUrl').val('http://dummyvalue.com');
+        }
+    </script>
+}
+

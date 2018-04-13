@@ -1,0 +1,164 @@
+﻿@model IList<DS.Domain.DataSetSchema>
+@{
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var user = HttpContext.Current.User;
+    var checkedRadioTab = String.IsNullOrEmpty(Request["tab"]) ? "selectonline" : Request["tab"];
+}
+
+<div class="grid_16 buttonbar">
+    @if (controller == "Schema")
+    {
+        
+        
+        <div id="radio" class="float_left">
+        Show: <input type="radio" id="allitems" name="radio" @((checkedRadioTab == "selectall")? "checked" : "")/><label for="allitems" id="selectall">All</label>
+	          <input type="radio" id="offlineitems" name="radio" @((checkedRadioTab == "selectoffline")? "checked" : "") /><label for="offlineitems" id="selectoffline">Offline</label>
+	          <input type="radio" id="onlineitems" name="radio" @((checkedRadioTab == "selectonline")? "checked" : "") /><label for="onlineitems" id="selectonline">Online</label>
+        </div>
+    }
+    @if (((WebViewPage) WebPageContext.Current.Page).ViewBag.ExtraButtons != null)
+    {
+        @Html.Raw(((WebViewPage) WebPageContext.Current.Page).ViewBag.ExtraButtons);
+    }
+    else
+    {
+        <h3>Please pick a schema</h3>
+    }
+</div>
+
+<div class="clearfix"></div>
+<ul class="biglist clickablelistrows">
+    @foreach (var c in Model)
+    {
+            var disable = c.DataSets.Count() == 0 && controller == "Upload";        
+            <li class="clearfix @(c.IsDisabled ? "disabled" : "")">
+                <h4 class="grid_4">
+                @{if (controller == "Upload")
+                  { //Upload controller only                          
+                        @Html.ActionLink(c.Title, c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Add", controller)
+                  }
+                  else if (controller == "Schema")
+                  { //Schema controller only                        
+                        @Html.ActionLink(c.Title, c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Edit", controller)
+                  }
+                }
+                </h4>
+                <div class="grid_2">@if (String.IsNullOrEmpty(c.Category.ImageUrl))
+                    {
+                        <span class="image @c.Category.CssClass">
+                            Category
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="namedimage" style="background:#fff url(@c.Category.ImageUrl) no-repeat 0 0;background-size: 100%;">
+                            Category
+                        </span>
+                    }
+                </div>
+                <div class="grid_7 description">@c.ShortDescription&nbsp;</div>
+                    @{if (controller == "Upload")
+                      { //Upload controller only
+                          <div class="grid_3 right actionCol">
+                          @Html.ActionLink("Upload new", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Add", controller, new { }, new { @class = "button green" })
+                          @{if (!disable)
+                            { 
+                                @Html.ActionLink("View existing", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Edit", controller, new { }, new { @class = "button grey" })
+                                <a href="@String.Format("/View/{0}/{1}?preview=true", c.Category.FriendlyUrl, c.FriendlyUrl)" class="button blue" style="margin-bottom: 30px">Preview</a>
+                            }
+                          }
+                          </div>                         
+                      }
+                      else if (controller == "Schema")
+                      { //Schema controller only
+                        <div class="grid_3 right actionCol">
+                            @Html.ActionLink("Edit", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Edit", controller, new { }, new { @class = "button blue" })                            
+                            @{
+                          if (!c.IsApproved)
+                          {
+                              if (user.IsInRole("SuperAdministrator"))
+                              {
+                                        @Html.ActionLink("Approve", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Approve", controller, new { }, new { @class = "button orange" })    
+                              }
+                              else
+                              {
+                                        <div>Pending approval, please contact the site administrator</div>
+                              }
+                          }
+                          else if (!c.IsDisabled)
+                          {
+                                    <a href="#" class="button secondary confirmbox">Take offline</a>
+                                    <div class="deleteConfirmation"><strong>Are you sure?</strong> This will disable all associated data.<br />
+                                        @Html.ActionLink("Yes", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Delete", controller, new { }, new { @class = "button small red" })
+                                        <a href="" class="button small grey noDelete">No</a>
+                                    </div>
+                          }
+                          else
+                          {
+                                    @Html.ActionLink("Enable", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/Enable", controller, new { }, new { @class = "button green" })
+                          }
+
+                          if (User.IsInRole("SchemaCreator") || User.IsInRole("SuperAdministrator"))
+                          {
+                                    <a href="#" class="button confirmbox red">Delete</a>
+                                    <div class="deleteConfirmation"><strong>Are you sure?</strong> This will delete the schema including all uploaded data.<br />
+                                        @Html.ActionLink("Yes", c.Category.FriendlyUrl + "/" + c.FriendlyUrl + "/DeleteAll", controller, new { }, new { @class = "button small red" })
+                                        <a href="" class="button small grey noDelete">No</a>
+                                    </div>
+                          }
+                            }
+                        </div>   
+                      }}
+               
+            </li>
+    }
+</ul>
+
+<script>
+
+    $(function () {
+
+        $('#radio').buttonset();
+
+        //Hide all disabled items by default
+        $('li.disabled').hide();
+
+        $('#radio').click(function (e) {
+            tempText = $(e.target).text()
+
+            if (tempText == "Offline") {
+                $('li:not(.disabled)', '.biglist').hide();
+                $('li.disabled', '.biglist').fadeIn(400);
+            }
+            else if (tempText == "Online") {
+                $('li.disabled', '.biglist').hide();
+                $('li:not(.disabled)', '.biglist').fadeIn(400); 
+            }
+            else
+            {
+                $('li', '.biglist').hide().fadeIn(400);
+            }
+            return false;
+        });
+    });
+    
+    var currentQueryStringAdded = "";
+    function UpdateTabClickedString(newTab) {
+        $('a').each(function () {
+            var href = $(this).attr('href');
+            
+            if (href && href.toLowerCase().indexOf("deleteall") > -1) {
+                href = href.replace(currentQueryStringAdded, "");
+                href += (href.match(/\?/) ? '&' : '?') + "tab=" + newTab;
+                $(this).attr('href', href);
+            }
+        });
+        currentQueryStringAdded = "?tab=" + newTab;
+    }
+    $(document).ready(function () {
+        $('#selectonline,#selectall,#selectoffline').click(function () {
+            UpdateTabClickedString(this.id);
+        });
+    });
+
+</script>
