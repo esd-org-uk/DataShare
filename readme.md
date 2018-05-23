@@ -21,11 +21,11 @@ DataShare implements output of an inventory of all your published datasets compl
 
 Your datasets are automatically published at [Find open data](https://data.gov.uk/) (aka data.gov.uk) once you’ve configured it to harvest from your inventory.
 
-![alt text](http://e-sd.org/wDCMb/ "Find open data - Harvest source setup")
+![Find open data](https://e-sd.org/wDCMb/ "Find open data - Harvest source setup")
 
 The same is true of the LGA’s catalogue of open datasets. Configure harvesting at http://inventories.opendata.esd.org.uk/harvesters/add 
 
-![alt text](http://e-sd.org/qkCCs/ "LG Inform Plus Open Data - Harvest source setup")
+![LG Inform Plus Open Data](https://e-sd.org/qkCCs/ "LG Inform Plus Open Data - Harvest source setup")
 
 # Support
 Post issues here or email support@esd.org.uk if you have queries on using DataShare or would like to see improvements.
