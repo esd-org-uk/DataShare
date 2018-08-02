@@ -8,10 +8,10 @@ Redbridge made DataShare open source in March 2018. It may be used and modified 
 Email the LGA's [LG Inform Plus Support team](mailto:support@esd.org.uk) if you need help.
 
 # Installing DataShare
-See the [DataShare Installation Guide](https://github.com/esd-org-uk/DataShare/blob/master/DataShare%20Installation%20Guide%20v1_4.pdf) for details. The installer uses [WiX](http://wixtoolset.org/) to install. It will expect a connection string to a SQL Server database, so an empty database needs to be set up in advance, along with the user who will access the database.
+See the [DataShare Installation Guide](https://github.com/esd-org-uk/DataShare/blob/master/DataShare%20Installation%20Guide%20v1_5.docx) for details. The installer uses [WiX](http://wixtoolset.org/) to install. It will expect a connection string to a SQL Server database, so an empty database needs to be set up in advance, along with the user who will access the database.
 
 # Administering Datashare
-The /admin page provides options to administer DataShare and lets a super administrator set up new users who can upload data, create/edit schemas (defining the structure of data) or act as super administrators themselves.  See the [DataShare Admin User Guide](https://github.com/esd-org-uk/DataShare/blob/master/DataShare%20Admin%20User%20Guide.pdf).
+The /admin page provides options to administer DataShare and lets a super administrator set up new users who can upload data, create/edit schemas (defining the structure of data) or act as super administrators themselves.  See the [DataShare Admin User Guide](https://github.com/esd-org-uk/DataShare/blob/master/DataShare%20Admin%20User%20Guide%20v1_5.docx).
 
 # Using DataShare
 Datashare provides a simple way for councils to delegate publishing to staff in different departments who simply upload data in CSV format.
