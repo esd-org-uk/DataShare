@@ -150,7 +150,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DSService.cs" />
+    <Compile Include="DSService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DSService.Designer.cs">
       <DependentUpon>DSService.cs</DependentUpon>
     </Compile>

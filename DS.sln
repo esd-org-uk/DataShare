@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{B6EA833F-CBF8-4F56-B383-981474C4FE3A}"
 	ProjectSection(SolutionItems) = preProject
 		DS TechnicalSpec.docx = DS TechnicalSpec.docx
@@ -45,6 +47,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		packages\YUICompressor.NET.2.0.0.0\lib\NET20\Yahoo.Yui.Compressor.dll = packages\YUICompressor.NET.2.0.0.0\lib\NET20\Yahoo.Yui.Compressor.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EE121DC6-4F47-4075-AA38-7A1A840BEF53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WixSetupProjects", "WixSetupProjects", "{DBAFF1AF-413D-45DC-B7C5-DD880CF0A6E9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS.WebUI", "DS.WebUI\DS.WebUI.csproj", "{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS.Domain", "DS.Domain\DS.Domain.csproj", "{AE084CC7-4923-4162-A873-E80ABD336117}"
@@ -65,53 +71,7 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DS.WebUI.WixSetup", "DS.Web
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DS.WindowsService.WixSetup", "DS.WindowsService.WixSetup\DS.WindowsService.WixSetup.wixproj", "{08B843FA-C426-4895-8E24-5A0F2D1B5244}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EE121DC6-4F47-4075-AA38-7A1A840BEF53}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WixSetupProjects", "WixSetupProjects", "{DBAFF1AF-413D-45DC-B7C5-DD880CF0A6E9}"
-EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://lbrcwapptfs01:8080/tfs/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DS.DL\\DS.DL.csproj
-		SccProjectName1 = DS.DL
-		SccLocalPath1 = DS.DL
-		SccProjectUniqueName2 = DS.Domain\\DS.Domain.csproj
-		SccProjectName2 = DS.Domain
-		SccLocalPath2 = DS.Domain
-		SccProjectUniqueName3 = DS.Extensions\\DS.Extensions.csproj
-		SccProjectName3 = DS.Extensions
-		SccLocalPath3 = DS.Extensions
-		SccProjectUniqueName4 = DS.Service\\DS.Service.csproj
-		SccProjectName4 = DS.Service
-		SccLocalPath4 = DS.Service
-		SccProjectUniqueName5 = DS.WebUI\\DS.WebUI.csproj
-		SccProjectName5 = DS.WebUI
-		SccLocalPath5 = DS.WebUI
-		SccProjectUniqueName6 = DS.Tests\\DS.Tests.csproj
-		SccProjectTopLevelParentUniqueName6 = DS.sln
-		SccProjectName6 = DS.Tests
-		SccLocalPath6 = DS.Tests
-		SccProjectUniqueName7 = DS.WindowsService\\DS.WindowsService.csproj
-		SccProjectName7 = DS.WindowsService
-		SccLocalPath7 = DS.WindowsService
-		SccProjectUniqueName8 = DS.WindowsService.Debugger\\DS.WindowsService.Debugger.csproj
-		SccProjectName8 = DS.WindowsService.Debugger
-		SccLocalPath8 = DS.WindowsService.Debugger
-		SccProjectUniqueName9 = DS.WebUI.WixSetup\\DS.WebUI.WixSetup.wixproj
-		SccProjectTopLevelParentUniqueName9 = DS.sln
-		SccProjectName9 = DS.WebUI.WixSetup
-		SccLocalPath9 = DS.WebUI.WixSetup
-		SccProjectUniqueName10 = DS.WindowsService.WixSetup\\DS.WindowsService.WixSetup.wixproj
-		SccProjectTopLevelParentUniqueName10 = DS.sln
-		SccProjectName10 = DS.WindowsService.WixSetup
-		SccLocalPath10 = DS.WindowsService.WixSetup
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = DS.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -532,7 +492,10 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D10341A8-FF4C-4992-881C-4CDA039D037E} = {EE121DC6-4F47-4075-AA38-7A1A840BEF53}
-		{08B843FA-C426-4895-8E24-5A0F2D1B5244} = {DBAFF1AF-413D-45DC-B7C5-DD880CF0A6E9}
 		{A4F98267-2EAC-4604-8995-97AA4CE4ED80} = {DBAFF1AF-413D-45DC-B7C5-DD880CF0A6E9}
+		{08B843FA-C426-4895-8E24-5A0F2D1B5244} = {DBAFF1AF-413D-45DC-B7C5-DD880CF0A6E9}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = DS.vsmdi
 	EndGlobalSection
 EndGlobal
