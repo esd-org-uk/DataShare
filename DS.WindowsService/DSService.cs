@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using DS.DL.DataContext;
@@ -14,6 +16,7 @@ using DS.Domain;
 using DS.Domain.Interface;
 using DS.Service;
 using DS.WindowsService.Debugger;
+using NLog;
 using StructureMap;
 using Timer = System.Timers.Timer;
 
@@ -28,10 +31,10 @@ namespace DS.WindowsService
         private static DateTime nextRun = DateTime.Now;
 
         private static IDataSetSchemaService _dataSetSchemaService;
-        //private static IDataSetSchemaDefinitionService _dataSetSchemaDefinitionService;
-        //private static DataSetDetailService _dataSetDetailService;
         private static IDataSetDetailUploaderService _uploaderService;
         private static DebugInfoService _debugInfoService;
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #region Constructor
 
@@ -48,10 +51,9 @@ namespace DS.WindowsService
         protected override void OnStart(string[] args)
         {
             StartService();
-            //_dataSetSchemaService = new DataSetSchemaService();
         }
 
-        private void StartService()
+        private static void StartService()
         {
             try
             {
@@ -63,9 +65,18 @@ namespace DS.WindowsService
                 DailyTaskTimer();
 
             }
-            catch (Exception exception)
+            catch (ReflectionTypeLoadException ex)
             {
-                AddDebugInfo(new DebugInfo(String.Format("ERROR: Service about to be re started... {0}", exception.Message), DebugInfoTypeEnum.Error));
+                var loaderExceptions = ex.LoaderExceptions;
+                foreach (var loaderException in loaderExceptions)
+                {
+                    AddDebugInfo(new DebugInfo(string.Format("EF ERROR: {0}", loaderException.Message), DebugInfoTypeEnum.Error), loaderException);
+                }
+                AddDebugInfo(new DebugInfo(string.Format("ERROR: {0}", ex.Message), DebugInfoTypeEnum.Error), ex);
+            }
+            catch (Exception ex)
+            {
+                AddDebugInfo(new DebugInfo(String.Format("ERROR: Service about to be re started... {0}", ex.Message), DebugInfoTypeEnum.Error), ex);
 
                 //restart the service
                 RestartService("DataShare.Service", 10000);
@@ -77,6 +88,7 @@ namespace DS.WindowsService
             var service = new ServiceController(serviceName);
             try
             {
+                Logger.Debug("Restarting service");
                 var millisec1 = Environment.TickCount;
                 var timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
                 service.Stop();
@@ -88,9 +100,9 @@ namespace DS.WindowsService
                 service.Start();
                 service.WaitForStatus(ServiceControllerStatus.Running, timeout);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-
+                Logger.Error(exception, "Error restarting service");
             }
         }
         #region Raised Events
@@ -153,7 +165,7 @@ namespace DS.WindowsService
                 }
                 catch (Exception ex)
                 {
-                    AddDebugInfo(new DebugInfo(String.Format(@"Error uploading dataset: {0}", ex.Message), DebugInfoTypeEnum.Error));
+                    AddDebugInfo(new DebugInfo(String.Format(@"Error uploading dataset: {0}", ex.Message), DebugInfoTypeEnum.Error), ex);
                     RestartService("DataShare.Service", 10000);
                 }
             }
@@ -170,6 +182,7 @@ namespace DS.WindowsService
         {
             try
             {
+                Logger.Debug("Adding missing schema folders");
                 var schemas = _dataSetSchemaService.GetFullList();
                 var createdFolders = new List<string>();
                 foreach (var s in schemas)
@@ -187,7 +200,7 @@ namespace DS.WindowsService
             }
             catch (Exception ex)
             {
-                AddDebugInfo(new DebugInfo(String.Format(@"AddMissingSchemaFolders threw an error: {0}", ex.Message), DebugInfoTypeEnum.Developer));
+                AddDebugInfo(new DebugInfo(String.Format(@"AddMissingSchemaFolders threw an error: {0}", ex.Message), DebugInfoTypeEnum.Error), ex);
                 RestartService("DataShare.Service", 10000);
             }
         }
@@ -224,7 +237,7 @@ namespace DS.WindowsService
             }
             catch (Exception ex)
             {
-                AddDebugInfo(new DebugInfo(String.Format(@"CheckForOverdueUploads threw an error: {0}", ex.Message), DebugInfoTypeEnum.Developer));
+                AddDebugInfo(new DebugInfo(String.Format(@"CheckForOverdueUploads threw an error: {0}", ex.Message), DebugInfoTypeEnum.Error), ex);
                 RestartService("DataShare.Service", 10000);
             }
         }
@@ -310,29 +323,23 @@ namespace DS.WindowsService
         #region Methods
         private static void SendEmail(string toEmail, string emailBody, bool isHtml, string action)
         {
-            if (String.IsNullOrEmpty(toEmail))
+            try
             {
-                AddDebugInfo(new DebugInfo(String.Format(@"Email failed to send as there was no email address. Send reason: {0}, Email body: {1}", action, emailBody), DebugInfoTypeEnum.Error));
-            }
-            else
-            {
-                try
-                {
-                    var client = new SmtpClient { DeliveryMethod = SmtpDeliveryMethod.Network };
-                    var oCredential = new NetworkCredential("", "");
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = oCredential;
+                if (string.IsNullOrEmpty(toEmail)) throw new Exception("toEmail not supplied");
+                var client = new SmtpClient {DeliveryMethod = SmtpDeliveryMethod.Network};
+                var oCredential = new NetworkCredential("", "");
+                client.UseDefaultCredentials = false;
+                client.Credentials = oCredential;
 
-                    var message = new MailMessage { IsBodyHtml = isHtml };
-                    message.To.Add(new MailAddress(toEmail, toEmail));
-                    message.Subject = "DataShare - " + action;
-                    message.Body = emailBody;
-                    client.Send(message);
-                }
-                catch (Exception)
-                {
-                    AddDebugInfo(new DebugInfo(String.Format(@"Email failed to send. Send reason: {0}, Sent to: ""{1}"", Email body: {2}", action, toEmail, emailBody), DebugInfoTypeEnum.Error));
-                }
+                var message = new MailMessage {IsBodyHtml = isHtml};
+                message.To.Add(new MailAddress(toEmail, toEmail));
+                message.Subject = "DataShare - " + action;
+                message.Body = emailBody;
+                client.Send(message);
+            }
+            catch (Exception ex)
+            {
+                AddDebugInfo(new DebugInfo(String.Format(@"Email failed to send. Send reason: {0}, Sent to: ""{1}"", Email body: {2}", action, toEmail, emailBody), DebugInfoTypeEnum.Error), ex);
             }
         }
 
@@ -412,12 +419,16 @@ namespace DS.WindowsService
             _debugInfoService = new DebugInfoService(ObjectFactory.GetInstance<IRepository<DebugInfo>>());
         }
 
-        public static void AddDebugInfo(DebugInfo info)
+        private static void AddDebugInfo(DebugInfo info, Exception e = null)
         {
-#if DEBUG            
-            Console.WriteLine(String.Format(@"{0} {1}", info.Description, info.Type));
-            Console.WriteLine("");
-#endif
+            if (e == null)
+            {
+                Logger.Debug(string.Format("{0} {1}", info.Type, info.Description));
+            }
+            else
+            {
+                Logger.Error(e, info.Description);
+            }
             if (ConfigurationManager.AppSettings["RecordDebugInfo"] == "true")
             {
                 _debugInfoService.Add(info);

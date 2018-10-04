@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DS.Domain.Base;
+﻿using DS.Domain.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace DS.Domain
 {

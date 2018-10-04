@@ -1,21 +1,19 @@
-﻿using System;
+﻿using DS.Domain;
+using DS.Domain.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DS.DL.DataContext.Base.Interfaces;
-using DS.Domain;
-using DS.Domain.Interface;
-using StructureMap;
 
 namespace DS.Service
 {
-    public  class DebugInfoService : IDebugInfoService
+    public class DebugInfoService : IDebugInfoService
     {
-        private IRepository<DebugInfo> _repository;
+        private readonly IRepository<DebugInfo> _repository;
+
         public DebugInfoService(IRepository<DebugInfo> repository)
         {
             _repository = repository;
         }
-
 
         public  IEnumerable<DebugInfo> GetAll()
         {
@@ -26,9 +24,7 @@ namespace DS.Service
         public  IEnumerable<DebugInfo> Get(DebugInfoTypeEnum type)
         {
             var typeToCheck = Convert.ToString(type);
-            if (typeToCheck == "All")
-                return GetAll();
-            return _repository.GetQuery().Where(d => d.Type == typeToCheck).OrderByDescending(d => d.DateCreated);
+            return typeToCheck == "All" ? GetAll() : _repository.GetQuery().Where(d => d.Type == typeToCheck).OrderByDescending(d => d.DateCreated);
         }
 
         public  void Add(DebugInfo info)

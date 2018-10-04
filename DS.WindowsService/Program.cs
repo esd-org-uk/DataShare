@@ -1,6 +1,4 @@
 ﻿using System.ServiceProcess;
-using System.Windows.Forms;
-using DS.WindowsService.Debugger;
 
 namespace DS.WindowsService
 {
@@ -11,12 +9,7 @@ namespace DS.WindowsService
         /// </summary>
         static void Main()
         {
-
-#if DEBUG
-                Application.Run(new ServiceRunner(new DSService()));
-#else 
-                ServiceBase.Run(new DSService());
-#endif
+            ServiceBase.Run(new DSService());
         }
     }
 }

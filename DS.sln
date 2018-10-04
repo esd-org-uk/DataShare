@@ -119,8 +119,8 @@ Global
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{5DDEEE88-CCB0-4EFC-A52B-9DE51EF21DC1}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
@@ -159,8 +159,8 @@ Global
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{AE084CC7-4923-4162-A873-E80ABD336117}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
@@ -199,8 +199,8 @@ Global
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{4CE9D39D-25DB-403D-90E4-9D85BA1C99B8}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
@@ -239,8 +239,8 @@ Global
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{98B34C1A-9F1A-4EAF-94C1-F187FC4505CE}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
@@ -279,8 +279,8 @@ Global
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{9FEA27F4-D2B5-4AA6-B9D4-CA23B8327A9C}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
@@ -317,8 +317,8 @@ Global
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseNightlyServiceDebug|x86.ActiveCfg = ReleaseNightlyServiceDebug|Any CPU
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Any CPU.ActiveCfg = ReleaseToInstall|Any CPU
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Any CPU.Build.0 = ReleaseToInstall|Any CPU
-		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|Any CPU
-		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|Any CPU
+		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Mixed Platforms.ActiveCfg = ReleaseToInstall|x86
+		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|Mixed Platforms.Build.0 = ReleaseToInstall|x86
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToInstall|x86.ActiveCfg = ReleaseToInstall|Any CPU
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToLive|Any CPU.ActiveCfg = ReleaseToLive|Any CPU
 		{D10341A8-FF4C-4992-881C-4CDA039D037E}.ReleaseToLive|Any CPU.Build.0 = ReleaseToLive|Any CPU
