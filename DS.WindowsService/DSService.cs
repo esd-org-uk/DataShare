@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net.Configuration;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -326,12 +327,21 @@ namespace DS.WindowsService
             try
             {
                 if (string.IsNullOrEmpty(toEmail)) throw new Exception("toEmail not supplied");
-                var client = new SmtpClient {DeliveryMethod = SmtpDeliveryMethod.Network};
-                var oCredential = new NetworkCredential("", "");
-                client.UseDefaultCredentials = false;
-                client.Credentials = oCredential;
 
-                var message = new MailMessage {IsBodyHtml = isHtml};
+                var smtpConfig = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+                var username = smtpConfig.Network.UserName;
+                var password = smtpConfig.Network.Password;
+                var from = smtpConfig.From;
+                var host = smtpConfig.Network.Host;
+
+                var client = new SmtpClient(host, 587)
+                {
+                    Credentials = new NetworkCredential(username, password),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network
+                };
+
+                var message = new MailMessage { From = new MailAddress(from), IsBodyHtml = isHtml};
                 message.To.Add(new MailAddress(toEmail, toEmail));
                 message.Subject = "DataShare - " + action;
                 message.Body = emailBody;
